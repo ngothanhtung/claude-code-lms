@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Làm bài Quiz — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  .quiz-page { grid-template-columns: 1fr; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .breadcrumb { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-bottom: 16px; }
+  .breadcrumb a { color: hsl(var(--muted-foreground)); text-decoration: none; }
+  .breadcrumb a:hover { color: hsl(var(--primary)); }
+  .breadcrumb svg { width: 14px; height: 14px; }
+  .breadcrumb .cur { color: hsl(var(--foreground)); font-weight: 600; }
+
+  /* Quiz header */
+  .quiz-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .quiz-head h1 { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
+  .quiz-head .qh-sub { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+  .timer { display: flex; align-items: center; gap: 9px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 12px; padding: 9px 15px; box-shadow: var(--shadow-card); }
+  .timer .t-ico { width: 34px; height: 34px; border-radius: 9px; background: hsl(var(--warning-muted)); color: hsl(32 80% 44%); display: grid; place-items: center; }
+  .timer .t-ico svg { width: 18px; height: 18px; }
+  .timer.low .t-ico { background: hsl(var(--danger-muted)); color: hsl(var(--danger)); }
+  .timer .t-val { font-size: 19px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .timer.low .t-val { color: hsl(var(--danger)); }
+  .timer .t-lbl { font-size: 10.5px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+
+  .quiz-grid { display: grid; grid-template-columns: 1fr 270px; gap: 18px; align-items: start; }
+
+  /* Question card */
+  .q-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 22px 24px; box-shadow: var(--shadow-card); }
+  .q-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .q-num { font-size: 12.5px; font-weight: 700; color: hsl(var(--primary)); text-transform: uppercase; letter-spacing: .04em; }
+  .q-flag { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 12px; font-weight: 600; color: hsl(var(--muted-foreground)); background: transparent; border: 1px solid hsl(var(--border)); border-radius: 8px; padding: 5px 11px; cursor: pointer; transition: all .14s; }
+  .q-flag svg { width: 14px; height: 14px; }
+  .q-flag:hover { border-color: hsl(38 92% 55%); color: hsl(32 80% 44%); }
+  .q-flag.on { background: hsl(var(--warning-muted)); border-color: hsl(38 92% 70%); color: hsl(32 80% 42%); }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.45; }
+  .q-code { margin-top: 14px; background: hsl(222 30% 14%); color: hsl(210 30% 90%); border-radius: 11px; padding: 15px 17px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre; }
+  .q-code .kw { color: hsl(280 60% 75%); } .q-code .ty { color: hsl(190 60% 65%); }
+  .q-code .nm { color: hsl(30 80% 70%); } .q-code .cm { color: hsl(140 20% 55%); }
+  .q-code .st { color: hsl(95 45% 68%); }
+
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+  .opt { display: flex; align-items: center; gap: 13px; border: 1.5px solid hsl(var(--border)); border-radius: 12px; padding: 13px 16px; cursor: pointer; transition: border-color .14s, background .14s; }
+  .opt:hover { border-color: hsl(var(--primary) / 0.5); background: hsl(var(--primary) / 0.03); }
+  .opt.sel { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.07); }
+  .opt .opt-key { width: 30px; height: 30px; border-radius: 8px; background: hsl(var(--muted)); color: hsl(var(--foreground)); font-weight: 700; font-size: 13px; display: grid; place-items: center; flex-shrink: 0; transition: all .14s; }
+  .opt.sel .opt-key { background: hsl(var(--primary)); color: #fff; }
+  .opt .opt-text { font-size: 14px; font-weight: 500; }
+  .opt .opt-text.mono { font-size: 13px; }
+
+  .q-foot { display: flex; align-items: center; gap: 10px; margin-top: 22px; }
+  .q-foot .spacer { flex: 1; }
+
+  /* Side panel */
+  .side-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 17px; box-shadow: var(--shadow-card); }
+  .side-card + .side-card { margin-top: 16px; }
+  .side-h { font-size: 13px; font-weight: 700; margin-bottom: 13px; display: flex; align-items: center; justify-content: space-between; }
+  .side-h .sh-cnt { font-size: 12px; font-weight: 600; color: hsl(var(--muted-foreground)); }
+  .prog-track { height: 8px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; margin-bottom: 14px; }
+  .prog-track span { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, hsl(var(--primary)), hsl(262 83% 64%)); transition: width .3s ease; }
+  .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .pal { aspect-ratio: 1; border: 1.5px solid hsl(var(--border)); border-radius: 9px; background: hsl(var(--card)); font: inherit; font-size: 13px; font-weight: 700; color: hsl(var(--muted-foreground)); cursor: pointer; display: grid; place-items: center; position: relative; transition: all .12s; }
+  .pal:hover { border-color: hsl(var(--primary) / 0.6); }
+  .pal.answered { background: hsl(var(--primary) / 0.12); border-color: hsl(var(--primary) / 0.4); color: hsl(var(--primary)); }
+  .pal.current { border-color: hsl(var(--primary)); border-width: 2px; color: hsl(var(--primary)); }
+  .pal.flagged::after { content: ""; position: absolute; top: 3px; right: 3px; width: 7px; height: 7px; border-radius: 99px; background: hsl(38 92% 52%); }
+  .legend { display: flex; flex-direction: column; gap: 7px; margin-top: 14px; font-size: 11.5px; color: hsl(var(--muted-foreground)); }
+  .legend .lg { display: flex; align-items: center; gap: 8px; }
+  .legend .sw { width: 14px; height: 14px; border-radius: 5px; border: 1.5px solid hsl(var(--border)); flex-shrink: 0; }
+  .legend .sw.answered { background: hsl(var(--primary) / 0.12); border-color: hsl(var(--primary) / 0.4); }
+  .legend .sw.current { border-color: hsl(var(--primary)); border-width: 2px; }
+  .legend .sw.flagged { position: relative; } .legend .sw.flagged::after { content:""; position:absolute; top:-2px; right:-2px; width:6px; height:6px; border-radius:99px; background: hsl(38 92% 52%); }
+
+  /* Result modal */
+  .modal-overlay { position: fixed; inset: 0; background: hsl(222 30% 12% / 0.5); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 100; }
+  .modal-overlay.open { display: flex; }
+  .modal { width: 100%; max-width: 440px; background: hsl(var(--card)); border-radius: 18px; box-shadow: 0 24px 60px -12px hsl(222 40% 12% / 0.45); overflow: hidden; }
+  .modal-pad { padding: 26px 24px; text-align: center; }
+  .modal-pad .res-ring { width: 92px; height: 92px; border-radius: 99px; display: grid; place-items: center; margin: 0 auto 16px; position: relative; }
+  .modal-pad .res-ring b { font-size: 22px; font-weight: 800; }
+  .modal-pad h3 { font-size: 19px; font-weight: 800; }
+  .modal-pad p { font-size: 13px; color: hsl(var(--muted-foreground)); margin-top: 6px; }
+  .res-stats { display: flex; gap: 10px; margin: 20px 0 4px; }
+  .res-stat { flex: 1; background: hsl(var(--muted) / 0.5); border-radius: 11px; padding: 12px; }
+  .res-stat .rs-num { font-size: 18px; font-weight: 800; } .res-stat .rs-lbl { font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+  .modal-foot { display: flex; gap: 10px; padding: 16px 24px; border-top: 1px solid hsl(var(--border)); }
+  .modal-foot .btn { flex: 1; justify-content: center; }
+  .confirm-text { font-size: 13.5px; line-height: 1.5; color: hsl(var(--muted-foreground)); }
+  .confirm-text b { color: hsl(var(--foreground)); }
+
+  @media (max-width: 900px) { .quiz-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group open" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem active" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="#" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group open" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">A</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content quiz-page">
+      <div class="col-main">
+
+        <div class="breadcrumb">
+          <a href="assignments-personal.html">Bài tập cá nhân</a>
+          <i data-lucide="chevron-right"></i>
+          <span class="cur">Quiz 2 · Lập trình Java</span>
+        </div>
+
+        <div class="quiz-head">
+          <div>
+            <h1>Quiz 2 – Vòng lặp &amp; Mảng</h1>
+            <div class="qh-sub">Lập trình Java · GV: Phạm Quốc Bảo · 10 câu · 1 lần nộp</div>
+          </div>
+          <div class="timer" id="timer">
+            <div class="t-ico"><i data-lucide="timer"></i></div>
+            <div><div class="t-val" id="timerVal">14:32</div><div class="t-lbl">Thời gian còn lại</div></div>
+          </div>
+        </div>
+
+        <div class="quiz-grid">
+          <!-- Question -->
+          <div class="q-card">
+            <div class="q-top">
+              <div class="q-num" id="qNum">Câu 1 / 10</div>
+              <button class="q-flag" id="flagBtn"><i data-lucide="flag"></i> Đánh dấu</button>
+            </div>
+            <div class="q-text" id="qText"></div>
+            <div class="q-code" id="qCode" style="display:none"></div>
+            <div class="options" id="options"></div>
+            <div class="q-foot">
+              <button class="btn" id="prevBtn"><i data-lucide="arrow-left" class="icon-sm"></i> Câu trước</button>
+              <div class="spacer"></div>
+              <button class="btn primary" id="nextBtn">Câu sau <i data-lucide="arrow-right" class="icon-sm"></i></button>
+            </div>
+          </div>
+
+          <!-- Side panel -->
+          <div>
+            <div class="side-card">
+              <div class="side-h">Tiến độ <span class="sh-cnt" id="progCnt">4/10</span></div>
+              <div class="prog-track"><span id="progBar" style="width:40%"></span></div>
+              <div class="palette" id="palette"></div>
+              <div class="legend">
+                <div class="lg"><span class="sw answered"></span> Đã trả lời</div>
+                <div class="lg"><span class="sw current"></span> Câu hiện tại</div>
+                <div class="lg"><span class="sw flagged"></span> Đã đánh dấu</div>
+              </div>
+            </div>
+            <div class="side-card">
+              <button class="btn primary" id="submitBtn" style="width:100%; justify-content:center"><i data-lucide="send" class="icon-sm"></i> Nộp bài</button>
+              <div style="font-size:11.5px; color:hsl(var(--muted-foreground)); text-align:center; margin-top:9px">Câu trả lời được lưu tự động</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm submit modal -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-pad">
+      <div class="res-ring" style="background:hsl(var(--warning-muted)); color:hsl(32 80% 44%)"><i data-lucide="help-circle" style="width:40px;height:40px"></i></div>
+      <h3>Nộp bài làm?</h3>
+      <p class="confirm-text" id="confirmText">Bạn đã trả lời <b>4/10</b> câu. Sau khi nộp, bạn không thể chỉnh sửa.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="confirmCancel">Tiếp tục làm</button>
+      <button class="btn primary" id="confirmSubmit">Nộp bài</button>
+    </div>
+  </div>
+</div>
+
+<!-- Result modal -->
+<div class="modal-overlay" id="resultModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-pad">
+      <div class="res-ring" id="resRing"><b id="resScore">8.0</b></div>
+      <h3 id="resTitle">Hoàn thành!</h3>
+      <p id="resMsg">Bạn đã hoàn thành Quiz 2 – Vòng lặp &amp; Mảng.</p>
+      <div class="res-stats">
+        <div class="res-stat"><div class="rs-num" id="resCorrect" style="color:hsl(142 71% 36%)">8</div><div class="rs-lbl">Đúng</div></div>
+        <div class="res-stat"><div class="rs-num" id="resWrong" style="color:hsl(var(--danger))">2</div><div class="rs-lbl">Sai</div></div>
+        <div class="res-stat"><div class="rs-num" id="resTime">5:28</div><div class="rs-lbl">Thời gian</div></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a class="btn primary" href="assignments-personal.html" style="flex:1; justify-content:center">Về danh sách bài tập</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Sidebar collapse
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => { appEl.classList.toggle('collapsed'); localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0'); });
+  }
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => { e.stopPropagation(); profileMenu.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open'); });
+  }
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open')));
+
+  // ---- Quiz data ----
+  const QUESTIONS = [
+    { q: 'Vòng lặp <b>for</b> sau in ra bao nhiêu lần?', code: 'for (int i = 0; i < 5; i++) {\n    System.out.println(i);\n}', opts: ['4 lần', '5 lần', '6 lần', 'Vô hạn'], a: 1 },
+    { q: 'Chỉ số (index) hợp lệ của mảng <span class="mono">int[] a = new int[5]</span> là?', opts: ['0 đến 5', '1 đến 5', '0 đến 4', '1 đến 4'], a: 2 },
+    { q: 'Kết quả của đoạn mã sau là gì?', code: 'int[] a = {2, 4, 6};\nint s = 0;\nfor (int x : a) s += x;\nSystem.out.println(s);', opts: ['6', '12', '0', 'Lỗi biên dịch'], a: 1 },
+    { q: 'Vòng lặp nào <b>luôn</b> chạy thân vòng ít nhất một lần?', opts: ['for', 'while', 'do-while', 'foreach'], a: 2 },
+    { q: 'Câu lệnh nào dùng để thoát ngay khỏi vòng lặp?', opts: ['continue', 'break', 'return', 'exit'], a: 1 },
+    { q: 'Độ dài của mảng trong Java được lấy bằng?', opts: ['a.length()', 'a.size()', 'a.length', 'len(a)'], a: 2 },
+    { q: 'Đoạn mã sau in ra gì?', code: 'int i = 0;\nwhile (i < 3) {\n    System.out.print(i + " ");\n    i++;\n}', opts: ['0 1 2', '1 2 3', '0 1 2 3', '1 2'], a: 0 },
+    { q: '<span class="mono">continue</span> trong vòng lặp có tác dụng gì?', opts: ['Thoát khỏi vòng lặp', 'Bỏ qua phần còn lại của vòng hiện tại và sang vòng kế', 'Dừng chương trình', 'Lặp lại từ đầu'], a: 1 },
+    { q: 'Khai báo mảng 2 chiều 3×3 đúng cú pháp là?', opts: ['int[3][3] m;', 'int m[][] = new int[3,3];', 'int[][] m = new int[3][3];', 'array int m = (3,3);'], a: 2 },
+    { q: 'Truy cập <span class="mono">a[5]</span> với mảng có 5 phần tử sẽ?', opts: ['Trả về 0', 'Trả về null', 'Ném ArrayIndexOutOfBoundsException', 'Tự mở rộng mảng'], a: 2 }
+  ];
+  const TOTAL = QUESTIONS.length;
+  const KEY = 'javaQuiz2_v1';
+
+  // ---- State (persisted) ----
+  let state = JSON.parse(localStorage.getItem(KEY) || 'null');
+  if (!state) {
+    // Seed "đang làm dở 4/10": câu 1-4 đã trả lời, đang ở câu 5
+    state = { answers: { 0: 1, 1: 2, 2: 1, 3: 2 }, flagged: [], cur: 4, remaining: 872 };
+  }
+  function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+  const qNum = document.getElementById('qNum'), qText = document.getElementById('qText'),
+        qCode = document.getElementById('qCode'), optionsEl = document.getElementById('options'),
+        flagBtn = document.getElementById('flagBtn'), palette = document.getElementById('palette'),
+        progBar = document.getElementById('progBar'), progCnt = document.getElementById('progCnt'),
+        prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn'),
+        timerVal = document.getElementById('timerVal'), timerEl = document.getElementById('timer');
+  const KEYS = ['A','B','C','D','E'];
+
+  function answeredCount() { return Object.keys(state.answers).length; }
+
+  function renderQuestion() {
+    const i = state.cur, Q = QUESTIONS[i];
+    qNum.textContent = 'Câu ' + (i + 1) + ' / ' + TOTAL;
+    qText.innerHTML = Q.q;
+    if (Q.code) { qCode.style.display = 'block'; qCode.textContent = Q.code; } else { qCode.style.display = 'none'; }
+    optionsEl.innerHTML = '';
+    Q.opts.forEach((opt, k) => {
+      const el = document.createElement('div');
+      el.className = 'opt' + (state.answers[i] === k ? ' sel' : '');
+      const mono = /^[a-z]|\(|\)|\[|\]|;|\.length/.test(opt) && opt.length < 40 ? ' mono' : '';
+      el.innerHTML = '<div class="opt-key">' + KEYS[k] + '</div><div class="opt-text' + mono + '"></div>';
+      el.querySelector('.opt-text').textContent = opt;
+      el.addEventListener('click', () => { state.answers[i] = k; save(); renderQuestion(); renderPalette(); renderProg(); });
+      optionsEl.appendChild(el);
+    });
+    flagBtn.classList.toggle('on', state.flagged.includes(i));
+    flagBtn.innerHTML = state.flagged.includes(i) ? '<i data-lucide="flag"></i> Đã đánh dấu' : '<i data-lucide="flag"></i> Đánh dấu';
+    prevBtn.disabled = i === 0;
+    nextBtn.style.visibility = i === TOTAL - 1 ? 'hidden' : 'visible';
+    lucide.createIcons();
+  }
+  function renderPalette() {
+    palette.innerHTML = '';
+    for (let i = 0; i < TOTAL; i++) {
+      const b = document.createElement('button');
+      b.className = 'pal' + (state.answers[i] !== undefined ? ' answered' : '') + (i === state.cur ? ' current' : '') + (state.flagged.includes(i) ? ' flagged' : '');
+      b.textContent = i + 1;
+      b.addEventListener('click', () => { state.cur = i; save(); renderQuestion(); renderPalette(); });
+      palette.appendChild(b);
+    }
+  }
+  function renderProg() {
+    const c = answeredCount();
+    progCnt.textContent = c + '/' + TOTAL;
+    progBar.style.width = (c / TOTAL * 100) + '%';
+  }
+
+  flagBtn.addEventListener('click', () => {
+    const i = state.cur, idx = state.flagged.indexOf(i);
+    if (idx >= 0) state.flagged.splice(idx, 1); else state.flagged.push(i);
+    save(); renderQuestion(); renderPalette();
+  });
+  prevBtn.addEventListener('click', () => { if (state.cur > 0) { state.cur--; save(); renderQuestion(); renderPalette(); } });
+  nextBtn.addEventListener('click', () => { if (state.cur < TOTAL - 1) { state.cur++; save(); renderQuestion(); renderPalette(); } });
+
+  // ---- Timer ----
+  function fmt(s) { return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
+  function tick() {
+    timerVal.textContent = fmt(state.remaining);
+    timerEl.classList.toggle('low', state.remaining <= 120);
+    if (state.remaining <= 0) { doSubmit(true); return; }
+    state.remaining--; save();
+  }
+  let timerId = setInterval(tick, 1000); tick();
+
+  // ---- Submit flow ----
+  const confirmModal = document.getElementById('confirmModal'), resultModal = document.getElementById('resultModal');
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    document.getElementById('confirmText').innerHTML = 'Bạn đã trả lời <b>' + answeredCount() + '/' + TOTAL + '</b> câu' +
+      (state.flagged.length ? ', còn <b>' + state.flagged.length + '</b> câu đánh dấu' : '') + '. Sau khi nộp, bạn không thể chỉnh sửa.';
+    confirmModal.classList.add('open');
+  });
+  document.getElementById('confirmCancel').addEventListener('click', () => confirmModal.classList.remove('open'));
+  confirmModal.addEventListener('click', e => { if (e.target === confirmModal) confirmModal.classList.remove('open'); });
+  document.getElementById('confirmSubmit').addEventListener('click', () => doSubmit(false));
+
+  function doSubmit(timeUp) {
+    clearInterval(timerId);
+    confirmModal.classList.remove('open');
+    let correct = 0;
+    QUESTIONS.forEach((Q, i) => { if (state.answers[i] === Q.a) correct++; });
+    const wrong = TOTAL - correct, score = (correct / TOTAL * 10).toFixed(1);
+    const elapsed = 1500 - state.remaining; // started from 25:00 → but seeded 14:32; show elapsed of session
+    document.getElementById('resScore').textContent = score;
+    document.getElementById('resCorrect').textContent = correct;
+    document.getElementById('resWrong').textContent = wrong;
+    document.getElementById('resTime').textContent = fmt(Math.max(0, 600 - state.remaining));
+    const ring = document.getElementById('resRing');
+    const good = correct >= 7;
+    ring.style.background = good ? 'hsl(var(--success-muted))' : 'hsl(var(--warning-muted))';
+    ring.style.color = good ? 'hsl(142 71% 36%)' : 'hsl(32 80% 44%)';
+    document.getElementById('resTitle').textContent = timeUp ? 'Hết giờ!' : (good ? 'Làm tốt lắm!' : 'Đã nộp bài');
+    document.getElementById('resMsg').textContent = (timeUp ? 'Bài đã tự động nộp khi hết giờ. ' : '') + 'Bạn trả lời đúng ' + correct + '/' + TOTAL + ' câu.';
+    localStorage.removeItem(KEY);
+    resultModal.classList.add('open');
+    lucide.createIcons();
+  }
+
+  // Init
+  renderQuestion(); renderPalette(); renderProg();
+</script>
+</body>
+</html>

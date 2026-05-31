@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thông báo — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  /* ---- Notifications page ----------------------------------------------- */
+  .notif-page { grid-template-columns: 1fr; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 20px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+  .page-head .ph-act { display: flex; gap: 8px; }
+
+  /* Category filter chips */
+  .cat-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .cat { display: inline-flex; align-items: center; gap: 8px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 99px; padding: 8px 15px; font-size: 13px; font-weight: 600; color: hsl(var(--muted-foreground)); cursor: pointer; transition: all .14s; box-shadow: var(--shadow-card); }
+  .cat svg { width: 15px; height: 15px; }
+  .cat:hover { color: hsl(var(--foreground)); border-color: hsl(var(--muted-foreground) / 0.4); }
+  .cat.active { background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: #fff; }
+  .cat .cat-cnt { font-size: 11px; font-weight: 700; background: hsl(var(--muted-foreground) / 0.16); color: hsl(var(--muted-foreground)); border-radius: 99px; padding: 1px 7px; min-width: 18px; text-align: center; }
+  .cat.active .cat-cnt { background: hsl(0 0% 100% / 0.25); color: #fff; }
+
+  /* Grouped sections */
+  .notif-group { margin-bottom: 26px; }
+  .notif-group:last-child { margin-bottom: 0; }
+  .group-label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: hsl(var(--muted-foreground)); margin-bottom: 12px; }
+  .group-list { display: flex; flex-direction: column; gap: 1px; background: hsl(var(--border)); border: 1px solid hsl(var(--border)); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-card); }
+
+  .nrow { display: flex; align-items: flex-start; gap: 14px; background: hsl(var(--card)); padding: 15px 18px; cursor: pointer; transition: background .12s; position: relative; }
+  .nrow:hover { background: hsl(var(--muted) / 0.45); }
+  .nrow.unread { background: hsl(214 100% 98%); }
+  .nrow.unread::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: hsl(var(--primary)); }
+  .nrow-ico { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; flex-shrink: 0; }
+  .nrow-ico svg { width: 19px; height: 19px; }
+  .nrow-body { flex: 1; min-width: 0; }
+  .nrow-top { display: flex; align-items: center; gap: 8px; }
+  .nrow-title { font-size: 14px; font-weight: 700; }
+  .ntag { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+  .ntag.assignment { background: hsl(var(--info-muted)); color: hsl(217 91% 48%); }
+  .ntag.grade { background: hsl(var(--success-muted)); color: hsl(142 71% 32%); }
+  .ntag.admin { background: hsl(var(--warning-muted)); color: hsl(32 80% 40%); }
+  .ntag.event { background: hsl(0 72% 51% / .12); color: hsl(0 72% 48%); }
+  .ntag.schedule { background: hsl(262 83% 56% / .12); color: hsl(262 70% 52%); }
+  .ntag.group { background: hsl(15 56% 54% / .14); color: hsl(15 56% 46%); }
+  .nrow-sub { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; line-height: 1.45; }
+  .nrow-meta { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+  .nrow-time { font-size: 11.5px; color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 5px; }
+  .nrow-time svg { width: 12px; height: 12px; }
+  .nrow-link { font-size: 11.5px; font-weight: 600; color: hsl(var(--primary)); display: flex; align-items: center; gap: 4px; }
+  .nrow-link svg { width: 12px; height: 12px; }
+  .nrow-side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+  .nrow-dot { width: 9px; height: 9px; border-radius: 99px; background: hsl(var(--primary)); flex-shrink: 0; }
+  .nrow-x { width: 26px; height: 26px; border-radius: 7px; border: none; background: transparent; color: hsl(var(--muted-foreground)); cursor: pointer; display: grid; place-items: center; opacity: 0; transition: opacity .12s, background .12s; }
+  .nrow:hover .nrow-x { opacity: 1; }
+  .nrow-x:hover { background: hsl(var(--muted)); color: hsl(var(--danger)); }
+  .nrow-x svg { width: 15px; height: 15px; }
+
+  .nrow.is-hidden, .notif-group.is-hidden { display: none; }
+  .empty { display: none; text-align: center; padding: 60px 20px; color: hsl(var(--muted-foreground)); }
+  .empty.show { display: block; }
+  .empty svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: .5; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group open" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item active" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">A</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content notif-page">
+      <div class="col-main">
+
+        <!-- Page header -->
+        <div class="page-head">
+          <div>
+            <h1>Thông báo</h1>
+            <p><span id="unreadLead">6</span> thông báo chưa đọc · cập nhật liên tục</p>
+          </div>
+          <div class="ph-act">
+            <button class="btn" id="markAllBtn"><i data-lucide="check-check" class="icon-sm"></i> Đánh dấu đã đọc tất cả</button>
+          </div>
+        </div>
+
+        <!-- Category filter -->
+        <div class="cat-bar" id="catBar">
+          <button class="cat active" data-cat="all"><i data-lucide="inbox"></i> Tất cả <span class="cat-cnt">11</span></button>
+          <button class="cat" data-cat="assignment"><i data-lucide="file-text"></i> Bài tập <span class="cat-cnt">3</span></button>
+          <button class="cat" data-cat="grade"><i data-lucide="bar-chart-3"></i> Điểm số <span class="cat-cnt">2</span></button>
+          <button class="cat" data-cat="admin"><i data-lucide="megaphone"></i> Đào tạo <span class="cat-cnt">2</span></button>
+          <button class="cat" data-cat="schedule"><i data-lucide="calendar-clock"></i> Lịch học &amp; thi <span class="cat-cnt">2</span></button>
+          <button class="cat" data-cat="group"><i data-lucide="users"></i> Nhóm <span class="cat-cnt">1</span></button>
+          <button class="cat" data-cat="event"><i data-lucide="calendar-heart"></i> Sự kiện <span class="cat-cnt">1</span></button>
+        </div>
+
+        <!-- ===== Hôm nay ===== -->
+        <div class="notif-group" data-group="today">
+          <div class="group-label">Hôm nay</div>
+          <div class="group-list">
+
+            <div class="nrow unread" data-cat="assignment">
+              <div class="nrow-ico ico-tint-indigo"><i data-lucide="file-text"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Giảng viên giao bài tập mới</span><span class="ntag assignment">Bài tập</span></div>
+                <div class="nrow-sub">Lập trình Java — Bài tập số 4: Vòng lặp &amp; Mảng. Hạn nộp 05/06.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 10 phút trước</span><a class="nrow-link" href="assignments-personal.html">Xem bài tập <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button><span class="nrow-dot"></span></div>
+            </div>
+
+            <div class="nrow unread" data-cat="group">
+              <div class="nrow-ico ico-tint-red"><i data-lucide="git-merge"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Hoạt động nhóm mới</span><span class="ntag group">Nhóm</span></div>
+                <div class="nrow-sub">Nhóm 3 · Claude Code for BackEnd: Tùng đã merge PR #28 — CRUD sản phẩm.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 36 phút trước</span><a class="nrow-link" href="workspace.html">Mở workspace <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button><span class="nrow-dot"></span></div>
+            </div>
+
+            <div class="nrow unread" data-cat="grade">
+              <div class="nrow-ico ico-tint-green"><i data-lucide="bar-chart-3"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Điểm mới được công bố</span><span class="ntag grade">Điểm số</span></div>
+                <div class="nrow-sub">Cơ sở dữ liệu — Quiz 1: bạn đạt <b>7.0/10</b>.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 1 giờ trước</span><a class="nrow-link" href="results.html">Xem kết quả <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button><span class="nrow-dot"></span></div>
+            </div>
+
+            <div class="nrow unread" data-cat="admin">
+              <div class="nrow-ico ico-tint-amber"><i data-lucide="megaphone"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Thông báo từ Phòng Đào tạo</span><span class="ntag admin">Đào tạo</span></div>
+                <div class="nrow-sub">Đăng ký học phần học kỳ III mở từ 20/05 – 30/05/2026.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 3 giờ trước</span><a class="nrow-link" href="#">Xem chi tiết <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button><span class="nrow-dot"></span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===== Hôm qua ===== -->
+        <div class="notif-group" data-group="yesterday">
+          <div class="group-label">Hôm qua</div>
+          <div class="group-list">
+
+            <div class="nrow unread" data-cat="schedule">
+              <div class="nrow-ico ico-tint-indigo"><i data-lucide="calendar-clock"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Lịch thi cuối kỳ đã cập nhật</span><span class="ntag schedule">Lịch học &amp; thi</span></div>
+                <div class="nrow-sub">Đã công bố lịch thi 6 môn (10/06 – 22/06). Kiểm tra phòng &amp; SBD.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> Hôm qua · 16:20</span><a class="nrow-link" href="exams.html">Xem lịch thi <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button><span class="nrow-dot"></span></div>
+            </div>
+
+            <div class="nrow unread" data-cat="assignment">
+              <div class="nrow-ico ico-tint-red"><i data-lucide="alarm-clock"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Sắp đến hạn nộp bài</span><span class="ntag assignment">Bài tập</span></div>
+                <div class="nrow-sub">Claude Code for BackEnd — Lab 1: Build REST API. Còn chưa đầy 1 ngày.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> Hôm qua · 09:00</span><a class="nrow-link" href="assignments-personal.html">Nộp bài <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button><span class="nrow-dot"></span></div>
+            </div>
+
+            <div class="nrow" data-cat="grade">
+              <div class="nrow-ico ico-tint-green"><i data-lucide="bar-chart-3"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Điểm bài tập đã chấm</span><span class="ntag grade">Điểm số</span></div>
+                <div class="nrow-sub">Cấu trúc dữ liệu &amp; giải thuật — Bài tập 4: <b>9.0/10</b>, có nhận xét.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> Hôm qua · 08:15</span><a class="nrow-link" href="assignments-personal.html">Xem nhận xét <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===== Trước đó ===== -->
+        <div class="notif-group" data-group="earlier">
+          <div class="group-label">Trước đó</div>
+          <div class="group-list">
+
+            <div class="nrow" data-cat="assignment">
+              <div class="nrow-ico ico-tint-indigo"><i data-lucide="users"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Bài tập nhóm được giao</span><span class="ntag assignment">Bài tập</span></div>
+                <div class="nrow-sub">Cơ sở dữ liệu — Thiết kế CSDL quản lý thư viện (Nhóm 2). Hạn 11/06.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 28/05 · 14:00</span><a class="nrow-link" href="assignments-group.html">Xem nhóm <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button></div>
+            </div>
+
+            <div class="nrow" data-cat="schedule">
+              <div class="nrow-ico ico-tint-indigo"><i data-lucide="calendar-days"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Thay đổi phòng học</span><span class="ntag schedule">Lịch học &amp; thi</span></div>
+                <div class="nrow-sub">Claude Code for BackEnd — buổi Thứ 7 chuyển sang Lab CNTT-301.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 27/05 · 10:30</span><a class="nrow-link" href="calendar.html">Xem lịch học <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button></div>
+            </div>
+
+            <div class="nrow" data-cat="admin">
+              <div class="nrow-ico ico-tint-amber"><i data-lucide="receipt"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Nhắc nhở đóng học phí</span><span class="ntag admin">Đào tạo</span></div>
+                <div class="nrow-sub">Học phí học kỳ II hạn cuối 15/06/2026. Vui lòng hoàn tất thanh toán.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 26/05 · 09:00</span><a class="nrow-link" href="#">Xem học phí <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button></div>
+            </div>
+
+            <div class="nrow" data-cat="event">
+              <div class="nrow-ico ico-tint-red"><i data-lucide="calendar-heart"></i></div>
+              <div class="nrow-body">
+                <div class="nrow-top"><span class="nrow-title">Sự kiện sắp diễn ra</span><span class="ntag event">Sự kiện</span></div>
+                <div class="nrow-sub">Ngày hội việc làm mùa Hè 2026 — 08/06 tại Hội trường A.</div>
+                <div class="nrow-meta"><span class="nrow-time"><i data-lucide="clock"></i> 25/05 · 15:40</span><a class="nrow-link" href="#">Đăng ký tham gia <i data-lucide="arrow-right"></i></a></div>
+              </div>
+              <div class="nrow-side"><button class="nrow-x" aria-label="Xóa"><i data-lucide="x"></i></button></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="empty" id="emptyState">
+          <i data-lucide="bell-off"></i>
+          <div>Không có thông báo nào trong mục này.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Sidebar collapse
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => {
+      appEl.classList.toggle('collapsed');
+      localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0');
+    });
+  }
+
+  // Profile dropdown
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => { e.stopPropagation(); profileMenu.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') profileMenu.classList.remove('open'); });
+  }
+
+  // Expandable nav groups
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
+    p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
+  });
+
+  // ---- Notifications logic ----
+  const catBar = document.getElementById('catBar');
+  const rows = Array.from(document.querySelectorAll('.nrow'));
+  const groups = Array.from(document.querySelectorAll('.notif-group'));
+  const emptyState = document.getElementById('emptyState');
+  const unreadLead = document.getElementById('unreadLead');
+  let activeCat = 'all';
+
+  function updateUnreadCount() {
+    const n = document.querySelectorAll('.nrow.unread').length;
+    unreadLead.textContent = n;
+    document.querySelectorAll('.nav-badge, .dot-badge').forEach(b => {
+      if (n > 0) { b.textContent = n; b.style.display = ''; } else { b.style.display = 'none'; }
+    });
+  }
+
+  function applyFilter() {
+    let anyVisible = false;
+    rows.forEach(r => {
+      const show = activeCat === 'all' || r.dataset.cat === activeCat;
+      r.classList.toggle('is-hidden', !show);
+      if (show) anyVisible = true;
+    });
+    // Hide groups that have no visible rows
+    groups.forEach(g => {
+      const hasVisible = g.querySelectorAll('.nrow:not(.is-hidden)').length > 0;
+      g.classList.toggle('is-hidden', !hasVisible);
+    });
+    emptyState.classList.toggle('show', !anyVisible);
+  }
+
+  // Category chips
+  catBar.querySelectorAll('.cat').forEach(c => {
+    c.addEventListener('click', () => {
+      catBar.querySelectorAll('.cat').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      activeCat = c.dataset.cat;
+      applyFilter();
+    });
+  });
+
+  // Click a row → mark read
+  rows.forEach(r => {
+    r.addEventListener('click', e => {
+      if (e.target.closest('.nrow-x') || e.target.closest('a')) return;
+      r.classList.remove('unread');
+      const dot = r.querySelector('.nrow-dot'); if (dot) dot.remove();
+      updateUnreadCount();
+    });
+    // Dismiss
+    const x = r.querySelector('.nrow-x');
+    if (x) x.addEventListener('click', e => {
+      e.stopPropagation();
+      r.remove();
+      applyFilter(); updateUnreadCount();
+    });
+  });
+
+  // Mark all read
+  document.getElementById('markAllBtn').addEventListener('click', () => {
+    document.querySelectorAll('.nrow.unread').forEach(r => {
+      r.classList.remove('unread');
+      const dot = r.querySelector('.nrow-dot'); if (dot) dot.remove();
+    });
+    updateUnreadCount();
+  });
+
+  updateUnreadCount();
+</script>
+</body>
+</html>

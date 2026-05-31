@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Khóa học của tôi — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  /* ---- My Courses page-specific ----------------------------------------- */
+  .courses-page { grid-template-columns: 1fr; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 20px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+  .head-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hchip { display: flex; align-items: center; gap: 9px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 12px; padding: 9px 14px; box-shadow: var(--shadow-card); }
+  .hchip .hc-ico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; }
+  .hchip .hc-ico svg { width: 17px; height: 17px; }
+  .hchip .hc-num { font-size: 17px; font-weight: 800; line-height: 1; }
+  .hchip .hc-lbl { font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tabs { display: inline-flex; background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: 11px; padding: 4px; gap: 3px; }
+  .tab { display: inline-flex; align-items: center; gap: 7px; border: none; background: transparent; font: inherit; font-size: 13px; font-weight: 600; color: hsl(var(--muted-foreground)); padding: 7px 15px; border-radius: 8px; cursor: pointer; transition: background .15s, color .15s, box-shadow .15s; }
+  .tab:hover { color: hsl(var(--foreground)); }
+  .tab.active { background: hsl(var(--card)); color: hsl(var(--foreground)); box-shadow: var(--shadow-card); }
+  .tab .cnt { font-size: 11px; font-weight: 700; background: hsl(var(--muted-foreground) / 0.16); color: hsl(var(--muted-foreground)); border-radius: 99px; padding: 1px 7px; }
+  .tab.active .cnt { background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); }
+  .course-search { display: flex; align-items: center; gap: 9px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 10px; padding: 9px 13px; min-width: 260px; }
+  .course-search svg { width: 17px; height: 17px; color: hsl(var(--muted-foreground)); }
+  .course-search input { border: none; outline: none; background: transparent; font: inherit; font-size: 13px; width: 100%; color: hsl(var(--foreground)); }
+
+  .cgrid { grid-template-columns: repeat(3, 1fr); }
+  .ccard-meta { display: flex; gap: 8px; padding: 11px 14px 0; }
+  .ccard-meta .m { flex: 1; display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: hsl(var(--muted-foreground)); }
+  .ccard-meta .m svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .ccard-foot { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-top: 1px solid hsl(var(--border)); margin-top: 11px; }
+  .ccard-foot .cstat { display: flex; align-items: center; gap: 7px; }
+  .ccard-foot .cstat .cs-ico { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; }
+  .ccard-foot .cstat .cs-ico svg { width: 15px; height: 15px; }
+  .ccard-foot .cstat .cs-num { font-size: 14px; font-weight: 800; line-height: 1; }
+  .ccard-foot .cstat .cs-lbl { font-size: 10.5px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+  .ccard-foot .spacer { flex: 1; }
+  .ccard-foot .btn { padding: 7px 13px; }
+  .course.is-hidden { display: none; }
+  .empty { display: none; text-align: center; padding: 60px 20px; color: hsl(var(--muted-foreground)); }
+  .empty.show { display: block; }
+  .empty svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: .5; }
+
+  @media (max-width: 1320px) { .cgrid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 680px)  { .cgrid { grid-template-columns: 1fr; } .course-search { min-width: 0; flex: 1; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item active" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group open" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">A</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content courses-page">
+      <div class="col-main">
+
+        <!-- Page header -->
+        <div class="page-head">
+          <div>
+            <h1>Khóa học của tôi</h1>
+            <p>Học kỳ II, năm học 2025 - 2026 · 6 môn đang theo học</p>
+          </div>
+          <div class="head-stats">
+            <div class="hchip"><div class="hc-ico ico-tint-indigo"><i data-lucide="book-open-check"></i></div><div><div class="hc-num">6</div><div class="hc-lbl">Môn học</div></div></div>
+            <div class="hchip"><div class="hc-ico ico-tint-blue"><i data-lucide="layers"></i></div><div><div class="hc-num">18</div><div class="hc-lbl">Tín chỉ</div></div></div>
+            <div class="hchip"><div class="hc-ico ico-tint-red"><i data-lucide="clipboard-list"></i></div><div><div class="hc-num">8</div><div class="hc-lbl">Bài tập</div></div></div>
+            <div class="hchip"><div class="hc-ico ico-tint-green"><i data-lucide="star"></i></div><div><div class="hc-num">7.8</div><div class="hc-lbl">Điểm TB</div></div></div>
+          </div>
+        </div>
+
+        <!-- Toolbar: filter tabs + search -->
+        <div class="toolbar">
+          <div class="tabs" id="courseTabs">
+            <button class="tab active" data-filter="all">Tất cả <span class="cnt">6</span></button>
+            <button class="tab" data-filter="learning">Đang học <span class="cnt">6</span></button>
+            <button class="tab" data-filter="done">Hoàn thành <span class="cnt">0</span></button>
+          </div>
+          <div class="course-search">
+            <i data-lucide="search"></i>
+            <input type="text" id="courseFilter" placeholder="Lọc theo tên môn hoặc giảng viên..." />
+          </div>
+        </div>
+
+        <!-- Courses grid -->
+        <div class="courses cgrid" id="courseGrid">
+
+          <div class="course" data-status="learning" data-name="lập trình hướng đối tượng nguyễn minh tuấn oop">
+            <div class="course-top violet">
+              <div class="course-emblem"><i data-lucide="code-xml"></i></div>
+              <div class="course-name">Lập trình hướng đối tượng</div>
+              <div class="course-gv">GV: Nguyễn Minh Tuấn</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ</span><span>66%</span></div>
+                <div class="course-track"><span style="width:66%"></span></div>
+              </div>
+            </div>
+            <div class="ccard-meta">
+              <div class="m"><i data-lucide="calendar"></i> Thứ 2 · 07:00</div>
+              <div class="m"><i data-lucide="layers"></i> 3 tín chỉ</div>
+            </div>
+            <div class="ccard-foot">
+              <div class="cstat"><div class="cs-ico ico-tint-amber"><i data-lucide="file-text"></i></div><div><div class="cs-num">2</div><div class="cs-lbl">Bài tập</div></div></div>
+              <div class="cstat"><div class="cs-ico ico-tint-green"><i data-lucide="star"></i></div><div><div class="cs-num">8.5</div><div class="cs-lbl">Điểm</div></div></div>
+              <div class="spacer"></div>
+              <button class="btn btn-outline-primary">Vào lớp</button>
+            </div>
+          </div>
+
+          <div class="course" data-status="learning" data-name="cơ sở dữ liệu trần thị hương database csdl">
+            <div class="course-top green">
+              <div class="course-emblem"><i data-lucide="database"></i></div>
+              <div class="course-name">Cơ sở dữ liệu</div>
+              <div class="course-gv">GV: Trần Thị Hương</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ</span><span>48%</span></div>
+                <div class="course-track"><span style="width:48%"></span></div>
+              </div>
+            </div>
+            <div class="ccard-meta">
+              <div class="m"><i data-lucide="calendar"></i> Thứ 3 · 09:30</div>
+              <div class="m"><i data-lucide="layers"></i> 3 tín chỉ</div>
+            </div>
+            <div class="ccard-foot">
+              <div class="cstat"><div class="cs-ico ico-tint-amber"><i data-lucide="file-text"></i></div><div><div class="cs-num">1</div><div class="cs-lbl">Bài tập</div></div></div>
+              <div class="cstat"><div class="cs-ico ico-tint-green"><i data-lucide="star"></i></div><div><div class="cs-num">7.0</div><div class="cs-lbl">Điểm</div></div></div>
+              <div class="spacer"></div>
+              <button class="btn btn-outline-primary">Vào lớp</button>
+            </div>
+          </div>
+
+          <div class="course" data-status="learning" data-name="cấu trúc dữ liệu và giải thuật lê văn nam algorithm">
+            <div class="course-top blue">
+              <div class="course-emblem"><i data-lucide="network"></i></div>
+              <div class="course-name">Cấu trúc dữ liệu và giải thuật</div>
+              <div class="course-gv">GV: Lê Văn Nam</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ</span><span>72%</span></div>
+                <div class="course-track"><span style="width:72%"></span></div>
+              </div>
+            </div>
+            <div class="ccard-meta">
+              <div class="m"><i data-lucide="calendar"></i> Thứ 4 · 13:00</div>
+              <div class="m"><i data-lucide="layers"></i> 4 tín chỉ</div>
+            </div>
+            <div class="ccard-foot">
+              <div class="cstat"><div class="cs-ico ico-tint-amber"><i data-lucide="file-text"></i></div><div><div class="cs-num">0</div><div class="cs-lbl">Bài tập</div></div></div>
+              <div class="cstat"><div class="cs-ico ico-tint-green"><i data-lucide="star"></i></div><div><div class="cs-num">8.0</div><div class="cs-lbl">Điểm</div></div></div>
+              <div class="spacer"></div>
+              <button class="btn btn-outline-primary">Vào lớp</button>
+            </div>
+          </div>
+
+          <div class="course" data-status="learning" data-name="lập trình java phạm quốc bảo">
+            <div class="course-top amber">
+              <div class="course-emblem"><i data-lucide="coffee"></i></div>
+              <div class="course-name">Lập trình Java</div>
+              <div class="course-gv">GV: Phạm Quốc Bảo</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ</span><span>30%</span></div>
+                <div class="course-track"><span style="width:30%"></span></div>
+              </div>
+            </div>
+            <div class="ccard-meta">
+              <div class="m"><i data-lucide="calendar"></i> Thứ 5 · 07:00</div>
+              <div class="m"><i data-lucide="layers"></i> 3 tín chỉ</div>
+            </div>
+            <div class="ccard-foot">
+              <div class="cstat"><div class="cs-ico ico-tint-amber"><i data-lucide="file-text"></i></div><div><div class="cs-num">3</div><div class="cs-lbl">Bài tập</div></div></div>
+              <div class="cstat"><div class="cs-ico ico-tint-green"><i data-lucide="star"></i></div><div><div class="cs-num">6.5</div><div class="cs-lbl">Điểm</div></div></div>
+              <div class="spacer"></div>
+              <button class="btn btn-outline-primary">Vào lớp</button>
+            </div>
+          </div>
+
+          <div class="course" data-status="learning" data-name="tiếng anh học thuật đỗ thu trang english">
+            <div class="course-top teal">
+              <div class="course-emblem"><i data-lucide="book-open"></i></div>
+              <div class="course-name">Tiếng Anh học thuật</div>
+              <div class="course-gv">GV: Đỗ Thu Trang</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ</span><span>60%</span></div>
+                <div class="course-track"><span style="width:60%"></span></div>
+              </div>
+            </div>
+            <div class="ccard-meta">
+              <div class="m"><i data-lucide="calendar"></i> Thứ 6 · 09:30</div>
+              <div class="m"><i data-lucide="layers"></i> 2 tín chỉ</div>
+            </div>
+            <div class="ccard-foot">
+              <div class="cstat"><div class="cs-ico ico-tint-amber"><i data-lucide="file-text"></i></div><div><div class="cs-num">1</div><div class="cs-lbl">Bài tập</div></div></div>
+              <div class="cstat"><div class="cs-ico ico-tint-green"><i data-lucide="star"></i></div><div><div class="cs-num">9.0</div><div class="cs-lbl">Điểm</div></div></div>
+              <div class="spacer"></div>
+              <button class="btn btn-outline-primary">Vào lớp</button>
+            </div>
+          </div>
+
+          <div class="course" data-status="learning" data-name="claude code for backend hoàng anh khoa">
+            <div class="course-top rust">
+              <div class="course-emblem"><i data-lucide="terminal"></i></div>
+              <div class="course-name">Claude Code for BackEnd</div>
+              <div class="course-gv">GV: Hoàng Anh Khoa</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ</span><span>15%</span></div>
+                <div class="course-track"><span style="width:15%"></span></div>
+              </div>
+            </div>
+            <div class="ccard-meta">
+              <div class="m"><i data-lucide="calendar"></i> Thứ 7 · 13:00</div>
+              <div class="m"><i data-lucide="layers"></i> 3 tín chỉ</div>
+            </div>
+            <div class="ccard-foot">
+              <div class="cstat"><div class="cs-ico ico-tint-amber"><i data-lucide="file-text"></i></div><div><div class="cs-num">1</div><div class="cs-lbl">Bài tập</div></div></div>
+              <div class="cstat"><div class="cs-ico ico-tint-green"><i data-lucide="star"></i></div><div><div class="cs-num">—</div><div class="cs-lbl">Điểm</div></div></div>
+              <div class="spacer"></div>
+              <button class="btn btn-outline-primary">Vào lớp</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="empty" id="emptyState">
+          <i data-lucide="search-x"></i>
+          <div>Không tìm thấy môn học phù hợp.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Sidebar collapse
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => {
+      appEl.classList.toggle('collapsed');
+      localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0');
+    });
+  }
+
+  // Profile dropdown
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => { e.stopPropagation(); profileMenu.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') profileMenu.classList.remove('open'); });
+  }
+
+  // Expandable nav groups
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
+    p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
+  });
+
+  // ---- Filter: tabs + search ----
+  const grid = document.getElementById('courseGrid');
+  const cards = Array.from(grid.querySelectorAll('.course'));
+  const tabs = document.getElementById('courseTabs');
+  const searchInput = document.getElementById('courseFilter');
+  const emptyState = document.getElementById('emptyState');
+  let activeFilter = 'all';
+
+  function applyFilter() {
+    const q = searchInput.value.trim().toLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const matchStatus = activeFilter === 'all' || card.dataset.status === activeFilter;
+      const matchSearch = !q || card.dataset.name.includes(q);
+      const show = matchStatus && matchSearch;
+      card.classList.toggle('is-hidden', !show);
+      if (show) visible++;
+    });
+    emptyState.classList.toggle('show', visible === 0);
+  }
+
+  tabs.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      activeFilter = t.dataset.filter;
+      applyFilter();
+    });
+  });
+  searchInput.addEventListener('input', applyFilter);
+</script>
+</body>
+</html>

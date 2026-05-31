@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lịch học — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  /* ---- Calendar page-specific ------------------------------------------- */
+  .cal-page { grid-template-columns: 1fr; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 20px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+
+  .week-nav { display: flex; align-items: center; gap: 12px; }
+  .week-nav .wk-label { font-size: 14px; font-weight: 700; min-width: 168px; text-align: center; }
+  .week-nav .sched-nav { display: inline-flex; gap: 4px; }
+  .week-nav .sched-nav button { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); border-radius: 9px; cursor: pointer; color: hsl(var(--foreground)); transition: background .15s; }
+  .week-nav .sched-nav button:hover { background: hsl(var(--muted)); }
+  .week-nav .btn.today-btn { padding: 8px 15px; }
+
+  /* Timetable grid */
+  .cal-wrap { padding: 0; overflow: hidden; }
+  .cal-scroll { overflow-x: auto; }
+  .cal { display: grid; grid-template-columns: 76px repeat(6, minmax(150px, 1fr)); grid-template-rows: 56px repeat(10, 62px); min-width: 880px; }
+  .cal-corner { grid-row: 1; grid-column: 1; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); }
+  .cal-dayhead { grid-row: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); }
+  .cal-dayhead .dh-day { font-size: 13px; font-weight: 700; }
+  .cal-dayhead .dh-date { font-size: 11.5px; color: hsl(var(--muted-foreground)); }
+  .cal-dayhead.is-today { background: hsl(var(--primary) / 0.06); }
+  .cal-dayhead.is-today .dh-day { color: hsl(var(--primary)); }
+  .cal-dayhead.is-today .dh-date { color: hsl(var(--primary)); font-weight: 600; }
+
+  .cal-time { grid-column: 1; display: flex; justify-content: flex-end; padding: 6px 10px 0 0; font-size: 11.5px; font-weight: 600; color: hsl(var(--muted-foreground)); border-right: 1px solid hsl(var(--border)); }
+  .cal-col { grid-row: 2 / span 10; border-right: 1px solid hsl(var(--border)); background-image: repeating-linear-gradient(to bottom, transparent, transparent 61px, hsl(var(--border)) 61px, hsl(var(--border)) 62px); }
+  .cal-col.is-today { background-color: hsl(var(--primary) / 0.035); }
+
+  /* Event block */
+  .ev { margin: 4px 5px; border-radius: 11px; padding: 9px 11px; color: #fff; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 4px; box-shadow: var(--shadow-card); cursor: pointer; transition: transform .1s ease, box-shadow .12s ease; z-index: 2; }
+  .ev:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+  .ev .ev-time { font-size: 11px; font-weight: 700; opacity: .92; }
+  .ev .ev-title { font-size: 13px; font-weight: 700; line-height: 1.22; }
+  .ev .ev-room { font-size: 11px; opacity: .92; display: flex; align-items: center; gap: 4px; margin-top: auto; }
+  .ev .ev-room svg { width: 12px; height: 12px; }
+  .ev.violet { background: linear-gradient(155deg, hsl(262 83% 62%), hsl(262 83% 50%)); }
+  .ev.green  { background: linear-gradient(155deg, hsl(142 65% 48%), hsl(142 71% 38%)); }
+  .ev.blue   { background: linear-gradient(155deg, hsl(221 83% 58%), hsl(221 83% 46%)); }
+  .ev.amber  { background: linear-gradient(155deg, hsl(36 95% 56%), hsl(28 92% 50%)); }
+  .ev.teal   { background: linear-gradient(155deg, hsl(172 60% 44%), hsl(174 66% 34%)); }
+  .ev.rust   { background: linear-gradient(155deg, hsl(16 60% 60%), hsl(14 52% 48%)); }
+
+  /* Legend */
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+  .lg { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: hsl(var(--foreground)); }
+  .lg .sw { width: 12px; height: 12px; border-radius: 4px; }
+  .lg .sw.violet { background: hsl(262 83% 56%); }
+  .lg .sw.green  { background: hsl(142 68% 43%); }
+  .lg .sw.blue   { background: hsl(221 83% 52%); }
+  .lg .sw.amber  { background: hsl(32 93% 53%); }
+  .lg .sw.teal   { background: hsl(173 63% 39%); }
+  .lg .sw.rust   { background: hsl(15 56% 54%); }
+
+  @media (max-width: 680px) {
+    .page-head { align-items: flex-start; }
+    .week-nav .wk-label { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item active" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group open" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">A</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content cal-page">
+      <div class="col-main">
+
+        <!-- Page header -->
+        <div class="page-head">
+          <div>
+            <h1>Lịch học</h1>
+            <p>Học kỳ II, năm học 2025 - 2026 · Thời khóa biểu tuần</p>
+          </div>
+          <div class="week-nav">
+            <button class="btn today-btn">Tuần này</button>
+            <div class="wk-label">25/05 – 30/05/2026</div>
+            <div class="sched-nav">
+              <button aria-label="Tuần trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+              <button aria-label="Tuần sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timetable -->
+        <div class="card cal-wrap">
+          <div class="cal-scroll">
+            <div class="cal">
+
+              <!-- Header row -->
+              <div class="cal-corner"></div>
+              <div class="cal-dayhead" style="grid-column:2"><div class="dh-day">Thứ 2</div><div class="dh-date">25/05</div></div>
+              <div class="cal-dayhead" style="grid-column:3"><div class="dh-day">Thứ 3</div><div class="dh-date">26/05</div></div>
+              <div class="cal-dayhead" style="grid-column:4"><div class="dh-day">Thứ 4</div><div class="dh-date">27/05</div></div>
+              <div class="cal-dayhead" style="grid-column:5"><div class="dh-day">Thứ 5</div><div class="dh-date">28/05</div></div>
+              <div class="cal-dayhead is-today" style="grid-column:6"><div class="dh-day">Thứ 6</div><div class="dh-date">29/05</div></div>
+              <div class="cal-dayhead" style="grid-column:7"><div class="dh-day">Thứ 7</div><div class="dh-date">30/05</div></div>
+
+              <!-- Time labels (col 1) -->
+              <div class="cal-time" style="grid-row:2">07:00</div>
+              <div class="cal-time" style="grid-row:3">08:00</div>
+              <div class="cal-time" style="grid-row:4">09:00</div>
+              <div class="cal-time" style="grid-row:5">10:00</div>
+              <div class="cal-time" style="grid-row:6">11:00</div>
+              <div class="cal-time" style="grid-row:7">12:00</div>
+              <div class="cal-time" style="grid-row:8">13:00</div>
+              <div class="cal-time" style="grid-row:9">14:00</div>
+              <div class="cal-time" style="grid-row:10">15:00</div>
+              <div class="cal-time" style="grid-row:11">16:00</div>
+
+              <!-- Day background columns -->
+              <div class="cal-col" style="grid-column:2"></div>
+              <div class="cal-col" style="grid-column:3"></div>
+              <div class="cal-col" style="grid-column:4"></div>
+              <div class="cal-col" style="grid-column:5"></div>
+              <div class="cal-col is-today" style="grid-column:6"></div>
+              <div class="cal-col" style="grid-column:7"></div>
+
+              <!-- Events -->
+              <!-- Thứ 2: OOP 07:00-09:00 -->
+              <div class="ev violet" style="grid-column:2; grid-row:2 / span 2">
+                <div class="ev-time">07:00 – 09:00</div>
+                <div class="ev-title">Lập trình hướng đối tượng</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> A2-201</div>
+              </div>
+
+              <!-- Thứ 3: CSDL 09:00-11:00 -->
+              <div class="ev green" style="grid-column:3; grid-row:4 / span 2">
+                <div class="ev-time">09:00 – 11:00</div>
+                <div class="ev-title">Cơ sở dữ liệu</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> B1-105</div>
+              </div>
+
+              <!-- Thứ 4: CTDL&GT 13:00-15:00 -->
+              <div class="ev blue" style="grid-column:4; grid-row:8 / span 2">
+                <div class="ev-time">13:00 – 15:00</div>
+                <div class="ev-title">Cấu trúc dữ liệu và giải thuật</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> A3-302</div>
+              </div>
+
+              <!-- Thứ 5: Java 07:00-09:00 -->
+              <div class="ev amber" style="grid-column:5; grid-row:2 / span 2">
+                <div class="ev-time">07:00 – 09:00</div>
+                <div class="ev-title">Lập trình Java</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> Lab CNTT-201</div>
+              </div>
+
+              <!-- Thứ 6: Tiếng Anh 09:00-11:00 -->
+              <div class="ev teal" style="grid-column:6; grid-row:4 / span 2">
+                <div class="ev-time">09:00 – 11:00</div>
+                <div class="ev-title">Tiếng Anh học thuật</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> NN-110</div>
+              </div>
+
+              <!-- Thứ 7: Claude Code 13:00-15:00 -->
+              <div class="ev rust" style="grid-column:7; grid-row:8 / span 2">
+                <div class="ev-time">13:00 – 15:00</div>
+                <div class="ev-title">Claude Code for BackEnd</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> Lab CNTT-301</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="cal-legend">
+          <div class="lg"><span class="sw violet"></span> Lập trình hướng đối tượng</div>
+          <div class="lg"><span class="sw green"></span> Cơ sở dữ liệu</div>
+          <div class="lg"><span class="sw blue"></span> Cấu trúc dữ liệu và giải thuật</div>
+          <div class="lg"><span class="sw amber"></span> Lập trình Java</div>
+          <div class="lg"><span class="sw teal"></span> Tiếng Anh học thuật</div>
+          <div class="lg"><span class="sw rust"></span> Claude Code for BackEnd</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Sidebar collapse
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => {
+      appEl.classList.toggle('collapsed');
+      localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0');
+    });
+  }
+
+  // Profile dropdown
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => { e.stopPropagation(); profileMenu.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') profileMenu.classList.remove('open'); });
+  }
+
+  // Expandable nav groups
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
+    p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
+  });
+</script>
+</body>
+</html>

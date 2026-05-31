@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hỗ trợ — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  /* ---- Support page ----------------------------------------------------- */
+  .support-page { grid-template-columns: 1fr var(--rail-w); align-items: start; }
+  .page-head { margin-bottom: 22px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+
+  /* Hero search */
+  .help-hero { background: linear-gradient(115deg, hsl(243 75% 59%), hsl(255 70% 60%)); border-radius: var(--radius); padding: 30px 28px; margin-bottom: 20px; color: #fff; box-shadow: var(--shadow-pop); }
+  .help-hero h2 { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; }
+  .help-hero p { font-size: 13px; opacity: .9; margin-top: 5px; }
+  .hero-search { display: flex; align-items: center; gap: 11px; background: #fff; border-radius: 12px; padding: 13px 16px; margin-top: 18px; }
+  .hero-search svg { width: 19px; height: 19px; color: hsl(var(--muted-foreground)); flex-shrink: 0; }
+  .hero-search input { border: none; outline: none; background: transparent; font: inherit; font-size: 14.5px; width: 100%; color: hsl(var(--foreground)); }
+  .hero-tags { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .hero-tag { font-size: 12px; font-weight: 600; color: #fff; background: hsl(0 0% 100% / 0.16); border-radius: 99px; padding: 6px 13px; cursor: pointer; transition: background .12s; }
+  .hero-tag:hover { background: hsl(0 0% 100% / 0.26); }
+
+  /* Quick-help categories */
+  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+  .cat-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-card); cursor: pointer; transition: border-color .12s, box-shadow .12s, transform .12s; }
+  .cat-card:hover { border-color: hsl(var(--primary) / 0.4); box-shadow: var(--shadow-pop); transform: translateY(-2px); }
+  .cat-ico { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 13px; }
+  .cat-ico svg { width: 21px; height: 21px; }
+  .cat-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .cat-card p { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 5px; line-height: 1.5; }
+  .cat-card .cat-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: hsl(var(--primary)); margin-top: 11px; }
+  .cat-card .cat-link svg { width: 13px; height: 13px; }
+
+  /* FAQ accordion */
+  .faq { display: flex; flex-direction: column; }
+  .faq-item { border-bottom: 1px solid hsl(var(--border)); }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 16px 0; font: inherit; font-size: 14px; font-weight: 600; color: hsl(var(--foreground)); }
+  .faq-q .faq-caret { margin-left: auto; flex-shrink: 0; transition: transform .2s; color: hsl(var(--muted-foreground)); }
+  .faq-q .faq-caret svg { width: 18px; height: 18px; }
+  .faq-q .faq-num { width: 26px; height: 26px; border-radius: 8px; background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); font-size: 12px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+  .faq-item.open .faq-caret { transform: rotate(180deg); }
+  .faq-item.open .faq-num { background: hsl(var(--primary)); color: #fff; }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
+  .faq-a-inner { padding: 0 0 18px 38px; font-size: 13.5px; color: hsl(var(--muted-foreground)); line-height: 1.65; }
+
+  /* Rail */
+  .rail { display: flex; flex-direction: column; gap: 16px; }
+  .contact-card .cc-row { display: flex; align-items: center; gap: 13px; padding: 12px 0; border-bottom: 1px solid hsl(var(--border)); }
+  .contact-card .cc-row:last-child { border-bottom: none; }
+  .cc-ico { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; flex-shrink: 0; }
+  .cc-ico svg { width: 19px; height: 19px; }
+  .cc-body { flex: 1; min-width: 0; }
+  .cc-t { font-size: 13px; font-weight: 700; }
+  .cc-s { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+  .cc-arr { color: hsl(var(--muted-foreground)); flex-shrink: 0; }
+  .cc-arr svg { width: 16px; height: 16px; }
+
+  .status-card .st-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; }
+  .st-dot { width: 9px; height: 9px; border-radius: 99px; flex-shrink: 0; }
+  .st-dot.ok { background: hsl(142 71% 42%); box-shadow: 0 0 0 3px hsl(142 71% 42% / 0.18); }
+  .st-dot.warn { background: hsl(var(--warning)); box-shadow: 0 0 0 3px hsl(var(--warning) / 0.18); }
+  .st-name { font-weight: 500; }
+  .st-state { margin-left: auto; font-size: 12px; font-weight: 600; color: hsl(var(--muted-foreground)); }
+
+  .ticket-card { background: hsl(var(--muted) / 0.5); border: 1px solid hsl(var(--border)); }
+  .ticket-card .tk-t { font-size: 14px; font-weight: 700; }
+  .ticket-card .tk-s { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 4px; line-height: 1.5; }
+
+  @media (max-width: 1320px) { .support-page { grid-template-columns: 1fr; } .rail { order: 0; } }
+  @media (max-width: 760px) { .cat-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item active" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">NT</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content support-page">
+
+      <div class="col-main">
+
+        <!-- Page header -->
+        <div class="page-head">
+          <h1>Trung tâm hỗ trợ</h1>
+          <p>Tìm câu trả lời nhanh hoặc liên hệ các phòng ban của trường</p>
+        </div>
+
+        <!-- Hero search -->
+        <div class="help-hero">
+          <h2>Chúng tôi có thể giúp gì cho bạn?</h2>
+          <p>Tra cứu hướng dẫn, câu hỏi thường gặp và các kênh liên hệ.</p>
+          <div class="hero-search">
+            <i data-lucide="search"></i>
+            <input type="text" id="faqSearch" placeholder="Nhập câu hỏi của bạn, ví dụ: cách xem điểm, gia hạn học phí..." />
+          </div>
+          <div class="hero-tags">
+            <span class="hero-tag">Quên mật khẩu</span>
+            <span class="hero-tag">Xem điểm thi</span>
+            <span class="hero-tag">Gia hạn học phí</span>
+            <span class="hero-tag">Đăng ký môn học</span>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="cat-grid">
+          <div class="cat-card">
+            <div class="cat-ico ico-tint-indigo"><i data-lucide="user-cog"></i></div>
+            <h3>Tài khoản &amp; đăng nhập</h3>
+            <p>Đặt lại mật khẩu, cập nhật thông tin cá nhân, bảo mật tài khoản.</p>
+            <span class="cat-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
+          </div>
+          <div class="cat-card">
+            <div class="cat-ico ico-tint-green"><i data-lucide="book-open"></i></div>
+            <h3>Học tập &amp; điểm số</h3>
+            <p>Đăng ký môn, nộp bài tập, tra cứu điểm và lịch thi.</p>
+            <span class="cat-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
+          </div>
+          <div class="cat-card">
+            <div class="cat-ico ico-tint-amber"><i data-lucide="wallet"></i></div>
+            <h3>Học phí &amp; thanh toán</h3>
+            <p>Nộp học phí, gia hạn, miễn giảm, học bổng và biên lai.</p>
+            <span class="cat-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Câu hỏi thường gặp</h2>
+            <span class="badge blue">6 câu hỏi</span>
+          </div>
+          <div class="faq" id="faq">
+
+            <div class="faq-item open">
+              <button class="faq-q"><span class="faq-num">1</span> Tôi quên mật khẩu đăng nhập, phải làm sao?</button>
+              <div class="faq-a">
+                <div class="faq-a-inner">Tại màn hình đăng nhập, bấm "Quên mật khẩu" và nhập email sinh viên của bạn. Hệ thống sẽ gửi liên kết đặt lại mật khẩu trong vòng vài phút. Nếu không nhận được email, hãy kiểm tra mục Spam hoặc liên hệ Phòng CNTT.</div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-q"><span class="faq-num">2</span> Làm thế nào để xem điểm thi cuối kỳ?</button>
+              <div class="faq-a">
+                <div class="faq-a-inner">Vào mục "Kết quả học tập" ở thanh điều hướng bên trái. Điểm thường được công bố trong vòng 2 tuần sau ngày thi. Bạn có thể lọc theo học kỳ và tải bảng điểm dạng PDF.</div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-q"><span class="faq-num">3</span> Tôi có thể gia hạn thời gian nộp học phí không?</button>
+              <div class="faq-a">
+                <div class="faq-a-inner">Sinh viên có hoàn cảnh khó khăn có thể nộp đơn xin gia hạn tại Phòng Tài chính – Kế toán trước hạn nộp ít nhất 5 ngày làm việc. Đơn cần có xác nhận của cố vấn học tập.</div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-q"><span class="faq-num">4</span> Số tín chỉ tối thiểu và tối đa mỗi học kỳ là bao nhiêu?</button>
+              <div class="faq-a">
+                <div class="faq-a-inner">Mỗi học kỳ, sinh viên cần đăng ký tối thiểu 12 tín chỉ và tối đa 24 tín chỉ. Sinh viên thuộc diện cảnh báo học vụ sẽ bị giới hạn ở mức thấp hơn theo quy định.</div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-q"><span class="faq-num">5</span> Tôi nộp nhầm bài tập, có thể nộp lại không?</button>
+              <div class="faq-a">
+                <div class="faq-a-inner">Nếu thời hạn nộp vẫn còn, bạn có thể tải lên phiên bản mới — hệ thống tự động lưu bản nộp gần nhất. Sau khi hết hạn, vui lòng liên hệ trực tiếp giảng viên phụ trách học phần.</div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-q"><span class="faq-num">6</span> Làm sao để đăng ký học lại / học cải thiện?</button>
+              <div class="faq-a">
+                <div class="faq-a-inner">Trong đợt đăng ký môn học, vào mục "Đăng ký môn học" và tìm học phần cần học lại. Học phần đã đạt nhưng muốn cải thiện điểm sẽ được đánh dấu riêng; điểm cao nhất sẽ được tính vào điểm trung bình tích lũy.</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="cart-empty" id="faqEmpty" style="display:none;text-align:center;padding:24px;color:hsl(var(--muted-foreground));font-size:13px;">Không tìm thấy câu hỏi phù hợp. Hãy thử từ khóa khác hoặc gửi yêu cầu hỗ trợ.</div>
+        </div>
+
+      </div>
+
+      <!-- =============================== RAIL =============================== -->
+      <aside class="rail">
+
+        <!-- Contact channels -->
+        <div class="card card-pad contact-card">
+          <div class="section-head" style="margin-bottom:6px;">
+            <h2>Liên hệ trực tiếp</h2>
+          </div>
+          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
+            <div class="cc-ico ico-tint-green"><i data-lucide="message-circle"></i></div>
+            <div class="cc-body"><div class="cc-t">Chat với AI Assistant</div><div class="cc-s">Phản hồi tức thì · 24/7</div></div>
+            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
+          </a>
+          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
+            <div class="cc-ico ico-tint-indigo"><i data-lucide="phone"></i></div>
+            <div class="cc-body"><div class="cc-t">Tổng đài sinh viên</div><div class="cc-s">(024) 3754 7461 · 8:00–17:00</div></div>
+            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
+          </a>
+          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
+            <div class="cc-ico ico-tint-blue"><i data-lucide="mail"></i></div>
+            <div class="cc-body"><div class="cc-t">Email hỗ trợ</div><div class="cc-s">hotro@lms.edu.vn</div></div>
+            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
+          </a>
+          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
+            <div class="cc-ico ico-tint-amber"><i data-lucide="map-pin"></i></div>
+            <div class="cc-body"><div class="cc-t">Văn phòng một cửa</div><div class="cc-s">Tầng 1, Nhà G2 · Phòng 102</div></div>
+            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
+          </a>
+        </div>
+
+        <!-- System status -->
+        <div class="card card-pad status-card">
+          <div class="section-head" style="margin-bottom:6px;">
+            <h2>Tình trạng hệ thống</h2>
+          </div>
+          <div class="st-row"><span class="st-dot ok"></span><span class="st-name">Cổng đăng nhập</span><span class="st-state">Hoạt động</span></div>
+          <div class="st-row"><span class="st-dot ok"></span><span class="st-name">Hệ thống đăng ký môn</span><span class="st-state">Hoạt động</span></div>
+          <div class="st-row"><span class="st-dot ok"></span><span class="st-name">Thanh toán học phí</span><span class="st-state">Hoạt động</span></div>
+          <div class="st-row"><span class="st-dot warn"></span><span class="st-name">Tra cứu điểm</span><span class="st-state">Bảo trì 23:00</span></div>
+        </div>
+
+        <!-- Submit ticket -->
+        <div class="card card-pad ticket-card">
+          <div class="tk-t">Chưa tìm được câu trả lời?</div>
+          <div class="tk-s">Gửi yêu cầu hỗ trợ và đội ngũ của trường sẽ phản hồi trong vòng 1 ngày làm việc.</div>
+          <button class="btn primary" id="ticketBtn" style="margin-top:13px;width:100%;justify-content:center;"><i data-lucide="send" class="icon-sm"></i> Gửi yêu cầu hỗ trợ</button>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Sidebar collapse
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => {
+      appEl.classList.toggle('collapsed');
+      localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0');
+    });
+  }
+
+  // Profile dropdown
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => { e.stopPropagation(); profileMenu.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') profileMenu.classList.remove('open'); });
+  }
+
+  // Expandable nav groups
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
+    p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
+  });
+
+  // FAQ accordion
+  const faq = document.getElementById('faq');
+  faq.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    function setH() { a.style.maxHeight = item.classList.contains('open') ? a.scrollHeight + 'px' : '0'; }
+    if (item.classList.contains('open')) setH();
+    q.addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      faq.querySelectorAll('.faq-item').forEach(o => { o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight = '0'; });
+      if (!wasOpen) { item.classList.add('open'); setH(); }
+    });
+  });
+
+  // FAQ search
+  const faqSearch = document.getElementById('faqSearch');
+  const faqEmpty = document.getElementById('faqEmpty');
+  faqSearch.addEventListener('input', () => {
+    const query = faqSearch.value.trim().toLowerCase();
+    let visible = 0;
+    faq.querySelectorAll('.faq-item').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      const show = !query || text.includes(query);
+      item.style.display = show ? 'block' : 'none';
+      if (show) visible++;
+    });
+    faqEmpty.style.display = visible ? 'none' : 'block';
+  });
+
+  // Hero tags fill search
+  document.querySelectorAll('.hero-tag').forEach(t => {
+    t.addEventListener('click', () => {
+      faqSearch.value = t.textContent;
+      faqSearch.dispatchEvent(new Event('input'));
+      faqSearch.focus();
+    });
+  });
+
+  document.getElementById('ticketBtn').addEventListener('click', () => {
+    alert('Biểu mẫu gửi yêu cầu hỗ trợ sẽ mở ở đây.');
+  });
+</script>
+</body>
+</html>

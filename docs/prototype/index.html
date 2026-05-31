@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Student Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item active" href="#" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group open" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">A</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ---------------------- MAIN COLUMN ---------------------- -->
+      <div class="col-main">
+
+        <div class="greeting card">
+          <div class="greeting-text">
+            <h1>Xin chào, Ngô Thanh Tùng!</h1>
+            <p>Học kỳ II, năm học 2025 - 2026</p>
+          </div>
+          <div class="greeting-date">
+            <i data-lucide="calendar-check-2" class="icon"></i>
+            <div>
+              <div class="gd-label">Hôm nay</div>
+              <div class="gd-value" id="gdValue">Thứ 6, 29/05/2026</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico indigo"><i data-lucide="trending-up" class="icon-lg"></i></div>
+              <svg class="spark" viewBox="0 0 64 34" fill="none">
+                <polyline points="0,28 12,22 22,25 34,14 44,17 56,6 64,9" stroke="hsl(var(--primary))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-label" style="margin-top:14px">GPA hiện tại</div>
+            <div class="stat-value">3.45</div>
+            <a class="link" href="results.html" style="margin-top:10px;display:inline-flex">Xem chi tiết <i data-lucide="arrow-right" class="icon-sm"></i></a>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico green"><i data-lucide="database" class="icon-lg"></i></div>
+              <i data-lucide="book-marked" class="icon-lg" style="color:hsl(var(--muted-foreground));opacity:.6"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Tín chỉ tích lũy</div>
+            <div class="stat-value">96 <span class="of">/ 140</span></div>
+            <div class="stat-foot" style="margin-bottom:5px">Hoàn thành 68.6%</div>
+            <div class="progress"><span style="width:68.6%"></span></div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico blue"><i data-lucide="layers" class="icon-lg"></i></div>
+              <i data-lucide="notebook-pen" class="icon-lg" style="color:hsl(var(--muted-foreground));opacity:.6"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Tín chỉ học kỳ này</div>
+            <div class="stat-value">18</div>
+            <div class="stat-foot">6 môn học</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico amber"><i data-lucide="clipboard-list" class="icon-lg"></i></div>
+              <i data-lucide="alarm-clock" class="icon-lg" style="color:hsl(var(--warning));opacity:.7"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Việc cần làm</div>
+            <div class="stat-value" style="color:hsl(var(--danger))">4</div>
+            <div class="stat-foot">Bài tập sắp đến hạn</div>
+          </div>
+        </div>
+
+        <!-- Announcement banner -->
+        <div class="banner" id="banner">
+          <div class="banner-ico"><i data-lucide="megaphone" class="icon"></i></div>
+          <div>
+            <h3>Thông báo quan trọng</h3>
+            <p>Sinh viên khóa K21 đăng ký học phần học kỳ III từ ngày 20/05 – 30/05/2026. Xem chi tiết tại đây</p>
+          </div>
+          <button class="banner-x" id="bannerClose" aria-label="Đóng"><i data-lucide="x" class="icon"></i></button>
+        </div>
+
+        <!-- Todos + Schedule -->
+        <div class="two-col">
+          <!-- Việc cần làm hôm nay -->
+          <div class="card card-pad">
+            <div class="section-head">
+              <h2>Việc cần làm hôm nay</h2>
+              <a class="link" href="#">Xem tất cả</a>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-red"><i data-lucide="file-question" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Nộp Assignment OOP – Bài tập lớn chương 3</div>
+                <div class="task-sub">Lập trình hướng đối tượng</div>
+              </div>
+              <div class="task-due"><span class="badge red">Hạn hôm nay</span><div class="when">23:59</div></div>
+              <button class="btn primary">Nộp bài</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-red"><i data-lucide="terminal" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Nộp Lab 1 – Build REST API với Claude Code</div>
+                <div class="task-sub">Claude Code for BackEnd</div>
+              </div>
+              <div class="task-due"><span class="badge amber">Còn 4 giờ</span><div class="when">22:00</div></div>
+              <button class="btn primary">Nộp bài</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-amber"><i data-lucide="help-circle" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Quiz Java - Quiz 2</div>
+                <div class="task-sub">Lập trình Java</div>
+              </div>
+              <div class="task-due"><span class="badge amber">Còn 2 giờ</span><div class="when">20:00</div></div>
+              <button class="btn">Làm quiz</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-blue"><i data-lucide="book-open" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Đọc tài liệu trước buổi học</div>
+                <div class="task-sub">Cơ sở dữ liệu</div>
+              </div>
+              <div class="task-due"><span class="badge blue">Ngày mai</span><div class="when">21/05</div></div>
+              <button class="btn">Xem ngay</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-indigo"><i data-lucide="calendar-clock" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Lịch thi giữa kỳ CTDL&amp;GT</div>
+                <div class="task-sub">Cấu trúc dữ liệu và giải thuật</div>
+              </div>
+              <div class="task-due"><span class="badge blue">Ngày mai</span><div class="when">21/05</div></div>
+              <button class="btn">Xem lịch thi</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-green"><i data-lucide="circle-dollar-sign" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Đóng học phí học kỳ II</div>
+                <div class="task-sub">Phòng Tài chính</div>
+              </div>
+              <div class="task-due"><span class="badge green">Còn 5 ngày</span><div class="when">25/05</div></div>
+              <button class="btn">Thanh toán</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-indigo"><i data-lucide="folder-git-2" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Đọc yêu cầu đồ án cuối kỳ</div>
+                <div class="task-sub">Lập trình hướng đối tượng</div>
+              </div>
+              <div class="task-due"><span class="badge green">Còn 20 ngày</span><div class="when">09/06</div></div>
+              <button class="btn">Xem ngay</button>
+            </div>
+          </div>
+
+          <!-- Lịch học hôm nay -->
+          <div class="card card-pad">
+            <div class="sched-head">
+              <div>
+                <h2 style="margin:0;font-size:16.5px;font-weight:700">Lịch học hôm nay</h2>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="day">Thứ 6, 29/05/2026</span>
+                <div class="sched-nav">
+                  <button aria-label="Trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+                  <button aria-label="Sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot live">
+              <div class="slot-time">08:00 - 09:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Cơ sở dữ liệu</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> A1-201</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(142 71% 36%)">Đang diễn ra</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot">
+              <div class="slot-time">10:00 - 11:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Lập trình hướng đối tượng</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> B1-302</div>
+                  </div>
+                  <button class="btn btn-outline-primary">Tham gia online</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot">
+              <div class="slot-time">13:00 - 14:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Tiếng Anh học thuật</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> C2-405</div>
+                  </div>
+                  <button class="btn">Xem chi tiết</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sched-subhead"><span>NGÀY MAI · THỨ 7, 30/05/2026</span></div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">07:30 - 09:20</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Cấu trúc dữ liệu và giải thuật</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> A2-105</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">10:00 - 11:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Lập trình Java</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> B1-204</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">13:00 - 14:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Claude Code for BackEnd</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> Lab CNTT-301</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-foot">
+              <a class="link" href="calendar.html">Xem toàn bộ lịch học <i data-lucide="arrow-right" class="icon-sm"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Các môn học đang học -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Các môn học đang học</h2>
+            <a class="link" href="my-courses.html">Xem tất cả</a>
+          </div>
+          <div class="courses">
+            <div class="course">
+              <div class="course-top violet">
+                <div class="course-emblem"><i data-lucide="code-xml"></i></div>
+                <div class="course-name">Lập trình hướng đối tượng</div>
+                <div class="course-gv">GV: Nguyễn Minh Tuấn</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>66%</span></div>
+                  <div class="course-track"><span style="width:66%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">2</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">8.5</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top green">
+                <div class="course-emblem"><i data-lucide="database"></i></div>
+                <div class="course-name">Cơ sở dữ liệu</div>
+                <div class="course-gv">GV: Trần Thị Hương</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>48%</span></div>
+                  <div class="course-track"><span style="width:48%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">1</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">7.0</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top blue">
+                <div class="course-emblem"><i data-lucide="network"></i></div>
+                <div class="course-name">Cấu trúc dữ liệu và giải thuật</div>
+                <div class="course-gv">GV: Lê Văn Nam</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>72%</span></div>
+                  <div class="course-track"><span style="width:72%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">0</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">8.0</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top amber">
+                <div class="course-emblem"><i data-lucide="coffee"></i></div>
+                <div class="course-name">Lập trình Java</div>
+                <div class="course-gv">GV: Phạm Quốc Bảo</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>30%</span></div>
+                  <div class="course-track"><span style="width:30%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">3</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">6.5</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top teal">
+                <div class="course-emblem"><i data-lucide="book-open"></i></div>
+                <div class="course-name">Tiếng Anh học thuật</div>
+                <div class="course-gv">GV: Đỗ Thu Trang</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>60%</span></div>
+                  <div class="course-track"><span style="width:60%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">1</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">9.0</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top rust">
+                <div class="course-emblem"><i data-lucide="terminal"></i></div>
+                <div class="course-name">Claude Code for BackEnd</div>
+                <div class="course-gv">GV: Hoàng Anh Khoa</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>15%</span></div>
+                  <div class="course-track"><span style="width:15%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">1</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">—</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ---------------------- RIGHT RAIL ---------------------- -->
+      <aside class="rail">
+
+        <!-- Thông báo gần đây -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Thông báo gần đây</h2>
+            <a class="link" href="#">Xem tất cả</a>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-indigo"><i data-lucide="file-text" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Giảng viên thông báo bài tập mới</div>
+              <div class="notif-sub">Lập trình Java - Bài tập số 4</div>
+              <div class="notif-time">10 phút trước</div>
+            </div>
+            <span class="notif-unread"></span>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-green"><i data-lucide="bar-chart-3" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Điểm mới được công bố</div>
+              <div class="notif-sub">Cơ sở dữ liệu - Quiz 1</div>
+              <div class="notif-time">1 giờ trước</div>
+            </div>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-amber"><i data-lucide="megaphone" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Thông báo từ Phòng Đào tạo</div>
+              <div class="notif-sub">Về việc đăng ký học phần học kỳ III</div>
+              <div class="notif-time">3 giờ trước</div>
+            </div>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-red"><i data-lucide="calendar-heart" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Sự kiện sắp diễn ra</div>
+              <div class="notif-sub">Ngày hội việc làm mùa Hè 2026</div>
+              <div class="notif-time">1 ngày trước</div>
+            </div>
+          </div>
+
+          <div class="rail-foot"><a class="link" href="#">Xem tất cả thông báo <i data-lucide="arrow-right" class="icon-sm"></i></a></div>
+        </div>
+
+        <!-- Kết quả học tập -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Kết quả học tập</h2>
+            <a class="link" href="results.html">Xem chi tiết</a>
+          </div>
+          <div class="results-body">
+            <div class="donut">
+              <svg width="132" height="132" viewBox="0 0 132 132">
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--muted))" stroke-width="16"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-1))" stroke-width="16" stroke-dasharray="200.5 351.9" stroke-dashoffset="0" stroke-linecap="butt"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-2))" stroke-width="16" stroke-dasharray="102.0 351.9" stroke-dashoffset="-200.5"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-3))" stroke-width="16" stroke-dasharray="35.2 351.9" stroke-dashoffset="-302.6"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-4))" stroke-width="16" stroke-dasharray="14.1 351.9" stroke-dashoffset="-337.8"/>
+              </svg>
+              <div class="donut-center">
+                <div>
+                  <div class="big">21</div>
+                  <div class="small">môn học</div>
+                </div>
+              </div>
+            </div>
+            <div class="legend">
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-1))"></span><span class="lbl">Tốt (A, B)</span><span class="val">12 môn (57%)</span></div>
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-2))"></span><span class="lbl">Khá (C)</span><span class="val">6 môn (29%)</span></div>
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-3))"></span><span class="lbl">Trung bình (D)</span><span class="val">2 môn (10%)</span></div>
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-4))"></span><span class="lbl">Yếu (F)</span><span class="val">1 môn (4%)</span></div>
+            </div>
+          </div>
+          <div class="cpa">
+            <div><div class="k">CPA hiện tại</div><div class="v">3.38</div></div>
+            <div><div class="k">Xếp loại</div><div class="v" style="color:hsl(var(--primary))">Khá</div></div>
+          </div>
+        </div>
+
+        <!-- Thao tác nhanh -->
+        <div class="card card-pad">
+          <div class="section-head"><h2>Thao tác nhanh</h2></div>
+          <div class="qa-grid">
+            <a class="qa" href="#"><div class="qa-ico ico-tint-blue"><i data-lucide="video" class="icon-lg"></i></div><div class="qa-label">Tham gia lớp học</div></a>
+            <a class="qa" href="results.html"><div class="qa-ico ico-tint-amber"><i data-lucide="bar-chart-3" class="icon-lg"></i></div><div class="qa-label">Xem điểm</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-indigo"><i data-lucide="upload" class="icon-lg"></i></div><div class="qa-label">Nộp bài tập</div></a>
+            <a class="qa" href="exams.html"><div class="qa-ico ico-tint-red"><i data-lucide="calendar-clock" class="icon-lg"></i></div><div class="qa-label">Lịch thi</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-indigo"><i data-lucide="clipboard-check" class="icon-lg"></i></div><div class="qa-label">Đăng ký môn học</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-green"><i data-lucide="circle-dollar-sign" class="icon-lg"></i></div><div class="qa-label">Học phí</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-blue"><i data-lucide="folder-open" class="icon-lg"></i></div><div class="qa-label">Tài liệu</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-amber"><i data-lucide="mail" class="icon-lg"></i></div><div class="qa-label">Liên hệ giảng viên</div></a>
+          </div>
+        </div>
+
+        <!-- Hoạt động gần đây -->
+        <div class="card card-pad">
+          <div class="section-head"><h2>Hoạt động gần đây</h2></div>
+          <div class="activity activity-rail">
+            <div class="act">
+              <div class="act-ico ico-tint-red"><i data-lucide="book-open" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã xem tài liệu</div>
+                <div class="act-sub">Lecture 3 - OOP Principles.pdf</div>
+                <div class="act-time">2 giờ trước</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-green"><i data-lucide="upload" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã nộp bài tập</div>
+                <div class="act-sub">BTL_OOP_Chuong2.zip</div>
+                <div class="act-time">Hôm qua</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-blue"><i data-lucide="video" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã tham gia lớp học</div>
+                <div class="act-sub">CSDL - Online Class</div>
+                <div class="act-time">Hôm qua</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-amber"><i data-lucide="bar-chart-3" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã xem điểm</div>
+                <div class="act-sub">Quiz 1 - Cơ sở dữ liệu</div>
+                <div class="act-time">2 ngày trước</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+  // Hôm nay: hiển thị ngày hiện tại
+  (function(){
+    const el = document.getElementById('gdValue');
+    if (!el) return;
+    const d = new Date();
+    const thu = d.getDay() === 0 ? 'Chủ nhật' : 'Thứ ' + (d.getDay() + 1);
+    const p = n => String(n).padStart(2, '0');
+    el.textContent = thu + ', ' + p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
+  })();
+  // Dismiss announcement banner
+  const bc = document.getElementById('bannerClose');
+  if (bc) bc.addEventListener('click', () => {
+    const b = document.getElementById('banner');
+    b.style.transition = 'opacity .2s, transform .2s';
+    b.style.opacity = '0'; b.style.transform = 'translateY(-6px)';
+    setTimeout(() => b.remove(), 200);
+  });
+  // Active nav switching (top-level items, excluding the expandable parent)
+  document.querySelectorAll('.nav-item:not(.nav-parent)').forEach(n => {
+    n.addEventListener('click', e => {
+      // Let real links (with a non-"#" href) navigate normally
+      const href = n.getAttribute('href');
+      if (href && href !== '#') return;
+      e.preventDefault();
+      document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.nav-subitem').forEach(x => x.classList.remove('active'));
+      n.classList.add('active');
+    });
+  });
+  // Sidebar collapse (topbar menu button → icon-only rail)
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => {
+      appEl.classList.toggle('collapsed');
+      localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0');
+    });
+  }
+
+  // Profile dropdown
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => {
+      e.stopPropagation();
+      profileMenu.classList.toggle('open');
+    });
+    document.addEventListener('click', e => {
+      if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') profileMenu.classList.remove('open');
+    });
+  }
+
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
+    p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
+  });
+  // Submenu item active state
+  document.querySelectorAll('.nav-subitem').forEach(s => {
+    s.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.nav-subitem').forEach(x => x.classList.remove('active'));
+      s.classList.add('active');
+      s.closest('.nav-group').classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>

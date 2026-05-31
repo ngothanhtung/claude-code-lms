@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bài tập cá nhân — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  /* ---- Assignments page-specific ---------------------------------------- */
+  .asg-page { grid-template-columns: 1fr; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 20px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+  .head-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hchip { display: flex; align-items: center; gap: 9px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 12px; padding: 9px 14px; box-shadow: var(--shadow-card); }
+  .hchip .hc-ico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; }
+  .hchip .hc-ico svg { width: 17px; height: 17px; }
+  .hchip .hc-num { font-size: 17px; font-weight: 800; line-height: 1; }
+  .hchip .hc-lbl { font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tabs { display: inline-flex; background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: 11px; padding: 4px; gap: 3px; }
+  .tab { display: inline-flex; align-items: center; gap: 7px; border: none; background: transparent; font: inherit; font-size: 13px; font-weight: 600; color: hsl(var(--muted-foreground)); padding: 7px 15px; border-radius: 8px; cursor: pointer; transition: background .15s, color .15s, box-shadow .15s; }
+  .tab:hover { color: hsl(var(--foreground)); }
+  .tab.active { background: hsl(var(--card)); color: hsl(var(--foreground)); box-shadow: var(--shadow-card); }
+  .tab .cnt { font-size: 11px; font-weight: 700; background: hsl(var(--muted-foreground) / 0.16); color: hsl(var(--muted-foreground)); border-radius: 99px; padding: 1px 7px; }
+  .tab.active .cnt { background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); }
+  .asg-search { display: flex; align-items: center; gap: 9px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 10px; padding: 9px 13px; min-width: 260px; }
+  .asg-search svg { width: 17px; height: 17px; color: hsl(var(--muted-foreground)); }
+  .asg-search input { border: none; outline: none; background: transparent; font: inherit; font-size: 13px; width: 100%; color: hsl(var(--foreground)); }
+
+  .asg-list { display: flex; flex-direction: column; gap: 12px; }
+  .asg { display: grid; grid-template-columns: 44px 1fr auto; gap: 15px; align-items: center; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 14px; padding: 15px 17px; box-shadow: var(--shadow-card); transition: transform .1s ease, box-shadow .12s ease; }
+  .asg:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+  .asg-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
+  .asg-ico svg { width: 21px; height: 21px; }
+  .asg-main .am-title { font-size: 15px; font-weight: 700; }
+  .asg-main .am-sub { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+  .asg-meta { display: flex; flex-wrap: wrap; gap: 6px 15px; margin-top: 9px; }
+  .asg-meta .mm { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: hsl(var(--foreground)); }
+  .asg-meta .mm svg { width: 14px; height: 14px; color: hsl(var(--muted-foreground)); flex-shrink: 0; }
+  .asg-meta .mm.due-soon { color: hsl(var(--danger)); font-weight: 600; }
+  .asg-meta .mm.due-soon svg { color: hsl(var(--danger)); }
+
+  .asg-side { display: flex; flex-direction: column; align-items: flex-end; gap: 9px; min-width: 132px; }
+  .asg-side .btn { padding: 7px 15px; }
+  .asg-score { font-size: 13px; font-weight: 700; }
+  .asg-score .sc-num { font-size: 18px; font-weight: 800; color: hsl(142 71% 34%); }
+  .asg-score .sc-of { font-size: 12px; color: hsl(var(--muted-foreground)); font-weight: 600; }
+
+  .asg.is-hidden { display: none; }
+  .empty { display: none; text-align: center; padding: 60px 20px; color: hsl(var(--muted-foreground)); }
+  .empty.show { display: block; }
+  .empty svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: .5; }
+
+  @media (max-width: 760px) {
+    .asg { grid-template-columns: 44px 1fr; }
+    .asg-side { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; min-width: 0; border-top: 1px solid hsl(var(--border)); padding-top: 12px; }
+    .asg-search { min-width: 0; flex: 1; }
+  }
+
+  /* ---- Submit modal ----------------------------------------------------- */
+  .modal-overlay { position: fixed; inset: 0; background: hsl(222 30% 12% / 0.5); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 100; opacity: 0; transition: opacity .18s ease; }
+  .modal-overlay.open { display: flex; opacity: 1; }
+  .modal { width: 100%; max-width: 520px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 18px; box-shadow: 0 24px 60px -12px hsl(222 40% 12% / 0.45); overflow: hidden; transform: translateY(12px) scale(.98); transition: transform .2s ease; max-height: calc(100vh - 48px); display: flex; flex-direction: column; }
+  .modal-overlay.open .modal { transform: none; }
+  .modal-head { display: flex; align-items: flex-start; gap: 13px; padding: 20px 22px 16px; border-bottom: 1px solid hsl(var(--border)); }
+  .modal-head .mh-ico { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; flex-shrink: 0; }
+  .modal-head .mh-ico svg { width: 21px; height: 21px; }
+  .modal-head .mh-txt { flex: 1; min-width: 0; }
+  .modal-head .mh-eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+  .modal-head h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; margin-top: 3px; line-height: 1.25; }
+  .modal-head .mh-sub { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 4px; }
+  .modal-close { width: 32px; height: 32px; border-radius: 9px; border: none; background: transparent; color: hsl(var(--muted-foreground)); cursor: pointer; display: grid; place-items: center; flex-shrink: 0; transition: background .12s; }
+  .modal-close:hover { background: hsl(var(--muted)); }
+  .modal-close svg { width: 18px; height: 18px; }
+  .modal-body { padding: 18px 22px; overflow-y: auto; }
+  .modal-due { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: hsl(var(--danger)); background: hsl(var(--danger-muted)); border-radius: 10px; padding: 9px 13px; margin-bottom: 16px; }
+  .modal-due svg { width: 15px; height: 15px; }
+  .field-label { font-size: 12.5px; font-weight: 700; margin-bottom: 8px; display: block; }
+  .dropzone { border: 2px dashed hsl(var(--border)); border-radius: 13px; padding: 26px 18px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s; }
+  .dropzone:hover, .dropzone.drag { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.05); }
+  .dropzone .dz-ico { width: 46px; height: 46px; border-radius: 12px; background: hsl(var(--primary) / 0.1); color: hsl(var(--primary)); display: grid; place-items: center; margin: 0 auto 11px; }
+  .dropzone .dz-ico svg { width: 22px; height: 22px; }
+  .dropzone .dz-main { font-size: 13.5px; font-weight: 600; }
+  .dropzone .dz-main b { color: hsl(var(--primary)); }
+  .dropzone .dz-hint { font-size: 11.5px; color: hsl(var(--muted-foreground)); margin-top: 4px; }
+  .file-chips { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .file-chip { display: flex; align-items: center; gap: 10px; background: hsl(var(--muted) / 0.6); border: 1px solid hsl(var(--border)); border-radius: 10px; padding: 9px 12px; font-size: 12.5px; }
+  .file-chip .fc-ico { color: hsl(var(--danger)); display: grid; place-items: center; flex-shrink: 0; }
+  .file-chip .fc-ico svg { width: 17px; height: 17px; }
+  .file-chip .fc-name { font-weight: 600; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-chip .fc-size { color: hsl(var(--muted-foreground)); font-size: 11.5px; flex-shrink: 0; }
+  .file-chip .fc-rm { border: none; background: transparent; color: hsl(var(--muted-foreground)); cursor: pointer; display: grid; place-items: center; padding: 2px; border-radius: 6px; }
+  .file-chip .fc-rm:hover { color: hsl(var(--danger)); background: hsl(var(--danger-muted)); }
+  .file-chip .fc-rm svg { width: 15px; height: 15px; }
+  .modal-note { width: 100%; margin-top: 16px; border: 1px solid hsl(var(--border)); border-radius: 11px; padding: 11px 13px; font: inherit; font-size: 13px; resize: vertical; min-height: 72px; background: hsl(var(--card)); color: hsl(var(--foreground)); outline: none; transition: border-color .15s; box-sizing: border-box; }
+  .modal-note:focus { border-color: hsl(var(--primary)); }
+  .modal-foot { display: flex; align-items: center; gap: 10px; padding: 15px 22px; border-top: 1px solid hsl(var(--border)); background: hsl(var(--muted) / 0.35); }
+  .modal-foot .agree { font-size: 12px; color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 7px; }
+  .modal-foot .agree input { width: 15px; height: 15px; accent-color: hsl(var(--primary)); }
+  .modal-foot .spacer { flex: 1; }
+  .btn[disabled] { opacity: .5; cursor: not-allowed; }
+  .submit-ok { text-align: center; padding: 34px 24px 30px; }
+  .submit-ok .ok-ring { width: 64px; height: 64px; border-radius: 99px; background: hsl(var(--success-muted)); color: hsl(142 71% 38%); display: grid; place-items: center; margin: 0 auto 16px; }
+  .submit-ok .ok-ring svg { width: 32px; height: 32px; }
+  .submit-ok h3 { font-size: 18px; font-weight: 800; }
+  .submit-ok p { font-size: 13px; color: hsl(var(--muted-foreground)); margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group open" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem active" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="#" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group open" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">A</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content asg-page">
+      <div class="col-main">
+
+        <!-- Page header -->
+        <div class="page-head">
+          <div>
+            <h1>Bài tập cá nhân</h1>
+            <p>Tất cả bài tập cá nhân của các môn · Học kỳ II, 2025 - 2026</p>
+          </div>
+          <div class="head-stats">
+            <div class="hchip"><div class="hc-ico ico-tint-red"><i data-lucide="clipboard-list"></i></div><div><div class="hc-num">3</div><div class="hc-lbl">Cần nộp</div></div></div>
+            <div class="hchip"><div class="hc-ico ico-tint-amber"><i data-lucide="loader"></i></div><div><div class="hc-num">1</div><div class="hc-lbl">Đang làm</div></div></div>
+            <div class="hchip"><div class="hc-ico ico-tint-green"><i data-lucide="check-check"></i></div><div><div class="hc-num">4</div><div class="hc-lbl">Đã nộp</div></div></div>
+          </div>
+        </div>
+
+        <!-- Toolbar: filter tabs + search -->
+        <div class="toolbar">
+          <div class="tabs" id="asgTabs">
+            <button class="tab active" data-filter="all">Tất cả <span class="cnt">8</span></button>
+            <button class="tab" data-filter="todo">Cần nộp <span class="cnt">3</span></button>
+            <button class="tab" data-filter="doing">Đang làm <span class="cnt">1</span></button>
+            <button class="tab" data-filter="done">Đã nộp <span class="cnt">4</span></button>
+          </div>
+          <div class="asg-search">
+            <i data-lucide="search"></i>
+            <input type="text" id="asgFilter" placeholder="Lọc theo tên bài tập hoặc môn..." />
+          </div>
+        </div>
+
+        <!-- Assignment list -->
+        <div class="asg-list" id="asgList">
+
+          <div class="asg" data-status="todo" data-name="lab 1 build rest api claude code for backend">
+            <div class="asg-ico ico-tint-red"><i data-lucide="terminal"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Lab 1 – Build REST API với Claude Code</div>
+              <div class="am-sub">Claude Code for BackEnd · GV: Hoàng Anh Khoa</div>
+              <div class="asg-meta">
+                <div class="mm due-soon"><i data-lucide="clock"></i> Hạn hôm nay · 22:00</div>
+                <div class="mm"><i data-lucide="paperclip"></i> Nộp file .zip</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <span class="badge amber">Còn 4 giờ</span>
+              <button class="btn primary">Nộp bài</button>
+            </div>
+          </div>
+
+          <div class="asg" data-status="todo" data-name="bài tập lớn 3 đa hình lập trình hướng đối tượng oop">
+            <div class="asg-ico ico-tint-indigo"><i data-lucide="code-xml"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Bài tập lớn 3 – Tính đa hình</div>
+              <div class="am-sub">Lập trình hướng đối tượng · GV: Nguyễn Minh Tuấn</div>
+              <div class="asg-meta">
+                <div class="mm"><i data-lucide="calendar"></i> Hạn 03/06 · 23:59</div>
+                <div class="mm"><i data-lucide="paperclip"></i> Nộp file .pdf</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <span class="badge amber">Còn 3 ngày</span>
+              <button class="btn primary">Nộp bài</button>
+            </div>
+          </div>
+
+          <div class="asg" data-status="doing" data-name="quiz 2 lập trình java vòng lặp mảng">
+            <div class="asg-ico ico-tint-amber"><i data-lucide="coffee"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Quiz 2 – Vòng lặp & Mảng</div>
+              <div class="am-sub">Lập trình Java · GV: Phạm Quốc Bảo</div>
+              <div class="asg-meta">
+                <div class="mm"><i data-lucide="calendar"></i> Hạn 05/06 · 18:00</div>
+                <div class="mm"><i data-lucide="loader"></i> Đang làm dở (4/10 câu)</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <span class="badge blue">Đang làm</span>
+              <a class="btn primary" href="quiz.html">Tiếp tục</a>
+            </div>
+          </div>
+
+          <div class="asg" data-status="todo" data-name="bài tập 5 chuẩn hóa csdl cơ sở dữ liệu">
+            <div class="asg-ico ico-tint-green"><i data-lucide="database"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Bài tập 5 – Chuẩn hóa CSDL</div>
+              <div class="am-sub">Cơ sở dữ liệu · GV: Trần Thị Hương</div>
+              <div class="asg-meta">
+                <div class="mm"><i data-lucide="calendar"></i> Hạn 07/06 · 23:59</div>
+                <div class="mm"><i data-lucide="paperclip"></i> Nộp file .pdf</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <span class="badge green">Còn 5 ngày</span>
+              <button class="btn primary">Nộp bài</button>
+            </div>
+          </div>
+
+          <div class="asg" data-status="done" data-name="bài tập 4 cây nhị phân cấu trúc dữ liệu giải thuật">
+            <div class="asg-ico ico-tint-blue"><i data-lucide="network"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Bài tập 4 – Cây nhị phân tìm kiếm</div>
+              <div class="am-sub">Cấu trúc dữ liệu và giải thuật · GV: Lê Văn Nam</div>
+              <div class="asg-meta">
+                <div class="mm"><i data-lucide="check"></i> Đã nộp 24/05 · 21:10</div>
+                <div class="mm"><i data-lucide="message-square"></i> Có nhận xét</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <div class="asg-score"><span class="sc-num">9.0</span><span class="sc-of"> / 10</span></div>
+              <button class="btn">Xem lại</button>
+            </div>
+          </div>
+
+          <div class="asg" data-status="done" data-name="essay writing task 2 tiếng anh học thuật english">
+            <div class="asg-ico ico-tint-green"><i data-lucide="book-open"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Writing Task 2 – Argumentative Essay</div>
+              <div class="am-sub">Tiếng Anh học thuật · GV: Đỗ Thu Trang</div>
+              <div class="asg-meta">
+                <div class="mm"><i data-lucide="check"></i> Đã nộp 20/05 · 14:30</div>
+                <div class="mm"><i data-lucide="message-square"></i> Có nhận xét</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <div class="asg-score"><span class="sc-num">8.5</span><span class="sc-of"> / 10</span></div>
+              <button class="btn">Xem lại</button>
+            </div>
+          </div>
+
+          <div class="asg" data-status="done" data-name="bài tập 2 kế thừa lập trình hướng đối tượng oop">
+            <div class="asg-ico ico-tint-indigo"><i data-lucide="code-xml"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Bài tập 2 – Kế thừa & Đóng gói</div>
+              <div class="am-sub">Lập trình hướng đối tượng · GV: Nguyễn Minh Tuấn</div>
+              <div class="asg-meta">
+                <div class="mm"><i data-lucide="check"></i> Đã nộp 16/05 · 20:05</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <div class="asg-score"><span class="sc-num">8.0</span><span class="sc-of"> / 10</span></div>
+              <button class="btn">Xem lại</button>
+            </div>
+          </div>
+
+          <div class="asg" data-status="done" data-name="quiz 1 java cú pháp cơ bản lập trình java">
+            <div class="asg-ico ico-tint-amber"><i data-lucide="coffee"></i></div>
+            <div class="asg-main">
+              <div class="am-title">Quiz 1 – Cú pháp cơ bản</div>
+              <div class="am-sub">Lập trình Java · GV: Phạm Quốc Bảo</div>
+              <div class="asg-meta">
+                <div class="mm"><i data-lucide="check"></i> Đã nộp 09/05 · 17:45</div>
+              </div>
+            </div>
+            <div class="asg-side">
+              <div class="asg-score"><span class="sc-num">6.5</span><span class="sc-of"> / 10</span></div>
+              <button class="btn">Xem lại</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="empty" id="emptyState">
+          <i data-lucide="search-x"></i>
+          <div>Không tìm thấy bài tập phù hợp.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== Submit modal ===== -->
+<div class="modal-overlay" id="submitModal" role="dialog" aria-modal="true" aria-labelledby="smTitle">
+  <div class="modal">
+    <div id="smForm">
+      <div class="modal-head">
+        <div class="mh-ico ico-tint-red"><i data-lucide="upload-cloud"></i></div>
+        <div class="mh-txt">
+          <div class="mh-eyebrow">Nộp bài tập</div>
+          <h3 id="smTitle">Lab 1 – Build REST API với Claude Code</h3>
+          <div class="mh-sub" id="smSub">Claude Code for BackEnd · GV: Hoàng Anh Khoa</div>
+        </div>
+        <button class="modal-close" id="smClose" aria-label="Đóng"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-due" id="smDue"><i data-lucide="clock"></i> Hạn nộp: hôm nay · 22:00 · còn 4 giờ</div>
+
+        <label class="field-label">Tệp bài nộp</label>
+        <div class="dropzone" id="dropzone">
+          <div class="dz-ico"><i data-lucide="file-up"></i></div>
+          <div class="dz-main">Kéo thả tệp vào đây hoặc <b>chọn từ máy</b></div>
+          <div class="dz-hint">Hỗ trợ .zip, .pdf, .docx, .java · tối đa 25 MB</div>
+        </div>
+        <input type="file" id="fileInput" multiple hidden />
+        <div class="file-chips" id="fileChips"></div>
+
+        <label class="field-label" style="margin-top:16px">Ghi chú cho giảng viên <span style="font-weight:400;color:hsl(var(--muted-foreground))">(không bắt buộc)</span></label>
+        <textarea class="modal-note" id="smNote" placeholder="Ví dụ: Phần bonus em làm thêm endpoint thống kê đơn hàng…"></textarea>
+      </div>
+      <div class="modal-foot">
+        <label class="agree"><input type="checkbox" id="smAgree" /> Tôi xác nhận đây là bài làm của mình</label>
+        <div class="spacer"></div>
+        <button class="btn" id="smCancel">Hủy</button>
+        <button class="btn primary" id="smSubmit" disabled>Nộp bài</button>
+      </div>
+    </div>
+    <div class="submit-ok" id="smDone" style="display:none">
+      <div class="ok-ring"><i data-lucide="check"></i></div>
+      <h3>Đã nộp bài thành công!</h3>
+      <p id="smDoneSub">Hệ thống đã ghi nhận bài nộp của bạn.</p>
+      <button class="btn primary" id="smFinish" style="margin-top:18px">Xong</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Sidebar collapse
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => {
+      appEl.classList.toggle('collapsed');
+      localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0');
+    });
+  }
+
+  // Profile dropdown
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => { e.stopPropagation(); profileMenu.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') profileMenu.classList.remove('open'); });
+  }
+
+  // Expandable nav groups
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
+    p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
+  });
+
+  // ---- Filter: tabs + search ----
+  const list = document.getElementById('asgList');
+  const items = Array.from(list.querySelectorAll('.asg'));
+  const tabs = document.getElementById('asgTabs');
+  const searchInput = document.getElementById('asgFilter');
+  const emptyState = document.getElementById('emptyState');
+  let activeFilter = 'all';
+
+  function applyFilter() {
+    const q = searchInput.value.trim().toLowerCase();
+    let visible = 0;
+    items.forEach(item => {
+      const matchStatus = activeFilter === 'all' || item.dataset.status === activeFilter;
+      const matchSearch = !q || item.dataset.name.includes(q);
+      const show = matchStatus && matchSearch;
+      item.classList.toggle('is-hidden', !show);
+      if (show) visible++;
+    });
+    emptyState.classList.toggle('show', visible === 0);
+  }
+
+  tabs.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      activeFilter = t.dataset.filter;
+      applyFilter();
+    });
+  });
+  searchInput.addEventListener('input', applyFilter);
+
+  // ---- Submit modal ----
+  const modal = document.getElementById('submitModal');
+  const smForm = document.getElementById('smForm');
+  const smDone = document.getElementById('smDone');
+  const smTitle = document.getElementById('smTitle');
+  const smSub = document.getElementById('smSub');
+  const smDue = document.getElementById('smDue');
+  const smDoneSub = document.getElementById('smDoneSub');
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const fileChips = document.getElementById('fileChips');
+  const smNote = document.getElementById('smNote');
+  const smAgree = document.getElementById('smAgree');
+  const smSubmit = document.getElementById('smSubmit');
+  let files = [];
+
+  const fmtSize = b => b < 1024 ? b + ' B' : b < 1048576 ? (b/1024).toFixed(0) + ' KB' : (b/1048576).toFixed(1) + ' MB';
+
+  function renderFiles() {
+    fileChips.innerHTML = '';
+    files.forEach((f, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'file-chip';
+      chip.innerHTML = '<span class="fc-ico"><i data-lucide="file"></i></span>' +
+        '<span class="fc-name"></span>' +
+        '<span class="fc-size">' + fmtSize(f.size) + '</span>' +
+        '<button class="fc-rm" aria-label="Xóa"><i data-lucide="x"></i></button>';
+      chip.querySelector('.fc-name').textContent = f.name;
+      chip.querySelector('.fc-rm').addEventListener('click', () => { files.splice(i, 1); renderFiles(); updateSubmit(); });
+      fileChips.appendChild(chip);
+    });
+    lucide.createIcons();
+  }
+  function addFiles(list) { files = files.concat(Array.from(list)); renderFiles(); updateSubmit(); }
+  function updateSubmit() { smSubmit.disabled = !(files.length > 0 && smAgree.checked); }
+
+  function openModal(title, sub, due) {
+    smTitle.textContent = title;
+    smSub.textContent = sub;
+    if (due) { smDue.style.display = 'flex'; smDue.innerHTML = '<i data-lucide="clock"></i> ' + due; }
+    else { smDue.style.display = 'none'; }
+    files = []; renderFiles(); smNote.value = ''; smAgree.checked = false; updateSubmit();
+    smForm.style.display = ''; smDone.style.display = 'none';
+    modal.classList.add('open'); document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+  }
+  function closeModal() { modal.classList.remove('open'); document.body.style.overflow = ''; }
+
+  // Open from each "Nộp bài" button
+  document.querySelectorAll('.asg').forEach(card => {
+    const btn = card.querySelector('.asg-side .btn.primary');
+    if (!btn || btn.textContent.trim() !== 'Nộp bài') return;
+    btn.addEventListener('click', () => {
+      const title = card.querySelector('.am-title').textContent.trim();
+      const sub = card.querySelector('.am-sub').textContent.trim();
+      const dueEl = card.querySelector('.asg-meta .mm');
+      const dueText = dueEl ? 'Hạn nộp: ' + dueEl.textContent.trim().replace(/^Hạn\s*/i, '') : '';
+      openModal(title, sub, dueText);
+    });
+  });
+
+  // Dropzone interactions
+  dropzone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', e => { if (e.target.files.length) addFiles(e.target.files); fileInput.value = ''; });
+  ['dragover','dragenter'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('drag'); }));
+  dropzone.addEventListener('drop', e => { if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
+
+  smAgree.addEventListener('change', updateSubmit);
+  document.getElementById('smClose').addEventListener('click', closeModal);
+  document.getElementById('smCancel').addEventListener('click', closeModal);
+  document.getElementById('smFinish').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+  smSubmit.addEventListener('click', () => {
+    smDoneSub.textContent = 'Đã nộp ' + files.length + ' tệp cho “' + smTitle.textContent + '”. Hệ thống đã ghi nhận lúc ' +
+      new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + '.';
+    smForm.style.display = 'none'; smDone.style.display = 'block';
+    lucide.createIcons();
+  });
+</script>
+</body>
+</html>
