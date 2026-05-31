@@ -5,15 +5,21 @@ import { usePathname } from "next/navigation"
 import {
     BookOpenIcon,
     CalendarIcon,
-    LayoutDashboardIcon,
     SettingsIcon,
     BellIcon,
-    Code2Icon,
     GraduationCapIcon,
     ChevronDownIcon,
     BotMessageSquareIcon,
     PanelLeftCloseIcon,
     PanelLeftIcon,
+    HomeIcon,
+    BarChart3Icon,
+    UserCheckIcon,
+    CalendarClockIcon,
+    FolderOpenIcon,
+    CircleDollarSignIcon,
+    ClipboardCheckIcon,
+    LifeBuoyIcon,
 } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
@@ -36,48 +42,37 @@ import {
 } from "@/components/ui/sidebar"
 
 const mainNavItems = [
-    {
-        title: "Dashboard",
-        icon: LayoutDashboardIcon,
-        href: "/dashboard",
-    },
-    {
-        title: "Khóa học của tôi",
-        icon: GraduationCapIcon,
-        href: "/courses",
-    },
-    {
-        title: "Lịch học",
-        icon: CalendarIcon,
-        href: "/calendar",
-    },
+    { title: "Trang chủ", icon: HomeIcon, href: "/dashboard" },
+    { title: "Khóa học của tôi", icon: GraduationCapIcon, href: "/courses" },
+    { title: "Lịch học", icon: CalendarIcon, href: "/calendar" },
     {
         title: "Bài tập",
         icon: BookOpenIcon,
         sub: [
-            { title: "Cá nhân", href: "/assignments/personal" },
-            { title: "Nhóm", href: "/assignments/group" },
+            { title: "Bài tập cá nhân", href: "/assignments/personal" },
+            { title: "Bài tập nhóm", href: "/assignments/group" },
+            { title: "Đồ án cuối kỳ", href: "/final-project" },
         ],
     },
+    { title: "Kết quả học tập", icon: BarChart3Icon, href: "/results" },
+    { title: "Điểm danh", icon: UserCheckIcon, href: "/attendance" },
+    { title: "Lịch thi", icon: CalendarClockIcon, href: "/exams" },
+    {
+        title: "Tài liệu",
+        icon: FolderOpenIcon,
+        sub: [
+            { title: "Tài liệu tham khảo", href: "/documents" },
+            { title: "Tài liệu luyện thi", href: "/exam-materials" },
+        ],
+    },
+    { title: "Thông báo", icon: BellIcon, href: "/notifications", badge: "6" },
+    { title: "Học phí", icon: CircleDollarSignIcon, href: "/tuition" },
+    { title: "Đăng ký môn học", icon: ClipboardCheckIcon, href: "/registration" },
+    { title: "Hỗ trợ", icon: LifeBuoyIcon, href: "/support" },
+    { title: "Cài đặt", icon: SettingsIcon, href: "/settings" },
 ]
 
-const otherNavItems = [
-    {
-        title: "Workspace",
-        icon: Code2Icon,
-        href: "/workspace",
-    },
-    {
-        title: "Thông báo",
-        icon: BellIcon,
-        href: "/notifications",
-    },
-    {
-        title: "Cài đặt",
-        icon: SettingsIcon,
-        href: "/settings",
-    },
-]
+const otherNavItems: { title: string; icon: React.ElementType; href: string }[] = []
 
 export function AppSidebar() {
     const { state, toggleSidebar } = useSidebar()
@@ -157,6 +152,11 @@ export function AppSidebar() {
                                             <Link href={item.href}>
                                                 <item.icon />
                                                 <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
+                                                {item.badge && (
+                                                    <span className="ml-auto min-w-5 h-5 px-1.5 grid place-items-center bg-[oklch(0.55_0.22_27)] text-white text-[11px] font-bold rounded-full">
+                                                        {item.badge}
+                                                    </span>
+                                                )}
                                             </Link>
                                         </SidebarMenuButton>
                                     )}
