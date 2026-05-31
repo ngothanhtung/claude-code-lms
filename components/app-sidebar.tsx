@@ -3,51 +3,34 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-    BookOpenIcon,
-    CalendarIcon,
-    SettingsIcon,
-    BellIcon,
-    GraduationCapIcon,
-    ChevronDownIcon,
-    BotMessageSquareIcon,
-    PanelLeftCloseIcon,
-    PanelLeftIcon,
-    HomeIcon,
     BarChart3Icon,
-    UserCheckIcon,
+    BellIcon,
+    BookOpenCheckIcon,
     CalendarClockIcon,
-    FolderOpenIcon,
+    CalendarDaysIcon,
+    ChevronDownIcon,
     CircleDollarSignIcon,
     ClipboardCheckIcon,
+    FileTextIcon,
+    FolderOpenIcon,
+    GraduationCapIcon,
+    HomeIcon,
     LifeBuoyIcon,
+    MessageCircleIcon,
+    SettingsIcon,
+    SparklesIcon,
+    UserCheckIcon,
 } from "lucide-react"
-import { useState } from "react"
 import { cn } from "@/lib/utils"
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarMenu,
-    SidebarMenuItem,
-    SidebarMenuButton,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
-    SidebarSeparator,
-    useSidebar,
-} from "@/components/ui/sidebar"
 
-const mainNavItems = [
+const navItems = [
     { title: "Trang chủ", icon: HomeIcon, href: "/dashboard" },
-    { title: "Khóa học của tôi", icon: GraduationCapIcon, href: "/courses" },
-    { title: "Lịch học", icon: CalendarIcon, href: "/calendar" },
+    { title: "Khóa học của tôi", icon: BookOpenCheckIcon, href: "/courses" },
+    { title: "Lịch học", icon: CalendarDaysIcon, href: "/calendar" },
     {
         title: "Bài tập",
-        icon: BookOpenIcon,
+        icon: FileTextIcon,
+        href: "/assignments",
         sub: [
             { title: "Bài tập cá nhân", href: "/assignments/personal" },
             { title: "Bài tập nhóm", href: "/assignments/group" },
@@ -60,6 +43,8 @@ const mainNavItems = [
     {
         title: "Tài liệu",
         icon: FolderOpenIcon,
+        href: "/documents",
+        open: true,
         sub: [
             { title: "Tài liệu tham khảo", href: "/documents" },
             { title: "Tài liệu luyện thi", href: "/exam-materials" },
@@ -72,166 +57,95 @@ const mainNavItems = [
     { title: "Cài đặt", icon: SettingsIcon, href: "/settings" },
 ]
 
-const otherNavItems: { title: string; icon: React.ElementType; href: string }[] = []
-
 export function AppSidebar() {
-    const { state, toggleSidebar } = useSidebar()
     const pathname = usePathname()
-    const [assignmentsOpen, setAssignmentsOpen] = useState(true)
-
-    const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/")
 
     return (
-        <Sidebar className="border-r border-sidebar-border" collapsible="icon">
-            <SidebarHeader className="h-(--topbar-height) flex flex-row items-center gap-3 border-b border-sidebar-border px-4">
-                {/* Brand Logo */}
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] bg-gradient-to-br from-[oklch(0.52_0.22_280)] to-[oklch(0.41_0.17_277)]">
-                    <GraduationCapIcon className="h-5 w-5 text-white" />
+        <aside className="sidebar">
+            <div className="brand">
+                <div className="brand-mark">
+                    <GraduationCapIcon className="h-6 w-6" />
                 </div>
-                <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                    <span className="text-[18px] font-extrabold tracking-tight text-sidebar-foreground">
-                        UniLMS
-                    </span>
-                    <span className="text-[11.5px] font-medium text-sidebar-foreground/50">
-                        Học tập thông minh
-                    </span>
+                <div>
+                    <div className="brand-name">LMS Portal</div>
+                    <div className="brand-sub">Dành cho Sinh viên</div>
                 </div>
-            </SidebarHeader>
+            </div>
 
-            <SidebarContent>
-                {/* Học tập Group */}
-                <SidebarGroup>
-                    <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">
-                        Học tập
-                    </SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {mainNavItems.map((item) => (
-                                <SidebarMenuItem key={item.href}>
-                                    {item.sub ? (
-                                        <>
-                                            <SidebarMenuButton
-                                                tooltip={item.title}
-                                                isActive={isActive("/assignments")}
-                                                onClick={() => setAssignmentsOpen(!assignmentsOpen)}
-                                                className="group-data-[collapsible=icon]:hidden"
-                                            >
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                                <ChevronDownIcon className={cn(
-                                                    "ml-auto h-4 w-4 transition-transform duration-200 group-data-[collapsible=icon]:hidden",
-                                                    assignmentsOpen && "rotate-180"
-                                                )} />
-                                            </SidebarMenuButton>
-                                            <SidebarMenuButton
-                                                tooltip={item.title}
-                                                isActive={isActive("/assignments")}
-                                                onClick={() => setAssignmentsOpen(!assignmentsOpen)}
-                                                className="hidden group-data-[collapsible=icon]:flex"
-                                            >
-                                                <item.icon />
-                                            </SidebarMenuButton>
-                                            <SidebarMenuSub className={cn(
-                                                "transition-all duration-200 ease-in-out",
-                                                !assignmentsOpen && "h-0 overflow-hidden opacity-0"
-                                            )}>
-                                                {item.sub.map((sub) => (
-                                                    <SidebarMenuSubItem key={sub.href}>
-                                                        <SidebarMenuSubButton
-                                                            asChild
-                                                            isActive={isActive(sub.href)}
-                                                        >
-                                                            <Link href={sub.href}>{sub.title}</Link>
-                                                        </SidebarMenuSubButton>
-                                                    </SidebarMenuSubItem>
-                                                ))}
-                                            </SidebarMenuSub>
-                                        </>
-                                    ) : (
-                                        <SidebarMenuButton tooltip={item.title} isActive={isActive(item.href)} asChild>
-                                            <Link href={item.href}>
-                                                <item.icon />
-                                                <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
-                                                {item.badge && (
-                                                    <span className="ml-auto min-w-5 h-5 px-1.5 grid place-items-center bg-[oklch(0.55_0.22_27)] text-white text-[11px] font-bold rounded-full">
-                                                        {item.badge}
-                                                    </span>
-                                                )}
-                                            </Link>
-                                        </SidebarMenuButton>
+            <nav className="nav">
+                {navItems.map((item) => {
+                    const Icon = item.icon
+                    const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
+                    if (item.sub) {
+                        return (
+                            <div className={cn("nav-group", item.open && "open")} key={item.title}>
+                                <button
+                                    type="button"
+                                    className={cn(
+                                        "nav-item nav-parent",
+                                        active && "active",
                                     )}
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-
-                <SidebarSeparator className="mx-2" />
-
-                {/* Khác Group */}
-                <SidebarGroup>
-                    <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">
-                        Khác
-                    </SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {otherNavItems.map((item) => (
-                                <SidebarMenuItem key={item.href}>
-                                    <SidebarMenuButton tooltip={item.title} isActive={isActive(item.href)} asChild>
-                                        <Link href={item.href}>
-                                            <item.icon />
-                                            <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-
-                {/* Assistant Card */}
-                <div className="mx-3 mt-4 hidden group-data-[collapsible=icon]:block">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[11px] bg-gradient-to-br from-[oklch(0.52_0.22_280)] to-[oklch(0.41_0.17_277)]">
-                        <BotMessageSquareIcon className="h-5 w-5 text-white" />
-                    </div>
-                </div>
-                <div className="mx-3 mt-4 group-data-[collapsible=icon]:hidden">
-                    <div className="rounded-[14px] bg-gradient-to-br from-[oklch(0.96_0.04_277)] to-[oklch(0.94_0.06_280)] p-4">
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[oklch(0.52_0.22_280)] to-[oklch(0.41_0.17_277)]">
-                                <BotMessageSquareIcon className="h-4 w-4 text-white" />
+                                    data-tip={item.title}
+                                >
+                                    <Icon className="icon" />
+                                    <span>{item.title}</span>
+                                    <ChevronDownIcon className="icon-sm nav-caret" />
+                                </button>
+                                <div className="nav-sub">
+                                    <div className="nav-sub-inner">
+                                        {item.sub.map((sub) => (
+                                            <Link
+                                                className="nav-subitem"
+                                                href={sub.href}
+                                                key={sub.title}
+                                            >
+                                                <span className="nav-dot" />
+                                                {sub.title}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
-                            <span className="text-sm font-semibold text-sidebar-foreground">Trợ lý AI</span>
-                        </div>
-                        <p className="text-xs text-sidebar-foreground/60 mb-3">
-                            Hỏi đáp bài giảng, gợi ý học tập, và hỗ trợ 24/7
-                        </p>
-                        <button className="w-full rounded-[9px] bg-[oklch(0.41_0.17_277)] py-2 text-xs font-semibold text-white transition-colors hover:bg-[oklch(0.36_0.17_277)]">
-                            Chat ngay
-                        </button>
+                        )
+                    }
+
+                    return (
+                        <Link
+                            className={cn(
+                                "nav-item",
+                                active && "active",
+                            )}
+                            data-tip={item.title}
+                            href={item.href}
+                            key={item.title}
+                        >
+                            <Icon className="icon" />
+                            {item.title}
+                            {item.badge && (
+                                <span className="nav-badge">
+                                    {item.badge}
+                                </span>
+                            )}
+                        </Link>
+                    )
+                })}
+            </nav>
+
+            <div className="assistant">
+                <div className="assistant-top">
+                    <div className="assistant-avatar">
+                        <SparklesIcon className="icon" />
+                    </div>
+                    <div>
+                        <div className="assistant-title">AI Assistant</div>
+                        <div className="assistant-sub">Bạn cần hỗ trợ gì?</div>
                     </div>
                 </div>
-            </SidebarContent>
-
-            <SidebarFooter className="border-t border-sidebar-border p-2">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton
-                            tooltip={state === "expanded" ? "Thu gọn" : "Mở rộng"}
-                            onClick={toggleSidebar}
-                        >
-                            {state === "expanded" ? (
-                                <PanelLeftCloseIcon />
-                            ) : (
-                                <PanelLeftIcon />
-                            )}
-                            <span className="group-data-[collapsible=icon]:hidden">
-                                Thu gọn
-                            </span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarFooter>
-        </Sidebar>
+                <button className="assistant-btn" type="button">
+                    <MessageCircleIcon className="icon-sm" />
+                    Chat ngay
+                </button>
+            </div>
+        </aside>
     )
 }

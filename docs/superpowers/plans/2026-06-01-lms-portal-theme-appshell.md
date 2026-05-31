@@ -12,19 +12,19 @@
 
 ## File Map
 
-| File | Action |
-|---|---|
-| `app/globals.css` | Modify — replace all CSS tokens with prototype values |
-| `app/layout.tsx` | Modify — add SidebarProvider wrapper |
-| `app/(portal)/layout.tsx` | Create — AppShell with sidebar + topbar + main |
-| `app/(portal)/dashboard/page.tsx` | Create — dashboard placeholder |
-| `app/(auth)/layout.tsx` | Create — auth layout (no sidebar) |
-| `components/app-sidebar.tsx` | Create — sidebar nav with brand, groups, assistant card |
-| `components/app-topbar.tsx` | Create — greeting, search, notifications, profile |
-| `components/stat-card.tsx` | Create — stat card component |
-| `components/course-card.tsx` | Create — course card component |
-| `components/badge-status.tsx` | Create — status badge component |
-| `components/icon-tint.tsx` | Create — colored icon container |
+| File                              | Action                                                  |
+| --------------------------------- | ------------------------------------------------------- |
+| `app/globals.css`                 | Modify — replace all CSS tokens with prototype values   |
+| `app/layout.tsx`                  | Modify — add SidebarProvider wrapper                    |
+| `app/(portal)/layout.tsx`         | Create — AppShell with sidebar + topbar + main          |
+| `app/(portal)/dashboard/page.tsx` | Create — dashboard placeholder                          |
+| `app/(auth)/layout.tsx`           | Create — auth layout (no sidebar)                       |
+| `components/app-sidebar.tsx`      | Create — sidebar nav with brand, groups, assistant card |
+| `components/app-topbar.tsx`       | Create — greeting, search, notifications, profile       |
+| `components/stat-card.tsx`        | Create — stat card component                            |
+| `components/course-card.tsx`      | Create — course card component                          |
+| `components/badge-status.tsx`     | Create — status badge component                         |
+| `components/icon-tint.tsx`        | Create — colored icon container                         |
 
 ---
 
@@ -38,100 +38,100 @@ Replace the entire `:root { ... }` block (lines 50–83) with prototype design t
 
 ```css
 :root {
-    /* Surfaces */
-    --background: oklch(0.985 0 0);
-    --foreground: oklch(0.145 0.01 265);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0.01 265);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0.01 265);
+  /* Surfaces */
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.145 0.01 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.01 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.01 265);
 
-    /* Primary Brand — Indigo */
-    --primary: oklch(0.41 0.17 277);
-    --primary-foreground: oklch(0.98 0 0);
-    --primary-muted: oklch(0.96 0.04 277);
+  /* Primary Brand — Indigo */
+  --primary: oklch(0.41 0.17 277);
+  --primary-foreground: oklch(0.98 0 0);
+  --primary-muted: oklch(0.96 0.04 277);
 
-    /* Secondary */
-    --secondary: oklch(0.965 0 0);
-    --secondary-foreground: oklch(0.145 0.01 265);
+  /* Secondary */
+  --secondary: oklch(0.965 0 0);
+  --secondary-foreground: oklch(0.145 0.01 265);
 
-    /* Muted */
-    --muted: oklch(0.965 0 0);
-    --muted-foreground: oklch(0.55 0.01 265);
+  /* Muted */
+  --muted: oklch(0.965 0 0);
+  --muted-foreground: oklch(0.55 0.01 265);
 
-    /* Accent */
-    --accent: oklch(0.96 0.04 277);
-    --accent-foreground: oklch(0.42 0.15 277);
+  /* Accent */
+  --accent: oklch(0.96 0.04 277);
+  --accent-foreground: oklch(0.42 0.15 277);
 
-    /* Semantic Colors */
-    --success: oklch(0.63 0.19 152);
-    --success-foreground: oklch(0.98 0 0);
-    --success-muted: oklch(0.96 0.03 152);
+  /* Semantic Colors */
+  --success: oklch(0.63 0.19 152);
+  --success-foreground: oklch(0.98 0 0);
+  --success-muted: oklch(0.96 0.03 152);
 
-    --warning: oklch(0.70 0.18 75);
-    --warning-foreground: oklch(0.98 0 0);
-    --warning-muted: oklch(0.96 0.05 75);
+  --warning: oklch(0.7 0.18 75);
+  --warning-foreground: oklch(0.98 0 0);
+  --warning-muted: oklch(0.96 0.05 75);
 
-    --destructive: oklch(0.55 0.22 27);
-    --destructive-foreground: oklch(0.98 0 0);
-    --destructive-muted: oklch(0.96 0.03 27);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --destructive-muted: oklch(0.96 0.03 27);
 
-    --info: oklch(0.60 0.18 250);
-    --info-foreground: oklch(0.98 0 0);
-    --info-muted: oklch(0.96 0.04 250);
+  --info: oklch(0.6 0.18 250);
+  --info-foreground: oklch(0.98 0 0);
+  --info-muted: oklch(0.96 0.04 250);
 
-    /* Borders & Ring */
-    --border: oklch(0.91 0 0);
-    --input: oklch(0.91 0 0);
-    --ring: oklch(0.41 0.17 277);
+  /* Borders & Ring */
+  --border: oklch(0.91 0 0);
+  --input: oklch(0.91 0 0);
+  --ring: oklch(0.41 0.17 277);
 
-    /* Chart Colors */
-    --chart-1: oklch(0.63 0.19 152);
-    --chart-2: oklch(0.60 0.18 250);
-    --chart-3: oklch(0.70 0.18 75);
-    --chart-4: oklch(0.55 0.22 27);
-    --chart-5: oklch(0.52 0.22 280);
+  /* Chart Colors */
+  --chart-1: oklch(0.63 0.19 152);
+  --chart-2: oklch(0.6 0.18 250);
+  --chart-3: oklch(0.7 0.18 75);
+  --chart-4: oklch(0.55 0.22 27);
+  --chart-5: oklch(0.52 0.22 280);
 
-    /* Layout Constants */
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0.01 265);
-    --sidebar-primary: oklch(0.41 0.17 277);
-    --sidebar-primary-foreground: oklch(0.98 0 0);
-    --sidebar-accent: oklch(0.96 0.04 277);
-    --sidebar-accent-foreground: oklch(0.42 0.15 277);
-    --sidebar-border: oklch(0.91 0 0);
-    --sidebar-ring: oklch(0.41 0.17 277);
+  /* Layout Constants */
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0.01 265);
+  --sidebar-primary: oklch(0.41 0.17 277);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.96 0.04 277);
+  --sidebar-accent-foreground: oklch(0.42 0.15 277);
+  --sidebar-border: oklch(0.91 0 0);
+  --sidebar-ring: oklch(0.41 0.17 277);
 
-    --radius: 0.875rem;
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
-    --radius-pill: 99px;
-    --radius-nav: 11px;
-    --radius-btn: 9px;
+  --radius: 0.875rem;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-pill: 99px;
+  --radius-nav: 11px;
+  --radius-btn: 9px;
 
-    /* Shadows */
-    --shadow-card: 0 1px 3px oklch(0.145/0.06), 0 1px 2px oklch(0.145/0.05);
-    --shadow-pop: 0 10px 30px -10px oklch(0.145/0.18);
-    --shadow-sm: 0 1px 2px oklch(0.145/0.04);
+  /* Shadows */
+  --shadow-card: 0 1px 3px oklch(0.145/0.06), 0 1px 2px oklch(0.145/0.05);
+  --shadow-pop: 0 10px 30px -10px oklch(0.145/0.18);
+  --shadow-sm: 0 1px 2px oklch(0.145/0.04);
 
-    /* Layout Widths */
-    --sidebar-width: 248px;
-    --sidebar-width-collapsed: 80px;
-    --topbar-height: 72px;
-    --rail-width: 404px;
+  /* Layout Widths */
+  --sidebar-width: 248px;
+  --sidebar-width-collapsed: 80px;
+  --topbar-height: 72px;
+  --rail-width: 404px;
 
-    /* Course Category Colors */
-    --course-violet: oklch(0.52 0.22 280);
-    --course-green: oklch(0.63 0.19 152);
-    --course-blue: oklch(0.52 0.17 258);
-    --course-amber: oklch(0.72 0.17 70);
-    --course-teal: oklch(0.52 0.14 175);
-    --course-rust: oklch(0.50 0.14 30);
+  /* Course Category Colors */
+  --course-violet: oklch(0.52 0.22 280);
+  --course-green: oklch(0.63 0.19 152);
+  --course-blue: oklch(0.52 0.17 258);
+  --course-amber: oklch(0.72 0.17 70);
+  --course-teal: oklch(0.52 0.14 175);
+  --course-rust: oklch(0.5 0.14 30);
 }
 ```
 
@@ -164,19 +164,29 @@ Append before the closing `}` of `globals.css`:
 
 ```css
 /* Custom Scrollbar */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-thumb {
-    background: oklch(0.88 0 0);
-    border-radius: 99px;
-    border: 3px solid var(--background);
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
-::-webkit-scrollbar-thumb:hover { background: oklch(0.78 0 0); }
+::-webkit-scrollbar-thumb {
+  background: oklch(0.88 0 0);
+  border-radius: 99px;
+  border: 3px solid var(--background);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.78 0 0);
+}
 
 /* Text selection */
-::selection { background: oklch(0.41 0.17 277 / 0.2); color: oklch(0.41 0.17 277); }
+::selection {
+  background: oklch(0.41 0.17 277 / 0.2);
+  color: oklch(0.41 0.17 277);
+}
 
 /* Smooth scroll */
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 ```
 
 - [ ] **Step 4: Verify CSS parses**

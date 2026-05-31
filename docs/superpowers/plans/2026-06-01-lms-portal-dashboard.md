@@ -12,22 +12,22 @@
 
 ## File Map
 
-| File | Action |
-|---|---|
-| `components/app-sidebar.tsx` | Modify — add 8 more nav items from prototype |
-| `components/greeting-card.tsx` | Create — gradient greeting card |
-| `components/announcement-banner.tsx` | Create — dismissible amber banner |
-| `components/stat-card-dashboard.tsx` | Create — dashboard-specific stat (GPA, credits, etc.) |
-| `components/todo-item.tsx` | Create — single task row |
-| `components/schedule-slot.tsx` | Create — timeline slot row |
-| `components/course-card-dashboard.tsx` | Create — 6-variant course card with footer stats |
-| `components/donut-chart.tsx` | Create — SVG donut for grade distribution |
-| `components/quick-actions.tsx` | Create — 8-item quick actions grid |
-| `components/notification-item.tsx` | Create — single notification row |
-| `components/activity-item.tsx` | Create — single activity row |
-| `components/dashboard-rail.tsx` | Create — right rail wrapper (4 sections) |
-| `app/(portal)/dashboard/page.tsx` | Replace — full dashboard |
-| `app/globals.css` | Append — responsive dashboard styles |
+| File                                   | Action                                                |
+| -------------------------------------- | ----------------------------------------------------- |
+| `components/app-sidebar.tsx`           | Modify — add 8 more nav items from prototype          |
+| `components/greeting-card.tsx`         | Create — gradient greeting card                       |
+| `components/announcement-banner.tsx`   | Create — dismissible amber banner                     |
+| `components/stat-card-dashboard.tsx`   | Create — dashboard-specific stat (GPA, credits, etc.) |
+| `components/todo-item.tsx`             | Create — single task row                              |
+| `components/schedule-slot.tsx`         | Create — timeline slot row                            |
+| `components/course-card-dashboard.tsx` | Create — 6-variant course card with footer stats      |
+| `components/donut-chart.tsx`           | Create — SVG donut for grade distribution             |
+| `components/quick-actions.tsx`         | Create — 8-item quick actions grid                    |
+| `components/notification-item.tsx`     | Create — single notification row                      |
+| `components/activity-item.tsx`         | Create — single activity row                          |
+| `components/dashboard-rail.tsx`        | Create — right rail wrapper (4 sections)              |
+| `app/(portal)/dashboard/page.tsx`      | Replace — full dashboard                              |
+| `app/globals.css`                      | Append — responsive dashboard styles                  |
 
 ---
 
@@ -1114,24 +1114,24 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 ```css
 /* Dashboard responsive */
 @media (max-width: 1320px) {
-    .grid.\[xl\:grid-cols-\[1fr_404px\]\] {
-        grid-template-columns: 1fr !important;
-    }
+  .grid.\[xl\:grid-cols-\[1fr_404px\]\] {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @media (max-width: 980px) {
-    .grid.\[lg\:grid-cols-2\] {
-        grid-template-columns: 1fr !important;
-    }
+  .grid.\[lg\:grid-cols-2\] {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @media (max-width: 680px) {
-    .grid.\[sm\:grid-cols-2\] {
-        grid-template-columns: 1fr 1fr !important;
-    }
-    .grid.\[1fr_1fr\] {
-        grid-template-columns: 1fr 1fr !important;
-    }
+  .grid.\[sm\:grid-cols-2\] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .grid.\[1fr_1fr\] {
+    grid-template-columns: 1fr 1fr !important;
+  }
 }
 ```
 

@@ -1,5 +1,6 @@
 import { VideoIcon, BarChart3Icon, UploadIcon, CalendarClockIcon, ClipboardCheckIcon, CircleDollarSignIcon, FolderOpenIcon, MailIcon } from "lucide-react"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 interface QuickAction {
     icon: React.ReactNode
@@ -32,26 +33,30 @@ export function QuickActions() {
         <div className="flex flex-wrap gap-3">
             {quickActions.map((qa, i) => (
                 qa.href ? (
-                    <Link
+                    <Button
+                        asChild
+                        variant="outline"
                         key={i}
-                        href={qa.href}
-                        className="w-[74px] flex flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:bg-muted hover:border-[hsl(243_60%_86%)]"
+                        className="h-auto w-[74px] flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:border-[hsl(243_60%_86%)] hover:bg-muted"
                     >
-                        <div className={`flex h-[38px] w-[38px] items-center justify-center rounded-[11px] ${tintClasses[qa.tint]}`}>
-                            {qa.icon}
-                        </div>
-                        <div className="text-[11px] font-medium text-[hsl(215_18%_38%)] text-center leading-tight">{qa.label}</div>
-                    </Link>
+                        <Link href={qa.href}>
+                            <div className={`flex h-[38px] w-[38px] items-center justify-center rounded-[11px] ${tintClasses[qa.tint]}`}>
+                                {qa.icon}
+                            </div>
+                            <div className="text-center text-[11px] font-medium leading-tight text-[hsl(215_18%_38%)]">{qa.label}</div>
+                        </Link>
+                    </Button>
                 ) : (
-                    <div
+                    <Button
+                        variant="outline"
                         key={i}
-                        className="w-[74px] flex flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:bg-muted hover:border-[hsl(243_60%_86%)]"
+                        className="h-auto w-[74px] flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:border-[hsl(243_60%_86%)] hover:bg-muted"
                     >
                         <div className={`flex h-[38px] w-[38px] items-center justify-center rounded-[11px] ${tintClasses[qa.tint]}`}>
                             {qa.icon}
                         </div>
-                        <div className="text-[11px] font-medium text-[hsl(215_18%_38%)] text-center leading-tight">{qa.label}</div>
-                    </div>
+                        <div className="text-center text-[11px] font-medium leading-tight text-[hsl(215_18%_38%)]">{qa.label}</div>
+                    </Button>
                 )
             ))}
         </div>

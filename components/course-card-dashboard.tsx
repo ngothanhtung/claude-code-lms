@@ -1,5 +1,6 @@
 import { CodeXmlIcon, DatabaseIcon, NetworkIcon, CoffeeIcon, BookOpenIcon, TerminalIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Card } from "@/components/ui/card"
 
 type Category = "violet" | "green" | "blue" | "amber" | "teal" | "rust"
 
@@ -25,8 +26,8 @@ const configs: Record<Category, { gradient: string; icon: React.ReactNode }> = {
 export function CourseCardDashboard({ title, category, instructor, progress, assignments, grade, className }: CourseCardDashboardProps) {
     const c = configs[category]
     return (
-        <div className={cn(
-            "flex flex-col overflow-hidden rounded-[14px] border border-border bg-card transition-all duration-150 hover:-translate-y-[3px]",
+        <Card className={cn(
+            "gap-0 overflow-hidden rounded-[14px] border border-border bg-card p-0 py-0 shadow-none ring-0 transition-all duration-150 hover:-translate-y-[3px]",
             className
         )}>
             <div className={cn("relative flex min-h-[116px] flex-col justify-end p-[14px_14px_16px]", "bg-gradient-to-br", c.gradient)}>
@@ -58,6 +59,6 @@ export function CourseCardDashboard({ title, category, instructor, progress, ass
                     <div className="text-[15px] font-extrabold mt-[2px]">{grade}</div>
                 </div>
             </div>
-        </div>
+        </Card>
     )
 }

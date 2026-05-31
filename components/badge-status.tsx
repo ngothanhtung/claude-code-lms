@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 type BadgeVariant = "success" | "warning" | "destructive" | "info" | "outline" | "default"
 
@@ -19,12 +20,12 @@ const variantClasses: Record<BadgeVariant, string> = {
 
 export function BadgeStatus({ variant = "default", children, className }: BadgeStatusProps) {
     return (
-        <span className={cn(
+        <Badge className={cn(
             "inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide",
             variantClasses[variant],
             className
         )}>
             {children}
-        </span>
+        </Badge>
     )
 }

@@ -84,16 +84,16 @@ Build Phase 1 of the LMS Portal frontend: a full theme system (light, with dark 
 
 ### 2.3 Spacing & Layout Constants
 
-| Token | Value | Usage |
-|---|---|---|
-| `--sidebar-w` | `248px` | Sidebar expanded width |
-| `--sidebar-collapsed-w` | `80px` | Sidebar collapsed width |
-| `--topbar-h` | `72px` | Topbar height |
-| `--rail-w` | `404px` | Right rail width (future) |
-| `--radius` | `0.875rem` (14px) | Default card corner radius |
-| `--radius-nav` | `11px` | Nav item radius |
-| `--radius-btn` | `9px` | Button radius |
-| `--radius-pill` | `99px` | Badge/pill radius |
+| Token                   | Value             | Usage                      |
+| ----------------------- | ----------------- | -------------------------- |
+| `--sidebar-w`           | `248px`           | Sidebar expanded width     |
+| `--sidebar-collapsed-w` | `80px`            | Sidebar collapsed width    |
+| `--topbar-h`            | `72px`            | Topbar height              |
+| `--rail-w`              | `404px`           | Right rail width (future)  |
+| `--radius`              | `0.875rem` (14px) | Default card corner radius |
+| `--radius-nav`          | `11px`            | Nav item radius            |
+| `--radius-btn`          | `9px`             | Button radius              |
+| `--radius-pill`         | `99px`            | Badge/pill radius          |
 
 **Shadows**
 | Token | Value |
@@ -149,18 +149,27 @@ Grid-based shell:
 }
 
 /* Desktop: sidebar spans full height, topbar spans full width */
-.app-sidebar   { grid-row: 1 / -1; }
-.app-topbar    { grid-column: 2; grid-row: 1; }
-.app-content   { grid-column: 2; grid-row: 2; overflow-y: auto; }
+.app-sidebar {
+  grid-row: 1 / -1;
+}
+.app-topbar {
+  grid-column: 2;
+  grid-row: 1;
+}
+.app-content {
+  grid-column: 2;
+  grid-row: 2;
+  overflow-y: auto;
+}
 ```
 
 ### 3.3 Responsive
 
-| Breakpoint | Behavior |
-|---|---|
-| `> 1320px` | Full layout, sidebar expanded |
-| `980px – 1320px` | Sidebar auto-collapsed (icon rail), rail hidden |
-| `< 980px` | Sidebar hidden, hamburger menu opens mobile drawer |
+| Breakpoint       | Behavior                                           |
+| ---------------- | -------------------------------------------------- |
+| `> 1320px`       | Full layout, sidebar expanded                      |
+| `980px – 1320px` | Sidebar auto-collapsed (icon rail), rail hidden    |
+| `< 980px`        | Sidebar hidden, hamburger menu opens mobile drawer |
 
 ## 4. Components
 

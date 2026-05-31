@@ -1,16 +1,18 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { AppTopbar } from "@/components/app-topbar"
 
-export default function PortalLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="flex min-h-svh">
-            <AppSidebar />
-            <div className="flex flex-1 flex-col">
-                <AppTopbar />
-                <main className="flex-1 overflow-y-auto p-6">
-                    {children}
-                </main>
-            </div>
-        </div>
-    )
+export default function PortalLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <div className="app">
+      <AppSidebar />
+      <div className="main">
+        <AppTopbar />
+        <main className="content">{children}</main>
+      </div>
+    </div>
+  )
 }

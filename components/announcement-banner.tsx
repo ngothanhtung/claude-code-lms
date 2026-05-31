@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { MegaphoneIcon, XIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 interface AnnouncementBannerProps {
     title: string
@@ -15,7 +17,7 @@ export function AnnouncementBanner({ title, message, href }: AnnouncementBannerP
     if (!visible) return null
 
     return (
-        <div className="flex items-start gap-3.5 rounded-[var(--radius)] border border-[hsl(45_90%_80%)] bg-[linear-gradient(100deg,hsl(48_96%_94%),hsl(45_96%_90%))] px-4 py-4">
+        <Card className="flex-row items-start gap-3.5 rounded-[var(--radius)] border border-[hsl(45_90%_80%)] bg-[linear-gradient(100deg,hsl(48_96%_94%),hsl(45_96%_90%))] px-4 py-4 shadow-none ring-0">
             <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[10px] bg-[hsl(38_92%_50%)] text-white">
                 <MegaphoneIcon className="h-[18px] w-[18px]" />
             </div>
@@ -31,12 +33,14 @@ export function AnnouncementBanner({ title, message, href }: AnnouncementBannerP
                     ) : message}
                 </p>
             </div>
-            <button
+            <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setVisible(false)}
-                className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[8px] border-0 bg-transparent text-[hsl(32_40%_45%)] transition-colors hover:bg-[hsl(45_70%_84%)]"
+                className="ml-auto h-[30px] w-[30px] shrink-0 rounded-[8px] border-0 bg-transparent text-[hsl(32_40%_45%)] hover:bg-[hsl(45_70%_84%)]"
             >
                 <XIcon className="h-[18px] w-[18px]" />
-            </button>
-        </div>
+            </Button>
+        </Card>
     )
 }

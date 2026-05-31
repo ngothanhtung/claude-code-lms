@@ -2,6 +2,7 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { IconTint } from "@/components/icon-tint"
 import { TrendingUpIcon, DatabaseIcon, LayersIcon, ClipboardListIcon } from "lucide-react"
+import { Card } from "@/components/ui/card"
 
 interface StatCardDashboardProps {
     variant: "gpa" | "credits" | "semester" | "todos"
@@ -57,8 +58,8 @@ export function StatCardDashboard({ variant, className }: StatCardDashboardProps
     const c = configs[variant]
 
     return (
-        <div className={cn(
-            "flex flex-col gap-3 rounded-[var(--radius)] border border-border bg-card p-[18px] shadow-[var(--shadow-card)] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[var(--shadow-pop)]",
+        <Card className={cn(
+            "gap-3 rounded-[var(--radius)] border border-border bg-card p-[18px] py-[18px] shadow-[var(--shadow-card)] ring-0 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[var(--shadow-pop)]",
             className
         )}>
             <div className="flex items-start justify-between">
@@ -96,6 +97,6 @@ export function StatCardDashboard({ variant, className }: StatCardDashboardProps
                     {c.detail}
                 </div>
             )}
-        </div>
+        </Card>
     )
 }

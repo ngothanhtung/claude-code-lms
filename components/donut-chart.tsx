@@ -1,5 +1,3 @@
-import { cn } from "@/lib/utils"
-
 interface DonutSegment {
     value: number
     color: string
@@ -16,12 +14,13 @@ export function DonutChart({ segments, centerLabel, centerSub }: DonutChartProps
     const circumference = 2 * Math.PI * R
     const total = segments.reduce((s, seg) => s + seg.value, 0)
 
-    let cumulative = 0
     const circles = segments.map((seg, i) => {
+        const cumulative = segments
+            .slice(0, i)
+            .reduce((sum, item) => sum + item.value, 0)
         const pct = seg.value / total
         const dashLen = pct * circumference
         const dashOffset = -(cumulative / total) * circumference
-        cumulative += seg.value
         return (
             <circle
                 key={i}
