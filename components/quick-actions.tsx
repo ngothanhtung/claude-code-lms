@@ -29,28 +29,28 @@ const tintClasses = {
 
 export function QuickActions() {
     return (
-        <div className="grid grid-cols-4 gap-3">
+        <div className="flex flex-wrap gap-3">
             {quickActions.map((qa, i) => (
                 qa.href ? (
                     <Link
                         key={i}
                         href={qa.href}
-                        className="flex flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_6px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:bg-muted hover:border-[hsl(243_60%_86%)]"
+                        className="w-[74px] flex flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:bg-muted hover:border-[hsl(243_60%_86%)]"
                     >
-                        <div className={`flex h-[40px] w-[40px] items-center justify-center rounded-[12px] ${tintClasses[qa.tint]}`}>
+                        <div className={`flex h-[38px] w-[38px] items-center justify-center rounded-[11px] ${tintClasses[qa.tint]}`}>
                             {qa.icon}
                         </div>
-                        <div className="text-[11.5px] font-medium text-[hsl(215_18%_38%)] text-center leading-tight">{qa.label}</div>
+                        <div className="text-[11px] font-medium text-[hsl(215_18%_38%)] text-center leading-tight">{qa.label}</div>
                     </Link>
                 ) : (
                     <div
                         key={i}
-                        className="flex flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_6px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:bg-muted hover:border-[hsl(243_60%_86%)]"
+                        className="w-[74px] flex flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:bg-muted hover:border-[hsl(243_60%_86%)]"
                     >
-                        <div className={`flex h-[40px] w-[40px] items-center justify-center rounded-[12px] ${tintClasses[qa.tint]}`}>
+                        <div className={`flex h-[38px] w-[38px] items-center justify-center rounded-[11px] ${tintClasses[qa.tint]}`}>
                             {qa.icon}
                         </div>
-                        <div className="text-[11.5px] font-medium text-[hsl(215_18%_38%)] text-center leading-tight">{qa.label}</div>
+                        <div className="text-[11px] font-medium text-[hsl(215_18%_38%)] text-center leading-tight">{qa.label}</div>
                     </div>
                 )
             ))}

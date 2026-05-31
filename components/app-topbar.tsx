@@ -1,6 +1,6 @@
 "use client"
 
-import { SearchIcon, BellIcon, ChevronDownIcon, GlobeIcon } from "lucide-react"
+import { SearchIcon, BellIcon, ChevronDownIcon, GlobeIcon, MenuIcon, CalendarIcon, MessageSquareIcon } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -44,6 +44,11 @@ export function AppTopbar() {
                 </p>
             </div>
 
+            {/* Hamburger */}
+            <Button variant="ghost" size="icon-sm" className="text-muted-foreground">
+                <MenuIcon className="h-4 w-4" />
+            </Button>
+
             {/* Center: Search */}
             <div className="relative hidden md:flex flex-1 max-w-md">
                 <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -64,6 +69,16 @@ export function AppTopbar() {
                     className="text-muted-foreground"
                 >
                     <GlobeIcon className="h-4 w-4" />
+                </Button>
+
+                {/* Calendar */}
+                <Button variant="ghost" size="icon-sm" className="text-muted-foreground">
+                    <CalendarIcon className="h-4 w-4" />
+                </Button>
+
+                {/* Messages */}
+                <Button variant="ghost" size="icon-sm" className="text-muted-foreground relative">
+                    <MessageSquareIcon className="h-4 w-4" />
                 </Button>
 
                 {/* Notifications */}

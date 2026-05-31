@@ -15,14 +15,14 @@ const tintClasses = {
 
 export function ActivityItem({ icon, iconTint, title, subtitle, time }: ActivityItemProps) {
     return (
-        <div className="flex gap-[11px] py-[13px] border-t border-border first:border-t-0 first:pt-0.5">
-            <div className={`flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[10px] ${tintClasses[iconTint]}`}>
+        <div className="flex gap-[10px] py-[11px] border-t border-border first:border-t-0 first:pt-0">
+            <div className={`flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[9px] ${tintClasses[iconTint]}`}>
                 {icon}
             </div>
             <div className="min-w-0 flex-1">
-                <div className="text-[13px] font-semibold">{title}</div>
+                <div className="text-[12.5px] font-semibold">{title}</div>
                 <div className="text-[12px] text-muted-foreground">{subtitle}</div>
-                <div className="text-[11px] text-muted-foreground mt-[3px]">{time}</div>
+                <div className="text-[11px] text-muted-foreground mt-[2px]">{time}</div>
             </div>
         </div>
     )

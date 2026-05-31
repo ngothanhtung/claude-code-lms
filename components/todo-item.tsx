@@ -25,7 +25,7 @@ const tintToIconClass: Record<TodoItemProps["iconTint"], string> = {
 export function TodoItem({ icon, iconTint, title, subtitle, badge, dueTime, action, actionVariant = "default" }: TodoItemProps) {
     return (
         <div className="flex items-center gap-3.5 py-[13px] border-t border-border first:border-t-0 first:pt-0.5">
-            <div className={`flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[11px] ${tintToIconClass[iconTint]}`}>
+            <div className={`flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[11px] ${tintToIconClass[iconTint]}`}>
                 {icon}
             </div>
             <div className="min-w-0 flex-1">

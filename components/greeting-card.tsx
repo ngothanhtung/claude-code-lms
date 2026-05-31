@@ -15,7 +15,7 @@ function formatDate() {
 export function GreetingCard({ userName, semester }: GreetingCardProps) {
     return (
         <div className="flex items-center justify-between gap-4 rounded-[var(--radius)] border border-[hsl(243_50%_91%)] bg-[linear-gradient(180deg,#fff,#fff)] px-6 py-5" style={{
-            backgroundImage: "radial-gradient(120% 140% at 100% 0%, oklch(0.96 0.04 277) 0%, transparent 55%), linear-gradient(180deg, #fff, #fff)",
+            backgroundImage: "radial-gradient(ellipse 80% 100% at 105% -10%, oklch(0.96 0.04 277 / 0.08) 0%, transparent 55%), linear-gradient(180deg, #fff, #fff)",
             backgroundSize: "100% 100%",
         }}>
             <div>
