@@ -10,7 +10,7 @@ import {
   TerminalIcon,
 } from "lucide-react"
 import type { ComponentType } from "react"
-import { TodoItem } from "@/components/todo-item"
+import { TodoItem } from "@/features/tasks/components/todo-item"
 import { Card } from "@/components/ui/card"
 import { todayTasks, type TaskIcon } from "@/features/tasks/mock"
 

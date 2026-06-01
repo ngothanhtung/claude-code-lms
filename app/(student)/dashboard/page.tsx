@@ -1,9 +1,9 @@
-import { GreetingCard } from "@/components/greeting-card"
-import { AnnouncementBanner } from "@/components/announcement-banner"
-import { StatCardDashboard } from "@/components/stat-card-dashboard"
-import { DashboardRail } from "@/components/dashboard-rail"
 import { TodayEvents } from "@/features/calendars/components/today-events"
 import { Courses } from "@/features/courses/components/courses"
+import { AnnouncementBanner } from "@/features/dashboard/components/announcement-banner"
+import { DashboardRail } from "@/features/dashboard/components/dashboard-rail"
+import { GreetingCard } from "@/features/dashboard/components/greeting-card"
+import { StatCardDashboard } from "@/features/dashboard/components/stat-card-dashboard"
 import { TodayTasks } from "@/features/tasks/components/today-tasks"
 
 export default function DashboardPage() {

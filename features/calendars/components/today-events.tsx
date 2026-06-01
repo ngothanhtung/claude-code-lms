@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
-import { ScheduleSlot } from "@/components/schedule-slot"
 import { Card } from "@/components/ui/card"
+import { ScheduleSlot } from "@/features/calendars/components/schedule-slot"
 import {
   todayEvents,
   todayLabel,

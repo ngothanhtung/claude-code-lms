@@ -4,10 +4,10 @@ import {
   UploadIcon,
   VideoIcon,
 } from "lucide-react"
-import { ActivityItem } from "@/components/activity-item"
 import { QuickActions } from "@/components/quick-actions"
-import { DonutChart } from "@/components/donut-chart"
+import { ActivityItem } from "@/features/activities/components/activity-item"
 import { RecentNotifications } from "@/features/notifications/components/recent-notifications"
+import { DonutChart } from "@/features/results/components/donut-chart"
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
 

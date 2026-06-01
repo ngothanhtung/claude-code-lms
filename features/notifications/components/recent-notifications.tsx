@@ -6,8 +6,8 @@ import {
   FileTextIcon,
   MegaphoneIcon,
 } from "lucide-react"
-import { NotificationItem } from "@/components/notification-item"
 import { Card } from "@/components/ui/card"
+import { NotificationItem } from "@/features/notifications/components/notification-item"
 import {
   recentNotifications,
   type NotificationIcon,
