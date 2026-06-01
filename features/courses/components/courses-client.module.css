@@ -1,0 +1,364 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---- Toolbar ---- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tabs {
+  display: inline-flex;
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 11px;
+  padding: 4px;
+  gap: 3px;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  padding: 7px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: hsl(var(--foreground));
+}
+
+.tabActive {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  box-shadow: var(--shadow-card);
+}
+
+.tabCount {
+  font-size: 11px;
+  font-weight: 700;
+  background: hsl(var(--muted-foreground) / 0.12);
+  color: hsl(var(--muted-foreground));
+  border-radius: 99px;
+  padding: 1px 7px;
+  line-height: 1.6;
+}
+
+.tabCountActive {
+  background: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+}
+
+/* ---- Search ---- */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  padding: 9px 13px;
+  min-width: 260px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.search:focus-within {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.12);
+}
+
+.searchIcon {
+  width: 17px;
+  height: 17px;
+  color: hsl(var(--muted-foreground));
+  flex-shrink: 0;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  width: 100%;
+  color: hsl(var(--foreground));
+  padding: 0;
+  height: auto;
+  box-shadow: none !important;
+}
+
+.searchInput::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.searchClear {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.searchClear:hover {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.searchClear svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---- Grid ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* ---- Course Card ---- */
+.courseCard {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.courseCard:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-pop);
+}
+
+.courseTop {
+  padding: 14px 14px 16px;
+  color: #fff;
+  position: relative;
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+}
+
+.violet {
+  background: linear-gradient(155deg, hsl(262 83% 62%), hsl(262 83% 50%));
+}
+
+.green {
+  background: linear-gradient(155deg, hsl(142 65% 48%), hsl(142 71% 38%));
+}
+
+.blue {
+  background: linear-gradient(155deg, hsl(221 83% 58%), hsl(221 83% 46%));
+}
+
+.amber {
+  background: linear-gradient(155deg, hsl(36 95% 56%), hsl(28 92% 50%));
+}
+
+.teal {
+  background: linear-gradient(155deg, hsl(172 60% 44%), hsl(174 66% 34%));
+}
+
+.rust {
+  background: linear-gradient(155deg, hsl(16 60% 60%), hsl(14 52% 48%));
+}
+
+.courseName {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.25;
+  padding-right: 26px;
+}
+
+.courseInstructor {
+  font-size: 11.5px;
+  opacity: 0.9;
+  margin-top: 3px;
+}
+
+.courseEmblem {
+  position: absolute;
+  top: 13px;
+  right: 12px;
+  opacity: 0.9;
+}
+
+.courseEmblem svg {
+  width: 18px;
+  height: 18px;
+}
+
+.courseProgress {
+  margin-top: auto;
+}
+
+.courseProgressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.courseTrack {
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.courseTrack > span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: #fff;
+}
+
+/* ---- Card Meta ---- */
+.courseMeta {
+  display: flex;
+  gap: 8px;
+  padding: 11px 14px 0;
+}
+
+.metaItem {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  color: hsl(var(--muted-foreground));
+}
+
+.metaItem svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ---- Card Foot ---- */
+.courseFoot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-top: 1px solid hsl(var(--border));
+  margin-top: 11px;
+}
+
+.courseStat {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.statIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.statIcon[data-variant="amber"] {
+  background: hsl(var(--warning-muted));
+  color: hsl(var(--warning));
+}
+
+.statIcon[data-variant="green"] {
+  background: hsl(var(--success-muted));
+  color: hsl(var(--success));
+}
+
+.statIcon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.statNum {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.statLbl {
+  font-size: 10.5px;
+  color: hsl(var(--muted-foreground));
+  margin-top: 2px;
+}
+
+.courseSpacer {
+  flex: 1;
+}
+
+/* ---- Empty State ---- */
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.emptyIcon {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
+}
+
+.empty p {
+  font-size: 14px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1320px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .search {
+    min-width: 0;
+    flex: 1;
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tabs {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -647,6 +647,9 @@ html {
   gap: 20px;
   min-width: 0;
 }
+.col-span-full {
+  grid-column: 1 / -1;
+}
 .rail {
   display: flex;
   flex-direction: column;
