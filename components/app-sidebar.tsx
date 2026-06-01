@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import {
   BarChart3Icon,
@@ -65,6 +65,7 @@ function isRouteActive(pathname: string, href: string) {
 
 export function AppSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const initialOpenGroups = useMemo(() => {
     return navItems.reduce<Record<string, boolean>>((groups, item) => {
       if (item.sub) {
@@ -194,7 +195,7 @@ export function AppSidebar() {
             <div className="assistant-sub">Bạn cần hỗ trợ gì?</div>
           </div>
         </div>
-        <button className="assistant-btn" type="button">
+        <button className="assistant-btn" type="button" onClick={() => router.push("/ai-assistant")}>
           <MessageCircleIcon className="icon-sm" />
           Chat ngay
         </button>
