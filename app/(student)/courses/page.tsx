@@ -1,4 +1,9 @@
-import { BookOpenCheckIcon, LayersIcon, StarIcon, ClipboardListIcon } from "lucide-react"
+import {
+  BookOpenCheckIcon,
+  LayersIcon,
+  StarIcon,
+  ClipboardListIcon,
+} from "lucide-react"
 import { CoursesClient } from "@/features/courses/components/courses-client"
 import {
   allCourses,
@@ -6,6 +11,7 @@ import {
   totalAssignments,
   averageGrade,
 } from "@/features/courses/mock"
+import { PageHeader } from "@/components/page-header"
 import styles from "./courses.module.css"
 
 export default function CoursesPage() {
@@ -14,14 +20,11 @@ export default function CoursesPage() {
   return (
     <div className="col-main col-span-full">
       {/* Page header */}
-      <div className={styles.pageHead}>
-        <div>
-          <h1 className={styles.pageTitle}>Khóa học của tôi</h1>
-          <p className={styles.pageSubtitle}>
-            Học kỳ II, năm học 2025 - 2026 · {learningCount} môn đang theo học
-          </p>
-        </div>
-
+      <PageHeader
+        title="Khóa học của tôi"
+        subtitle={`Học kỳ II, năm học 2025 - 2026 · ${learningCount} môn đang theo học`}
+        className={styles.pageHead}
+      >
         {/* Stat chips */}
         <div className={styles.headStats}>
           <div className={styles.statChip}>
@@ -64,7 +67,7 @@ export default function CoursesPage() {
             </div>
           </div>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Interactive course list */}
       <CoursesClient />

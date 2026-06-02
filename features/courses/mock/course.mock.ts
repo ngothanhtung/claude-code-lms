@@ -142,7 +142,10 @@ export const allCourses: Course[] = [
 ]
 
 export const totalCredits = allCourses.reduce((sum, c) => sum + c.credits, 0)
-export const totalAssignments = allCourses.reduce((sum, c) => sum + c.assignments, 0)
+export const totalAssignments = allCourses.reduce(
+  (sum, c) => sum + c.assignments,
+  0
+)
 export const averageGrade = (() => {
   const graded = allCourses.filter((c) => c.grade !== "—")
   if (!graded.length) return "—"

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import type { ComponentType } from "react"
+import Link from "next/link"
 import {
   BookOpenIcon,
   CalendarIcon,
@@ -19,7 +20,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { allCourses, type Course, type CourseCategory } from "@/features/courses/mock"
+import {
+  allCourses,
+  type Course,
+  type CourseCategory,
+} from "@/features/courses/mock"
 import styles from "./courses-client.module.css"
 
 const categoryGradients: Record<CourseCategory, string> = {
@@ -96,8 +101,23 @@ function CourseCard({ course }: { course: Course }) {
           </div>
         </div>
         <div className={styles.courseSpacer} />
-        <Button size="sm" variant="outline" className="text-[13px] font-semibold">
-          Vào lớp
+        <Button
+          size="sm"
+          variant="outline"
+          className="text-[13px] font-semibold"
+          asChild
+        >
+          <Link
+            href={`/courses/${course.title
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/[đĐ]/g, "d")
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/(^-|-$)/g, "")}`}
+          >
+            Vào lớp
+          </Link>
         </Button>
       </div>
     </div>
@@ -125,8 +145,7 @@ export function CoursesClient() {
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim()
     return allCourses.filter((c) => {
-      const matchTab =
-        activeTab === "all" || c.status === activeTab
+      const matchTab = activeTab === "all" || c.status === activeTab
       const matchSearch =
         !q ||
         c.title.toLowerCase().includes(q) ||

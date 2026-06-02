@@ -8,6 +8,7 @@ import { CheckInBanner } from "./checkin-banner"
 import { CourseAttendanceList } from "./course-attendance"
 import { SessionLogList } from "./session-log"
 import { AttendanceRail } from "./attendance-rail"
+import { PageHeader } from "@/components/page-header"
 import {
   INITIAL_COURSES,
   INITIAL_SESSIONS,
@@ -109,20 +110,15 @@ export function AttendanceShell() {
       {/* Left Column: Main */}
       <div className="flex flex-col gap-[22px] min-w-0 flex-1">
         {/* Page Header */}
-        <div className="flex flex-col gap-4.5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-              Điểm danh
-            </h1>
-            <p className="mt-1.5 text-sm font-semibold text-muted-foreground">
-              Theo dõi chuyên cần &amp; điểm danh các buổi học
-            </p>
-          </div>
+        <PageHeader
+          title="Điểm danh"
+          subtitle="Theo dõi chuyên cần & điểm danh các buổi học"
+        >
           <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-xs font-extrabold text-muted-foreground shadow-xs">
             <CalendarRange className="h-4 w-4" />
             Học kỳ III · 2025–2026
           </span>
-        </div>
+        </PageHeader>
 
         {/* Stats Grid */}
         <AttendanceStats
