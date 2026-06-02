@@ -23,7 +23,11 @@ export function ChatShell() {
 
       // Update title if first user message
       const conv = getActiveConversation()
-      if (conv && conv.messages.length === 1 && conv.messages[0].role === "ai") {
+      if (
+        conv &&
+        conv.messages.length === 1 &&
+        conv.messages[0].role === "ai"
+      ) {
         const title = trimmed.length > 40 ? trimmed.slice(0, 40) + "…" : trimmed
         dispatch({ type: "UPDATE_TITLE", id: state.activeId, title })
       }
@@ -63,9 +67,9 @@ export function ChatShell() {
     activeConversation && activeConversation.messages.length <= 1
 
   return (
-    <div className="flex flex-1 min-h-0">
+    <div className="flex h-[calc(100vh-138px)] max-sm:h-[calc(100vh-122px)] min-h-0 flex-1 border border-border rounded-2xl overflow-hidden bg-card shadow-sm">
       {/* Left: Conversation Panel */}
-      <div className="w-[286px] flex-shrink-0 hidden md:flex">
+      <div className="hidden w-[286px] shrink-0 md:flex flex-col">
         <ConversationPanel
           conversations={state.conversations}
           activeId={state.activeId}
@@ -75,10 +79,10 @@ export function ChatShell() {
       </div>
 
       {/* Right: Thread */}
-      <div className="flex-1 flex flex-col min-w-0 bg-background">
+      <div className="flex min-w-0 flex-1 flex-col bg-background">
         {/* Thread header */}
-        <div className="flex items-center gap-3 px-6 py-3.5 border-b border-border bg-card">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white bg-gradient-to-br from-primary to-purple-500">
+        <div className="flex items-center gap-3 border-b border-border bg-card px-6 py-3.5">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-500 text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -87,28 +91,28 @@ export function ChatShell() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="w-5 h-5"
+              className="h-5 w-5"
             >
               <path d="M12 3l1.912 5.813a2 2 0 001.272 1.278L21 12l-5.816 1.909a2 2 0 00-1.278 1.272L12 21l-1.909-5.819a2 2 0 00-1.278-1.278L3 12l5.819-1.909a2 2 0 001.278-1.278L12 3z" />
             </svg>
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="text-sm font-bold tracking-tight">
               Trợ lý học tập AI
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-green-500 font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-green-500">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500" />
               Trực tuyến · phản hồi tức thì
             </div>
           </div>
-          <span className="text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full flex items-center gap-1">
+          <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="w-3 h-3"
+              className="h-3 w-3"
             >
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
@@ -116,10 +120,10 @@ export function ChatShell() {
           </span>
           <button
             onClick={handleClear}
-            className="w-9 h-9 flex items-center justify-center border border-border bg-card rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             title="Xóa hội thoại"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
 
@@ -131,7 +135,7 @@ export function ChatShell() {
 
         {/* Suggestions */}
         {showSuggestions && (
-          <div className="px-6 pb-2 pt-1">
+          <div className="px-6 pt-1 pb-2">
             <Suggestions suggestions={SUGGESTIONS} onClick={handleSend} />
           </div>
         )}

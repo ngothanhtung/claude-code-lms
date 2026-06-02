@@ -2,7 +2,6 @@
 "use client"
 
 import { useReducer, useEffect, useCallback, useRef } from "react"
-import React from "react"
 import {
   DEFAULT_CONVERSATIONS,
   REPLY_RULES,

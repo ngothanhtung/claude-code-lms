@@ -2,7 +2,7 @@ import { ChatShell } from "@/features/ai-assistant/components/chat-shell"
 
 export default function AIAssistantPage() {
   return (
-    <div className="col-span-full">
+    <div className="col-span-full h-full">
       <ChatShell />
     </div>
   )

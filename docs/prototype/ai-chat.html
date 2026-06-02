@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chat với AI — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  /* ---- AI Chat page ----------------------------------------------------- */
+  .chat-shell { display: grid; grid-template-columns: 286px 1fr; height: calc(100vh - var(--topbar-h)); min-height: 0; }
+
+  /* Conversation history panel */
+  .conv-panel { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid hsl(var(--border)); background: hsl(var(--card)); }
+  .conv-head { padding: 16px 16px 12px; }
+  .new-chat-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-size: 13.5px; font-weight: 700; color: #fff; background: hsl(var(--primary)); border: none; border-radius: 11px; padding: 11px 14px; cursor: pointer; transition: filter .15s; }
+  .new-chat-btn:hover { filter: brightness(1.07); }
+  .new-chat-btn svg { width: 17px; height: 17px; }
+  .conv-search { position: relative; margin: 0 16px 8px; }
+  .conv-search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: hsl(var(--muted-foreground)); }
+  .conv-search input { width: 100%; font: inherit; font-size: 13px; padding: 9px 12px 9px 34px; border: 1px solid hsl(var(--input)); border-radius: 9px; background: hsl(var(--background)); outline: none; transition: border-color .15s, box-shadow .15s; }
+  .conv-search input:focus { border-color: hsl(var(--ring)); background: #fff; box-shadow: 0 0 0 3px hsl(var(--ring) / 0.12); }
+
+  .conv-list { flex: 1; overflow-y: auto; padding: 6px 10px 14px; }
+  .conv-group-label { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: hsl(var(--muted-foreground)); padding: 12px 8px 6px; }
+  .conv-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 10px; border-radius: 10px; cursor: pointer; transition: background .12s; position: relative; }
+  .conv-item:hover { background: hsl(var(--muted)); }
+  .conv-item.active { background: hsl(var(--primary) / 0.1); }
+  .conv-item .ci-ico { width: 30px; height: 30px; border-radius: 8px; flex: none; display: grid; place-items: center; background: hsl(var(--primary) / 0.1); color: hsl(var(--primary)); }
+  .conv-item.active .ci-ico { background: hsl(var(--primary)); color: #fff; }
+  .conv-item .ci-ico svg { width: 15px; height: 15px; }
+  .conv-item .ci-body { flex: 1; min-width: 0; }
+  .conv-item .ci-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: hsl(var(--foreground)); }
+  .conv-item.active .ci-title { color: hsl(var(--primary)); }
+  .conv-item .ci-snip { font-size: 11.5px; color: hsl(var(--muted-foreground)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .conv-item .ci-time { font-size: 11px; color: hsl(var(--muted-foreground)); flex: none; }
+
+  /* Thread */
+  .thread { display: flex; flex-direction: column; min-height: 0; background: hsl(var(--background)); }
+  .thread-head { display: flex; align-items: center; gap: 13px; padding: 14px 22px; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--card)); }
+  .th-ava { width: 40px; height: 40px; border-radius: 12px; flex: none; display: grid; place-items: center; color: #fff; background: linear-gradient(150deg, hsl(243 75% 62%), hsl(262 83% 58%)); }
+  .th-ava svg { width: 21px; height: 21px; }
+  .th-meta { flex: 1; min-width: 0; }
+  .th-name { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+  .th-status { font-size: 12px; color: hsl(142 71% 36%); font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+  .th-status .pip { width: 7px; height: 7px; border-radius: 50%; background: hsl(var(--success)); }
+  .th-model { font-size: 11px; font-weight: 700; color: hsl(var(--primary)); background: hsl(var(--primary) / 0.1); padding: 4px 10px; border-radius: 99px; display: inline-flex; align-items: center; gap: 5px; }
+  .th-model svg { width: 12px; height: 12px; }
+  .th-head-btn { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); border-radius: 10px; cursor: pointer; color: hsl(var(--muted-foreground)); transition: background .15s, color .15s; }
+  .th-head-btn:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+  .th-head-btn svg { width: 17px; height: 17px; }
+
+  /* Messages */
+  .msgs { flex: 1; overflow-y: auto; padding: 26px 22px 12px; }
+  .msgs-inner { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+  .msg { display: flex; gap: 13px; align-items: flex-start; }
+  .msg.user { justify-content: flex-end; }
+  .m-ava { width: 34px; height: 34px; border-radius: 10px; flex: none; display: grid; place-items: center; color: #fff; }
+  .m-ava.ai { background: linear-gradient(150deg, hsl(243 75% 62%), hsl(262 83% 58%)); }
+  .m-ava svg { width: 17px; height: 17px; }
+  .bubble { border-radius: 15px; padding: 14px 17px; font-size: 14px; line-height: 1.62; max-width: 680px; }
+  .msg.ai .bubble { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); color: hsl(222 24% 20%); box-shadow: var(--shadow-card); border-top-left-radius: 5px; }
+  .msg.user .bubble { background: hsl(var(--primary)); color: #fff; border-top-right-radius: 5px; }
+  .bubble p { margin: 0 0 9px; } .bubble p:last-child { margin-bottom: 0; }
+  .bubble strong { font-weight: 700; }
+  .bubble ul, .bubble ol { margin: 8px 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .bubble li { line-height: 1.55; }
+  .bubble code { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: hsl(var(--muted)); padding: 2px 6px; border-radius: 5px; color: hsl(262 60% 45%); }
+  .msg.user .bubble code { background: hsl(0 0% 100% / 0.18); color: #fff; }
+  .bubble pre { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.6; background: #0f1729; color: #e2e8f0; padding: 13px 15px; border-radius: 11px; overflow-x: auto; margin: 10px 0; }
+  .bubble pre code { background: none; padding: 0; color: inherit; font-size: 12.5px; }
+  .bubble .tok-k { color: #c4b5fd; } .bubble .tok-t { color: #67e8f9; } .bubble .tok-c { color: #64748b; font-style: italic; }
+  .bubble .b-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+  .bubble .b-table th, .bubble .b-table td { border: 1px solid hsl(var(--border)); padding: 7px 11px; text-align: left; }
+  .bubble .b-table th { background: hsl(var(--muted)); font-weight: 700; }
+  .m-foot { display: flex; gap: 6px; margin-top: 9px; }
+  .m-foot button { display: inline-flex; align-items: center; gap: 5px; font: inherit; font-size: 11.5px; font-weight: 600; color: hsl(var(--muted-foreground)); background: none; border: none; cursor: pointer; padding: 3px 6px; border-radius: 6px; transition: background .12s, color .12s; }
+  .m-foot button:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+  .m-foot button svg { width: 13px; height: 13px; }
+  .m-time { font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 7px; }
+  .msg.user .m-time { text-align: right; }
+
+  /* Typing indicator */
+  .typing .bubble { display: inline-flex; gap: 5px; padding: 16px 18px; }
+  .typing .dot { width: 7px; height: 7px; border-radius: 50%; background: hsl(var(--muted-foreground) / 0.6); animation: typed 1.3s infinite; }
+  .typing .dot:nth-child(2) { animation-delay: .18s; } .typing .dot:nth-child(3) { animation-delay: .36s; }
+  @keyframes typed { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+  /* Suggestions */
+  .suggest-wrap { max-width: 860px; margin: 4px auto 0; }
+  .suggest-row { display: flex; flex-wrap: wrap; gap: 9px; }
+  .sugg { display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 12.5px; font-weight: 600; color: hsl(var(--foreground)); background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 99px; padding: 8px 14px; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; }
+  .sugg:hover { border-color: hsl(243 60% 80%); background: hsl(var(--primary) / 0.04); transform: translateY(-1px); }
+  .sugg svg { width: 14px; height: 14px; color: hsl(var(--primary)); }
+
+  /* Composer */
+  .composer-wrap { padding: 14px 22px 18px; border-top: 1px solid hsl(var(--border)); background: hsl(var(--card)); }
+  .composer { max-width: 860px; margin: 0 auto; display: flex; align-items: flex-end; gap: 10px; border: 1px solid hsl(var(--input)); border-radius: 16px; padding: 8px 8px 8px 8px; background: hsl(var(--background)); transition: border-color .15s, box-shadow .15s; }
+  .composer.focus { border-color: hsl(var(--ring)); background: #fff; box-shadow: 0 0 0 3px hsl(var(--ring) / 0.1); }
+  .comp-attach { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border: none; background: transparent; color: hsl(var(--muted-foreground)); border-radius: 10px; cursor: pointer; transition: background .12s, color .12s; }
+  .comp-attach:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+  .comp-attach svg { width: 19px; height: 19px; }
+  .composer textarea { flex: 1; border: none; background: transparent; outline: none; resize: none; font: inherit; font-size: 14px; line-height: 1.5; color: hsl(var(--foreground)); padding: 9px 4px; max-height: 160px; min-height: 22px; }
+  .composer textarea::placeholder { color: hsl(var(--muted-foreground)); }
+  .comp-send { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border: none; background: hsl(var(--primary)); color: #fff; border-radius: 11px; cursor: pointer; transition: filter .15s, opacity .15s, background .15s; }
+  .comp-send:hover { filter: brightness(1.08); }
+  .comp-send:disabled { background: hsl(var(--muted-foreground) / 0.4); cursor: not-allowed; filter: none; }
+  .comp-send svg { width: 18px; height: 18px; }
+  .comp-hint { max-width: 860px; margin: 9px auto 0; font-size: 11.5px; color: hsl(var(--muted-foreground)); text-align: center; display: flex; align-items: center; justify-content: center; gap: 7px; }
+  .comp-hint kbd { font-family: inherit; font-size: 11px; font-weight: 600; background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: 5px; padding: 1px 6px; }
+
+  @media (max-width: 980px) {
+    .chat-shell { grid-template-columns: 1fr; }
+    .conv-panel { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Đang trò chuyện</div>
+        </div>
+      </div>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">NT</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Chat shell -->
+    <div class="chat-shell" data-screen-label="Chat với AI">
+
+      <!-- Conversation history -->
+      <div class="conv-panel">
+        <div class="conv-head">
+          <button class="new-chat-btn" id="newChatBtn"><i data-lucide="plus"></i> Cuộc trò chuyện mới</button>
+        </div>
+        <div class="conv-search">
+          <i data-lucide="search"></i>
+          <input type="text" id="convSearch" placeholder="Tìm cuộc trò chuyện..." />
+        </div>
+        <div class="conv-list" id="convList"></div>
+      </div>
+
+      <!-- Thread -->
+      <div class="thread">
+        <div class="thread-head">
+          <div class="th-ava"><i data-lucide="sparkles"></i></div>
+          <div class="th-meta">
+            <div class="th-name">Trợ lý học tập AI</div>
+            <div class="th-status"><span class="pip"></span> Trực tuyến · phản hồi tức thì</div>
+          </div>
+          <span class="th-model"><i data-lucide="zap"></i> UniLMS&nbsp;AI</span>
+          <button class="th-head-btn" id="clearBtn" title="Xóa hội thoại"><i data-lucide="trash-2"></i></button>
+        </div>
+
+        <div class="msgs" id="msgs">
+          <div class="msgs-inner" id="msgsInner"></div>
+        </div>
+
+        <div class="composer-wrap">
+          <div class="suggest-wrap" id="suggestWrap">
+            <div class="suggest-row" id="suggestRow"></div>
+          </div>
+          <div class="composer" id="composer">
+            <button class="comp-attach" title="Đính kèm"><i data-lucide="paperclip"></i></button>
+            <textarea id="chatInput" rows="1" placeholder="Hỏi AI bất cứ điều gì về môn học, bài tập, lịch thi..."></textarea>
+            <button class="comp-send" id="sendBtn" disabled><i data-lucide="arrow-up"></i></button>
+          </div>
+          <div class="comp-hint"><kbd>Enter</kbd> để gửi · <kbd>Shift</kbd>+<kbd>Enter</kbd> xuống dòng · AI có thể mắc lỗi, hãy kiểm tra thông tin quan trọng.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="ai-chat-data.js"></script>
+<script src="ai-chat-app.js"></script>
+</body>
+</html>
