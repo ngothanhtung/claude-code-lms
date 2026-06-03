@@ -1,0 +1,197 @@
+<style>
+  /* ---- Workspace page --------------------------------------------------- */
+  .ws-page { grid-template-columns: 1fr; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .breadcrumb { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-bottom: 16px; }
+  .breadcrumb a { color: hsl(var(--muted-foreground)); text-decoration: none; }
+  .breadcrumb a:hover { color: hsl(var(--primary)); }
+  .breadcrumb svg { width: 14px; height: 14px; }
+  .breadcrumb .cur { color: hsl(var(--foreground)); font-weight: 600; }
+
+  /* Repo header */
+  .repo-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 18px; }
+  .repo-id { display: flex; align-items: center; gap: 13px; }
+  .repo-id .repo-ico { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; color: #fff; background: linear-gradient(155deg, hsl(16 60% 60%), hsl(14 52% 48%)); flex-shrink: 0; }
+  .repo-id .repo-ico svg { width: 23px; height: 23px; }
+  .repo-id h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; display: flex; align-items: center; gap: 9px; }
+  .repo-id h1 .vis { font-size: 11px; font-weight: 700; color: hsl(var(--muted-foreground)); border: 1px solid hsl(var(--border)); border-radius: 99px; padding: 2px 10px; }
+  .repo-id .repo-path { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+  .repo-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* Stat strip */
+  .ws-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+  .ws-stat { display: flex; align-items: center; gap: 11px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 13px; padding: 13px 15px; box-shadow: var(--shadow-card); }
+  .ws-stat .s-ico { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+  .ws-stat .s-ico svg { width: 18px; height: 18px; }
+  .ws-stat .s-num { font-size: 18px; font-weight: 800; line-height: 1; }
+  .ws-stat .s-lbl { font-size: 11.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+
+  .ws-grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 18px; align-items: start; }
+  .card-pad { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 0; box-shadow: var(--shadow-card); overflow: hidden; }
+  .card-pad.pad { padding: 18px; }
+  .card-pad + .card-pad { margin-top: 18px; }
+  .sec-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 18px; border-bottom: 1px solid hsl(var(--border)); }
+  .sec-h h2 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .sec-h h2 svg { width: 16px; height: 16px; color: hsl(var(--muted-foreground)); }
+  .sec-h .branch-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: 8px; padding: 5px 11px; }
+  .sec-h .branch-pill svg { width: 13px; height: 13px; }
+
+  /* Latest commit banner */
+  .commit-banner { display: flex; align-items: center; gap: 11px; padding: 11px 18px; background: hsl(var(--muted) / 0.5); border-bottom: 1px solid hsl(var(--border)); font-size: 12.5px; }
+  .commit-banner .av { width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .commit-banner .cb-msg { font-weight: 600; }
+  .commit-banner .cb-hash { margin-left: auto; color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+  /* File listing */
+  .file-row { display: flex; align-items: center; gap: 12px; padding: 11px 18px; font-size: 13px; border-bottom: 1px solid hsl(var(--border)); cursor: pointer; transition: background .12s; }
+  .file-row:last-child { border-bottom: none; }
+  .file-row:hover { background: hsl(var(--muted) / 0.45); }
+  .file-row .f-ico { width: 17px; display: grid; place-items: center; flex-shrink: 0; }
+  .file-row .f-ico svg { width: 16px; height: 16px; }
+  .file-row .f-ico.dir { color: hsl(217 80% 56%); }
+  .file-row .f-ico.file { color: hsl(var(--muted-foreground)); }
+  .file-row .f-name { font-weight: 500; min-width: 130px; }
+  .file-row .f-msg { color: hsl(var(--muted-foreground)); font-size: 12px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-row .f-time { color: hsl(var(--muted-foreground)); font-size: 11.5px; flex-shrink: 0; }
+
+  av-share { }
+  .av { display: grid; place-items: center; color: #fff; font-weight: 700; }
+  .a1 { background: hsl(262 70% 58%); } .a2 { background: hsl(142 60% 42%); }
+  .a3 { background: hsl(221 75% 56%); } .a4 { background: hsl(32 85% 52%); }
+
+  /* CI pipeline */
+  .pipe { padding: 6px 0; }
+  .pipe-step { display: flex; align-items: center; gap: 11px; padding: 9px 18px; font-size: 12.5px; }
+  .pipe-step .ps-ico { width: 22px; height: 22px; border-radius: 99px; display: grid; place-items: center; flex-shrink: 0; }
+  .pipe-step .ps-ico svg { width: 13px; height: 13px; }
+  .ps-ico.ok { background: hsl(var(--success-muted)); color: hsl(142 71% 36%); }
+  .ps-ico.run { background: hsl(var(--info-muted)); color: hsl(217 91% 50%); }
+  .ps-ico.wait { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+  .pipe-step .ps-name { font-weight: 600; }
+  .pipe-step .ps-time { margin-left: auto; color: hsl(var(--muted-foreground)); font-size: 11.5px; }
+  .pipe-summary { display: flex; align-items: center; gap: 9px; padding: 12px 18px; border-top: 1px solid hsl(var(--border)); font-size: 12.5px; font-weight: 600; }
+  .pipe-summary .badge { font-size: 11px; }
+
+  /* Branches */
+  .branch-row { display: flex; align-items: center; gap: 11px; padding: 11px 18px; font-size: 13px; border-bottom: 1px solid hsl(var(--border)); }
+  .branch-row:last-child { border-bottom: none; }
+  .branch-row svg.b-ico { width: 15px; height: 15px; color: hsl(var(--muted-foreground)); flex-shrink: 0; }
+  .branch-row .b-name { font-weight: 600; }
+  .branch-row .b-def { font-size: 10px; font-weight: 700; color: hsl(142 71% 34%); background: hsl(var(--success-muted)); border-radius: 99px; padding: 1px 8px; }
+  .branch-row .b-meta { margin-left: auto; color: hsl(var(--muted-foreground)); font-size: 11.5px; }
+
+  /* Online members */
+  .online-row { display: flex; align-items: center; gap: 11px; padding: 10px 18px; border-bottom: 1px solid hsl(var(--border)); }
+  .online-row:last-child { border-bottom: none; }
+  .online-row .av { width: 32px; height: 32px; border-radius: 99px; font-size: 12px; position: relative; }
+  .online-row .av .pres { position: absolute; right: -1px; bottom: -1px; width: 10px; height: 10px; border-radius: 99px; border: 2px solid hsl(var(--card)); }
+  .pres.on { background: hsl(142 71% 45%); } .pres.idle { background: hsl(38 92% 55%); } .pres.off { background: hsl(var(--muted-foreground)); }
+  .online-row .o-name { font-size: 13px; font-weight: 600; }
+  .online-row .o-stat { font-size: 11.5px; color: hsl(var(--muted-foreground)); margin-top: 1px; }
+
+  @media (max-width: 980px) { .ws-grid { grid-template-columns: 1fr; } .ws-stats { grid-template-columns: repeat(2, 1fr); } }
+</style>
+<div class="content ws-page">
+      <div class="col-main">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+          <a href="assignments-group.html">Bài tập nhóm</a>
+          <i data-lucide="chevron-right"></i>
+          <a href="group-detail.html">Nhóm 3</a>
+          <i data-lucide="chevron-right"></i>
+          <span class="cur">Workspace</span>
+        </div>
+
+        <!-- Repo header -->
+        <div class="repo-head">
+          <div class="repo-id">
+            <div class="repo-ico"><i data-lucide="terminal"></i></div>
+            <div>
+              <h1>ecom-api <span class="vis"><i data-lucide="users" style="width:11px;height:11px;display:inline;vertical-align:-1px"></i> Nhóm 3</span></h1>
+              <div class="repo-path mono">github.com/nhom3/ecom-api · main</div>
+            </div>
+          </div>
+          <div class="repo-actions">
+            <button class="btn"><i data-lucide="git-branch" class="icon-sm"></i> 4 nhánh</button>
+            <button class="btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat nhóm</button>
+            <button class="btn primary"><i data-lucide="code" class="icon-sm"></i> Clone</button>
+          </div>
+        </div>
+
+        <!-- Stat strip -->
+        <div class="ws-stats">
+          <div class="ws-stat"><div class="s-ico ico-tint-indigo"><i data-lucide="git-commit-horizontal"></i></div><div><div class="s-num">147</div><div class="s-lbl">Commit</div></div></div>
+          <div class="ws-stat"><div class="s-ico ico-tint-blue"><i data-lucide="git-pull-request"></i></div><div><div class="s-num">3</div><div class="s-lbl">PR đang mở</div></div></div>
+          <div class="ws-stat"><div class="s-ico ico-tint-red"><i data-lucide="circle-dot"></i></div><div><div class="s-num">3</div><div class="s-lbl">Issue mở</div></div></div>
+          <div class="ws-stat"><div class="s-ico ico-tint-green"><i data-lucide="check-check"></i></div><div><div class="s-num">passing</div><div class="s-lbl">CI build</div></div></div>
+        </div>
+
+        <div class="ws-grid">
+
+          <!-- LEFT: file explorer + commits -->
+          <div>
+            <div class="card-pad">
+              <div class="sec-h">
+                <h2><i data-lucide="folder-git-2"></i> Mã nguồn</h2>
+                <span class="branch-pill"><i data-lucide="git-branch"></i> main</span>
+              </div>
+              <div class="commit-banner">
+                <div class="av a4">T</div>
+                <span class="cb-msg">feat: hoàn thiện CRUD sản phẩm &amp; danh mục</span>
+                <span class="cb-hash"><span class="mono">a3f9c21</span><span><i data-lucide="history" style="width:13px;height:13px;display:inline;vertical-align:-2px"></i> hôm nay</span></span>
+              </div>
+              <div class="file-row"><div class="f-ico dir"><i data-lucide="folder"></i></div><div class="f-name mono">src/</div><div class="f-msg">refactor: tách module products</div><div class="f-time">hôm nay</div></div>
+              <div class="file-row"><div class="f-ico dir"><i data-lucide="folder"></i></div><div class="f-name mono">tests/</div><div class="f-msg">test: unit test giỏ hàng</div><div class="f-time">2 ngày trước</div></div>
+              <div class="file-row"><div class="f-ico dir"><i data-lucide="folder"></i></div><div class="f-name mono">migrations/</div><div class="f-msg">db: thêm bảng orders</div><div class="f-time">5 ngày trước</div></div>
+              <div class="file-row"><div class="f-ico dir"><i data-lucide="folder"></i></div><div class="f-name mono">.github/</div><div class="f-msg">ci: cấu hình GitHub Actions</div><div class="f-time">5 ngày trước</div></div>
+              <div class="file-row"><div class="f-ico file"><i data-lucide="file-code-2"></i></div><div class="f-name mono">docker-compose.yml</div><div class="f-msg">chore: thêm service redis</div><div class="f-time">28/05</div></div>
+              <div class="file-row"><div class="f-ico file"><i data-lucide="file-code-2"></i></div><div class="f-name mono">openapi.yaml</div><div class="f-msg">docs: spec endpoint đơn hàng</div><div class="f-time">11/05</div></div>
+              <div class="file-row"><div class="f-ico file"><i data-lucide="file-text"></i></div><div class="f-name mono">README.md</div><div class="f-msg">docs: hướng dẫn cài đặt</div><div class="f-time">21/05</div></div>
+            </div>
+
+            <div class="card-pad">
+              <div class="sec-h"><h2><i data-lucide="git-commit-horizontal"></i> Commit gần đây</h2><span class="sh-cnt" style="font-size:12px;color:hsl(var(--muted-foreground))">main</span></div>
+              <div class="file-row"><div class="av a4" style="width:26px;height:26px;border-radius:99px;font-size:10px">T</div><div class="f-msg" style="flex:1;color:hsl(var(--foreground));font-weight:500">feat: hoàn thiện CRUD sản phẩm &amp; danh mục</div><span class="mono f-time">a3f9c21</span><div class="f-time">09:24</div></div>
+              <div class="file-row"><div class="av a3" style="width:26px;height:26px;border-radius:99px;font-size:10px">M</div><div class="f-msg" style="flex:1;color:hsl(var(--foreground));font-weight:500">db: tạo index cho bảng products</div><span class="mono f-time">7b1e0aa</span><div class="f-time">hôm qua</div></div>
+              <div class="file-row"><div class="av a1" style="width:26px;height:26px;border-radius:99px;font-size:10px">H</div><div class="f-msg" style="flex:1;color:hsl(var(--foreground));font-weight:500">fix: validate body khi tạo sản phẩm</div><span class="mono f-time">c92d5f3</span><div class="f-time">hôm qua</div></div>
+              <div class="file-row"><div class="av a2" style="width:26px;height:26px;border-radius:99px;font-size:10px">L</div><div class="f-msg" style="flex:1;color:hsl(var(--foreground));font-weight:500">test: bổ sung ca kiểm thử giỏ hàng</div><span class="mono f-time">e4408bd</span><div class="f-time">2 ngày</div></div>
+            </div>
+          </div>
+
+          <!-- RIGHT: CI, branches, online -->
+          <div>
+            <div class="card-pad">
+              <div class="sec-h"><h2><i data-lucide="workflow"></i> CI/CD Pipeline</h2><span class="branch-pill"><i data-lucide="git-commit-horizontal"></i> a3f9c21</span></div>
+              <div class="pipe">
+                <div class="pipe-step"><div class="ps-ico ok"><i data-lucide="check"></i></div><span class="ps-name">Install dependencies</span><span class="ps-time">18s</span></div>
+                <div class="pipe-step"><div class="ps-ico ok"><i data-lucide="check"></i></div><span class="ps-name">Lint &amp; type-check</span><span class="ps-time">22s</span></div>
+                <div class="pipe-step"><div class="ps-ico ok"><i data-lucide="check"></i></div><span class="ps-name">Unit tests</span><span class="ps-time">41s</span></div>
+                <div class="pipe-step"><div class="ps-ico run"><i data-lucide="loader"></i></div><span class="ps-name">Integration tests</span><span class="ps-time">đang chạy…</span></div>
+                <div class="pipe-step"><div class="ps-ico wait"><i data-lucide="clock"></i></div><span class="ps-name">Build &amp; push image</span><span class="ps-time">chờ</span></div>
+                <div class="pipe-step"><div class="ps-ico wait"><i data-lucide="clock"></i></div><span class="ps-name">Deploy staging</span><span class="ps-time">chờ</span></div>
+              </div>
+              <div class="pipe-summary"><span class="badge blue">Đang chạy</span> 3/6 bước hoàn thành · #142</div>
+            </div>
+
+            <div class="card-pad">
+              <div class="sec-h"><h2><i data-lucide="git-branch"></i> Nhánh</h2></div>
+              <div class="branch-row"><i data-lucide="git-branch" class="b-ico"></i><span class="b-name mono">main</span><span class="b-def">mặc định</span><span class="b-meta">cập nhật hôm nay</span></div>
+              <div class="branch-row"><i data-lucide="git-branch" class="b-ico"></i><span class="b-name mono">feature/products</span><span class="b-meta">PR #28 · Tùng</span></div>
+              <div class="branch-row"><i data-lucide="git-branch" class="b-ico"></i><span class="b-name mono">feature/cart</span><span class="b-meta">PR #31 · Hà</span></div>
+              <div class="branch-row"><i data-lucide="git-branch" class="b-ico"></i><span class="b-name mono">ci/github-actions</span><span class="b-meta">2 ngày trước · Minh</span></div>
+            </div>
+
+            <div class="card-pad">
+              <div class="sec-h"><h2><i data-lucide="users"></i> Thành viên online</h2></div>
+              <div class="online-row"><div class="av a4">T<span class="pres on"></span></div><div><div class="o-name">Ngô Thanh Tùng</div><div class="o-stat">Đang sửa src/products</div></div></div>
+              <div class="online-row"><div class="av a1">H<span class="pres on"></span></div><div><div class="o-name">Trần Thu Hà</div><div class="o-stat">Đang xem PR #31</div></div></div>
+              <div class="online-row"><div class="av a3">M<span class="pres idle"></span></div><div><div class="o-name">Lê Hoàng Minh</div><div class="o-stat">Rảnh · 12 phút</div></div></div>
+              <div class="online-row"><div class="av a2">L<span class="pres off"></span></div><div><div class="o-name">Phạm Khánh Lan</div><div class="o-stat">Ngoại tuyến</div></div></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>

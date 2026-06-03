@@ -1,0 +1,299 @@
+<style>
+  /* ---- Settings page ---------------------------------------------------- */
+  .settings-page { grid-template-columns: 210px 1fr; align-items: start; gap: 26px; }
+  .page-head { margin-bottom: 16px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+
+  /* Section nav (left rail) */
+  .set-nav { display: flex; flex-direction: column; gap: 2px; position: sticky; top: 20px; }
+  .set-nav a { display: flex; align-items: center; gap: 11px; padding: 10px 13px; border-radius: 10px; font-size: 13.5px; font-weight: 600; color: hsl(var(--muted-foreground)); text-decoration: none; transition: background .12s, color .12s; }
+  .set-nav a svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .set-nav a:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+  .set-nav a.active { background: hsl(var(--primary) / 0.1); color: hsl(var(--primary)); }
+
+  /* Section cards */
+  .set-section { scroll-margin-top: 20px; }
+  .set-section + .set-section { margin-top: 18px; }
+  .set-section .sec-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  .set-section .sec-desc { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+  .sec-head-row { padding-bottom: 16px; border-bottom: 1px solid hsl(var(--border)); margin-bottom: 4px; }
+
+  /* Field rows */
+  .field-row { display: flex; align-items: center; gap: 20px; padding: 16px 0; border-bottom: 1px solid hsl(var(--border)); }
+  .field-row:last-child { border-bottom: none; }
+  .field-info { flex: 1; min-width: 0; }
+  .field-label { font-size: 13.5px; font-weight: 600; }
+  .field-sub { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 3px; line-height: 1.5; }
+  .field-control { flex-shrink: 0; }
+
+  .ipt { font: inherit; font-size: 13.5px; padding: 9px 12px; border: 1px solid hsl(var(--border)); border-radius: 9px; background: hsl(var(--card)); color: hsl(var(--foreground)); outline: none; width: 260px; transition: border-color .12s, box-shadow .12s; }
+  .ipt:focus { border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12); }
+  select.ipt { width: 200px; cursor: pointer; }
+
+  /* Avatar block */
+  .avatar-block { display: flex; align-items: center; gap: 16px; }
+  .avatar-lg { width: 64px; height: 64px; border-radius: 50%; background: hsl(var(--primary)); color: #fff; font-size: 23px; font-weight: 800; display: grid; place-items: center; flex-shrink: 0; }
+
+  /* Toggle switch */
+  .switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; cursor: pointer; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch .track { position: absolute; inset: 0; background: hsl(var(--muted-foreground) / 0.35); border-radius: 99px; transition: background .18s; }
+  .switch .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .18s; }
+  .switch input:checked + .track { background: hsl(var(--primary)); }
+  .switch input:checked + .track::after { transform: translateX(18px); }
+
+  /* Theme picker */
+  .theme-opts { display: flex; gap: 12px; }
+  .theme-opt { cursor: pointer; text-align: center; }
+  .theme-swatch { width: 76px; height: 52px; border-radius: 10px; border: 2px solid hsl(var(--border)); overflow: hidden; position: relative; transition: border-color .12s; }
+  .theme-opt.sel .theme-swatch { border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15); }
+  .theme-opt .theme-name { font-size: 11.5px; font-weight: 600; margin-top: 6px; color: hsl(var(--muted-foreground)); }
+  .theme-opt.sel .theme-name { color: hsl(var(--primary)); }
+  .sw-light { background: #fff; } .sw-light .sw-bar { background: #eef1f6; }
+  .sw-dark { background: #1d2330; } .sw-dark .sw-bar { background: #333b4d; }
+  .sw-auto { background: linear-gradient(120deg, #fff 50%, #1d2330 50%); }
+  .theme-swatch .sw-bar { position: absolute; top: 9px; left: 9px; right: 30px; height: 7px; border-radius: 3px; }
+  .theme-swatch .sw-dot { position: absolute; top: 9px; right: 9px; width: 12px; height: 12px; border-radius: 50%; background: hsl(243 75% 59%); }
+
+  /* Accent picker */
+  .accent-opts { display: flex; gap: 10px; }
+  .accent-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; position: relative; border: 2px solid transparent; transition: transform .12s; }
+  .accent-dot:hover { transform: scale(1.08); }
+  .accent-dot.sel { box-shadow: 0 0 0 2px hsl(var(--card)), 0 0 0 4px currentColor; }
+  .accent-dot.sel::after { content: ""; position: absolute; inset: 0; display: grid; place-items: center; }
+
+  /* Danger zone */
+  .danger-zone { border-color: hsl(var(--danger) / 0.3); }
+  .danger-zone .sec-title { color: hsl(var(--danger)); }
+
+  /* Save bar */
+  .save-bar { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 14px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius); padding: 13px 18px; margin-top: 18px; box-shadow: var(--shadow-pop); }
+  .save-bar .sb-note { font-size: 12.5px; color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 8px; }
+  .save-bar .sb-note svg { width: 15px; height: 15px; }
+  .save-bar .sb-act { display: flex; gap: 9px; }
+
+  @media (max-width: 1100px) { .settings-page { grid-template-columns: 1fr; } .set-nav { position: static; flex-direction: row; flex-wrap: wrap; margin-bottom: 6px; } }
+  @media (max-width: 620px) { .field-row { flex-direction: column; align-items: flex-start; gap: 10px; } .ipt, select.ipt { width: 100%; } .field-control { width: 100%; } }
+</style>
+<div class="content settings-page">
+
+      <!-- Section nav -->
+      <nav class="set-nav" id="setNav">
+        <a href="#sec-profile" class="active"><i data-lucide="user-round"></i> Hồ sơ</a>
+        <a href="#sec-account"><i data-lucide="shield"></i> Tài khoản &amp; bảo mật</a>
+        <a href="#sec-notify"><i data-lucide="bell"></i> Thông báo</a>
+        <a href="#sec-appearance"><i data-lucide="palette"></i> Giao diện</a>
+        <a href="#sec-language"><i data-lucide="globe"></i> Ngôn ngữ &amp; vùng</a>
+        <a href="#sec-danger"><i data-lucide="triangle-alert"></i> Vùng nguy hiểm</a>
+      </nav>
+
+      <div class="col-main">
+
+        <div class="page-head">
+          <h1>Cài đặt</h1>
+          <p>Quản lý hồ sơ, bảo mật và tùy chỉnh trải nghiệm của bạn</p>
+        </div>
+
+        <!-- Profile -->
+        <section class="card card-pad set-section" id="sec-profile">
+          <div class="sec-head-row">
+            <div class="sec-title">Hồ sơ cá nhân</div>
+            <div class="sec-desc">Thông tin hiển thị trên tài khoản của bạn</div>
+          </div>
+          <div class="field-row">
+            <div class="field-info">
+              <div class="field-label">Ảnh đại diện</div>
+              <div class="field-sub">PNG hoặc JPG, tối đa 2MB.</div>
+            </div>
+            <div class="field-control">
+              <div class="avatar-block">
+                <div class="avatar-lg">NT</div>
+                <button class="btn"><i data-lucide="upload" class="icon-sm"></i> Tải ảnh lên</button>
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Họ và tên</div></div>
+            <div class="field-control"><input class="ipt" type="text" value="Ngô Thanh Tùng" /></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Mã số sinh viên</div><div class="field-sub">Không thể thay đổi</div></div>
+            <div class="field-control"><input class="ipt" type="text" value="21123456" disabled style="opacity:.6;cursor:not-allowed;" /></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Email</div></div>
+            <div class="field-control"><input class="ipt" type="email" value="tung.nt@lms.edu.vn" /></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Số điện thoại</div></div>
+            <div class="field-control"><input class="ipt" type="tel" value="0912 345 678" /></div>
+          </div>
+        </section>
+
+        <!-- Account & security -->
+        <section class="card card-pad set-section" id="sec-account">
+          <div class="sec-head-row">
+            <div class="sec-title">Tài khoản &amp; bảo mật</div>
+            <div class="sec-desc">Mật khẩu và các tùy chọn đăng nhập an toàn</div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Mật khẩu</div><div class="field-sub">Đổi lần cuối 3 tháng trước</div></div>
+            <div class="field-control"><button class="btn"><i data-lucide="key-round" class="icon-sm"></i> Đổi mật khẩu</button></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Xác thực 2 lớp (2FA)</div><div class="field-sub">Bảo vệ tài khoản bằng mã OTP qua ứng dụng.</div></div>
+            <div class="field-control"><label class="switch"><input type="checkbox" /><span class="track"></span></label></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Cảnh báo đăng nhập lạ</div><div class="field-sub">Gửi email khi có đăng nhập từ thiết bị mới.</div></div>
+            <div class="field-control"><label class="switch"><input type="checkbox" checked /><span class="track"></span></label></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Phiên đăng nhập</div><div class="field-sub">2 thiết bị đang hoạt động</div></div>
+            <div class="field-control"><button class="btn"><i data-lucide="log-out" class="icon-sm"></i> Đăng xuất thiết bị khác</button></div>
+          </div>
+        </section>
+
+        <!-- Notifications -->
+        <section class="card card-pad set-section" id="sec-notify">
+          <div class="sec-head-row">
+            <div class="sec-title">Thông báo</div>
+            <div class="sec-desc">Chọn loại thông báo bạn muốn nhận</div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Bài tập &amp; deadline sắp tới</div><div class="field-sub">Nhắc trước hạn nộp 24 giờ.</div></div>
+            <div class="field-control"><label class="switch"><input type="checkbox" checked /><span class="track"></span></label></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Điểm số mới</div><div class="field-sub">Thông báo khi giảng viên công bố điểm.</div></div>
+            <div class="field-control"><label class="switch"><input type="checkbox" checked /><span class="track"></span></label></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Thông báo học phí</div><div class="field-sub">Nhắc hạn nộp và xác nhận thanh toán.</div></div>
+            <div class="field-control"><label class="switch"><input type="checkbox" checked /><span class="track"></span></label></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Tin tức &amp; sự kiện của trường</div><div class="field-sub">Bản tin hàng tuần qua email.</div></div>
+            <div class="field-control"><label class="switch"><input type="checkbox" /><span class="track"></span></label></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Kênh nhận thông báo (Notification Channel)</div></div>
+            <div class="field-control">
+              <select class="ipt">
+                <option>Trong ứng dụng + Email</option>
+                <option>Chỉ trong ứng dụng</option>
+                <option>Chỉ Email</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Appearance -->
+        <section class="card card-pad set-section" id="sec-appearance">
+          <div class="sec-head-row">
+            <div class="sec-title">Giao diện</div>
+            <div class="sec-desc">Tùy chỉnh diện mạo của cổng thông tin</div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Chế độ hiển thị</div><div class="field-sub">Sáng, tối hoặc theo hệ thống.</div></div>
+            <div class="field-control">
+              <div class="theme-opts" id="themeOpts">
+                <div class="theme-opt sel" data-theme="light"><div class="theme-swatch sw-light"><div class="sw-bar"></div><div class="sw-dot"></div></div><div class="theme-name">Sáng</div></div>
+                <div class="theme-opt" data-theme="dark"><div class="theme-swatch sw-dark"><div class="sw-bar"></div><div class="sw-dot"></div></div><div class="theme-name">Tối</div></div>
+                <div class="theme-opt" data-theme="auto"><div class="theme-swatch sw-auto"><div class="sw-bar"></div><div class="sw-dot"></div></div><div class="theme-name">Tự động</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Màu chủ đạo</div><div class="field-sub">Màu nhấn cho nút và liên kết.</div></div>
+            <div class="field-control">
+              <div class="accent-opts" id="accentOpts">
+                <div class="accent-dot sel" style="background:hsl(243 75% 59%);color:hsl(243 75% 59%);"></div>
+                <div class="accent-dot" style="background:hsl(217 91% 52%);color:hsl(217 91% 52%);"></div>
+                <div class="accent-dot" style="background:hsl(142 71% 38%);color:hsl(142 71% 38%);"></div>
+                <div class="accent-dot" style="background:hsl(24 95% 53%);color:hsl(24 95% 53%);"></div>
+                <div class="accent-dot" style="background:hsl(340 75% 52%);color:hsl(340 75% 52%);"></div>
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Cỡ chữ</div><div class="field-sub">Điều chỉnh độ lớn văn bản toàn hệ thống.</div></div>
+            <div class="field-control">
+              <select class="ipt">
+                <option>Nhỏ</option>
+                <option selected>Vừa (mặc định)</option>
+                <option>Lớn</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Thu gọn menu mặc định</div><div class="field-sub">Mở cổng với thanh điều hướng thu gọn.</div></div>
+            <div class="field-control"><label class="switch"><input type="checkbox" /><span class="track"></span></label></div>
+          </div>
+        </section>
+
+        <!-- Language & region -->
+        <section class="card card-pad set-section" id="sec-language">
+          <div class="sec-head-row">
+            <div class="sec-title">Ngôn ngữ &amp; vùng</div>
+            <div class="sec-desc">Định dạng ngôn ngữ, ngày giờ</div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Ngôn ngữ</div></div>
+            <div class="field-control">
+              <select class="ipt">
+                <option selected>Tiếng Việt</option>
+                <option>English</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Múi giờ</div></div>
+            <div class="field-control">
+              <select class="ipt">
+                <option selected>(GMT+7) Hà Nội</option>
+                <option>(GMT+0) UTC</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Định dạng ngày</div></div>
+            <div class="field-control">
+              <select class="ipt">
+                <option selected>DD/MM/YYYY</option>
+                <option>MM/DD/YYYY</option>
+                <option>YYYY-MM-DD</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Danger zone -->
+        <section class="card card-pad set-section danger-zone" id="sec-danger">
+          <div class="sec-head-row">
+            <div class="sec-title">Vùng nguy hiểm</div>
+            <div class="sec-desc">Các thao tác này không thể hoàn tác</div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Tải xuống dữ liệu cá nhân</div><div class="field-sub">Xuất toàn bộ dữ liệu học tập của bạn dạng ZIP.</div></div>
+            <div class="field-control"><button class="btn"><i data-lucide="download" class="icon-sm"></i> Tải dữ liệu</button></div>
+          </div>
+          <div class="field-row">
+            <div class="field-info"><div class="field-label">Vô hiệu hóa tài khoản</div><div class="field-sub">Tạm khóa truy cập cho đến khi bạn kích hoạt lại.</div></div>
+            <div class="field-control"><button class="btn" style="color:hsl(var(--danger));border-color:hsl(var(--danger) / 0.4);"><i data-lucide="user-x" class="icon-sm"></i> Vô hiệu hóa</button></div>
+          </div>
+        </section>
+
+        <!-- Save bar -->
+        <div class="save-bar">
+          <div class="sb-note"><i data-lucide="info"></i> Thay đổi chưa được lưu.</div>
+          <div class="sb-act">
+            <button class="btn" id="resetBtn">Hủy</button>
+            <button class="btn primary" id="saveBtn"><i data-lucide="check" class="icon-sm"></i> Lưu thay đổi</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>

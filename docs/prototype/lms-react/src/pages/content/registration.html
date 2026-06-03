@@ -1,0 +1,282 @@
+<style>
+  /* ---- Registration page ------------------------------------------------ */
+  .reg-page { grid-template-columns: 1fr var(--rail-w); align-items: start; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 16px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+  .page-head .ph-act { display: flex; gap: 8px; align-items: center; }
+  .term-pill { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: hsl(var(--muted-foreground)); background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 99px; padding: 6px 13px; box-shadow: var(--shadow-card); }
+  .term-pill svg { width: 14px; height: 14px; }
+
+  /* Registration window banner */
+  .reg-window { display: flex; align-items: center; gap: 13px; background: hsl(var(--success-muted)); border: 1px solid hsl(142 60% 80%); border-radius: var(--radius); padding: 13px 16px; margin-bottom: 18px; }
+  .reg-window .rw-ico { width: 36px; height: 36px; border-radius: 10px; background: hsl(142 71% 36%); color: #fff; display: grid; place-items: center; flex-shrink: 0; }
+  .reg-window .rw-ico svg { width: 18px; height: 18px; }
+  .reg-window .rw-t { font-size: 13.5px; font-weight: 700; color: hsl(142 71% 26%); }
+  .reg-window .rw-s { font-size: 12px; color: hsl(142 30% 38%); margin-top: 2px; }
+  .reg-window .rw-time { margin-left: auto; text-align: right; flex-shrink: 0; }
+  .reg-window .rw-time .rt-v { font-size: 15px; font-weight: 800; color: hsl(142 71% 26%); font-variant-numeric: tabular-nums; }
+  .reg-window .rw-time .rt-l { font-size: 11px; color: hsl(142 30% 38%); }
+
+  /* Toolbar */
+  .reg-tools { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .reg-search { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 9px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 10px; padding: 9px 13px; box-shadow: var(--shadow-card); }
+  .reg-search svg { width: 16px; height: 16px; color: hsl(var(--muted-foreground)); flex-shrink: 0; }
+  .reg-search input { border: none; outline: none; background: transparent; font: inherit; font-size: 13.5px; width: 100%; color: hsl(var(--foreground)); }
+  .filter-chips { display: flex; gap: 7px; }
+  .fchip { font-size: 12.5px; font-weight: 600; color: hsl(var(--muted-foreground)); background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 99px; padding: 8px 14px; cursor: pointer; transition: all .12s; box-shadow: var(--shadow-card); }
+  .fchip:hover { color: hsl(var(--foreground)); }
+  .fchip.active { background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: #fff; }
+
+  /* Course rows */
+  .course-list { display: flex; flex-direction: column; gap: 12px; }
+  .crow { display: flex; align-items: center; gap: 16px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow-card); transition: border-color .12s, box-shadow .12s; }
+  .crow:hover { border-color: hsl(var(--primary) / 0.4); box-shadow: var(--shadow-pop); }
+  .crow.added { border-color: hsl(142 60% 60%); background: hsl(142 76% 98%); }
+  .crow.full { opacity: .62; }
+  .crow-ico { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
+  .crow-ico svg { width: 22px; height: 22px; }
+  .crow-main { flex: 1; min-width: 0; }
+  .crow-top { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .crow-name { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .crow-code { font-size: 11.5px; font-weight: 700; color: hsl(var(--muted-foreground)); background: hsl(var(--muted)); padding: 2px 8px; border-radius: 6px; }
+  .crow-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+  .cmeta { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: hsl(var(--muted-foreground)); }
+  .cmeta svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .cmeta b { color: hsl(var(--foreground)); font-weight: 600; }
+  .crow-right { display: flex; flex-direction: column; align-items: flex-end; gap: 9px; flex-shrink: 0; }
+  .slots { font-size: 11.5px; font-weight: 600; color: hsl(var(--muted-foreground)); }
+  .slots b { color: hsl(142 71% 34%); }
+  .slots.low b { color: hsl(var(--warning)); }
+  .slots.none b { color: hsl(var(--danger)); }
+  .reg-btn { border: 1px solid hsl(var(--primary)); background: hsl(var(--primary)); color: #fff; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: filter .12s; white-space: nowrap; }
+  .reg-btn svg { width: 15px; height: 15px; }
+  .reg-btn:hover { filter: brightness(1.07); }
+  .reg-btn.remove { background: #fff; color: hsl(var(--danger)); border-color: hsl(var(--danger) / 0.4); }
+  .reg-btn.remove:hover { background: hsl(var(--danger-muted)); filter: none; }
+  .reg-btn.disabled { background: hsl(var(--muted)); border-color: hsl(var(--border)); color: hsl(var(--muted-foreground)); cursor: not-allowed; }
+  .reg-btn.disabled:hover { filter: none; }
+
+  /* Rail / cart */
+  .rail { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 20px; }
+  .cart-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .cart-head h2 { font-size: 16.5px; font-weight: 700; }
+  .cred-ring { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid hsl(var(--border)); margin-bottom: 6px; }
+  .cred-num { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .cred-num small { font-size: 15px; color: hsl(var(--muted-foreground)); font-weight: 700; }
+  .cred-lbl { font-size: 12px; color: hsl(var(--muted-foreground)); line-height: 1.4; }
+  .cred-bar { flex: 1; }
+  .cred-track { height: 7px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; margin-top: 7px; }
+  .cred-fill { height: 100%; background: hsl(var(--primary)); border-radius: 99px; transition: width .25s; }
+
+  .cart-list { display: flex; flex-direction: column; gap: 1px; }
+  .citem { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid hsl(var(--border)); }
+  .citem:last-child { border-bottom: none; }
+  .citem-body { flex: 1; min-width: 0; }
+  .citem-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .citem-sub { font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+  .citem-cr { font-size: 12px; font-weight: 700; color: hsl(var(--muted-foreground)); flex-shrink: 0; }
+  .citem-x { width: 24px; height: 24px; border-radius: 6px; border: none; background: transparent; color: hsl(var(--muted-foreground)); cursor: pointer; display: grid; place-items: center; flex-shrink: 0; transition: background .12s, color .12s; }
+  .citem-x:hover { background: hsl(var(--danger-muted)); color: hsl(var(--danger)); }
+  .citem-x svg { width: 14px; height: 14px; }
+  .cart-empty { text-align: center; padding: 26px 10px; color: hsl(var(--muted-foreground)); font-size: 12.5px; }
+  .cart-empty svg { width: 32px; height: 32px; opacity: .4; margin-bottom: 8px; }
+
+  .cart-foot { margin-top: 14px; padding-top: 14px; border-top: 2px solid hsl(var(--border)); }
+  .cart-foot .cf-line { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+  .cart-foot .cf-line .cf-l { color: hsl(var(--muted-foreground)); }
+  .cart-foot .cf-line .cf-v { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 1320px) { .reg-page { grid-template-columns: 1fr; } .rail { position: static; order: -1; } }
+  @media (max-width: 720px) { .crow { flex-wrap: wrap; } .crow-right { flex-direction: row; width: 100%; justify-content: space-between; align-items: center; } }
+</style>
+<div class="content reg-page">
+
+      <div class="col-main">
+
+        <!-- Page header -->
+        <div class="page-head">
+          <div>
+            <h1>Đăng ký môn học</h1>
+            <p>Chọn học phần cho học kỳ tới</p>
+          </div>
+          <div class="ph-act">
+            <span class="term-pill"><i data-lucide="calendar-range"></i> Học kỳ I · 2026–2027</span>
+          </div>
+        </div>
+
+        <!-- Registration window -->
+        <div class="reg-window">
+          <div class="rw-ico"><i data-lucide="door-open"></i></div>
+          <div>
+            <div class="rw-t">Cổng đăng ký đang mở</div>
+            <div class="rw-s">Đợt 1 dành cho sinh viên khóa K21 · 28/05 – 04/06/2026</div>
+          </div>
+          <div class="rw-time">
+            <div class="rt-v">còn 4 ngày</div>
+            <div class="rt-l">đến khi đóng cổng</div>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="reg-tools">
+          <div class="reg-search">
+            <i data-lucide="search"></i>
+            <input type="text" id="courseSearch" placeholder="Tìm theo tên hoặc mã học phần..." />
+          </div>
+          <div class="filter-chips" id="filterChips">
+            <button class="fchip active" data-filter="all">Tất cả</button>
+            <button class="fchip" data-filter="required">Bắt buộc</button>
+            <button class="fchip" data-filter="elective">Tự chọn</button>
+            <button class="fchip" data-filter="open">Còn chỗ</button>
+          </div>
+        </div>
+
+        <!-- Course list -->
+        <div class="course-list" id="courseList">
+
+          <div class="crow" data-id="ai" data-type="required" data-credits="3" data-slots="12">
+            <div class="crow-ico ico-tint-indigo"><i data-lucide="brain-circuit"></i></div>
+            <div class="crow-main">
+              <div class="crow-top"><span class="crow-name">Trí tuệ nhân tạo</span><span class="crow-code">INT3401</span><span class="badge blue">Bắt buộc</span></div>
+              <div class="crow-meta">
+                <span class="cmeta"><i data-lucide="award"></i> <b>3</b> tín chỉ</span>
+                <span class="cmeta"><i data-lucide="user"></i> TS. Lê Văn An</span>
+                <span class="cmeta"><i data-lucide="clock"></i> Thứ 2 · 07:00–09:30</span>
+                <span class="cmeta"><i data-lucide="map-pin"></i> P.301-G2</span>
+              </div>
+            </div>
+            <div class="crow-right">
+              <div class="slots">Còn <b>12</b>/60 chỗ</div>
+              <button class="reg-btn"><i data-lucide="plus"></i> Đăng ký</button>
+            </div>
+          </div>
+
+          <div class="crow" data-id="ml" data-type="required" data-credits="3" data-slots="5">
+            <div class="crow-ico ico-tint-green"><i data-lucide="line-chart"></i></div>
+            <div class="crow-main">
+              <div class="crow-top"><span class="crow-name">Học máy</span><span class="crow-code">INT3405</span><span class="badge blue">Bắt buộc</span></div>
+              <div class="crow-meta">
+                <span class="cmeta"><i data-lucide="award"></i> <b>3</b> tín chỉ</span>
+                <span class="cmeta"><i data-lucide="user"></i> PGS. Trần Thị Bình</span>
+                <span class="cmeta"><i data-lucide="clock"></i> Thứ 3 · 13:00–15:30</span>
+                <span class="cmeta"><i data-lucide="map-pin"></i> P.205-G2</span>
+              </div>
+            </div>
+            <div class="crow-right">
+              <div class="slots low">Còn <b>5</b>/50 chỗ</div>
+              <button class="reg-btn"><i data-lucide="plus"></i> Đăng ký</button>
+            </div>
+          </div>
+
+          <div class="crow full" data-id="test" data-type="elective" data-credits="2" data-slots="0">
+            <div class="crow-ico ico-tint-amber"><i data-lucide="bug"></i></div>
+            <div class="crow-main">
+              <div class="crow-top"><span class="crow-name">Kiểm thử phần mềm</span><span class="crow-code">INT3110</span><span class="badge amber">Tự chọn</span></div>
+              <div class="crow-meta">
+                <span class="cmeta"><i data-lucide="award"></i> <b>2</b> tín chỉ</span>
+                <span class="cmeta"><i data-lucide="user"></i> ThS. Nguyễn Văn Cường</span>
+                <span class="cmeta"><i data-lucide="clock"></i> Thứ 4 · 09:45–11:15</span>
+                <span class="cmeta"><i data-lucide="map-pin"></i> P.110-G2</span>
+              </div>
+            </div>
+            <div class="crow-right">
+              <div class="slots none">Còn <b>0</b>/40 chỗ</div>
+              <button class="reg-btn disabled"><i data-lucide="x"></i> Hết chỗ</button>
+            </div>
+          </div>
+
+          <div class="crow" data-id="sad" data-type="required" data-credits="3" data-slots="23">
+            <div class="crow-ico ico-tint-blue"><i data-lucide="workflow"></i></div>
+            <div class="crow-main">
+              <div class="crow-top"><span class="crow-name">Phân tích &amp; thiết kế hệ thống</span><span class="crow-code">INT3115</span><span class="badge blue">Bắt buộc</span></div>
+              <div class="crow-meta">
+                <span class="cmeta"><i data-lucide="award"></i> <b>3</b> tín chỉ</span>
+                <span class="cmeta"><i data-lucide="user"></i> TS. Phạm Đức Duy</span>
+                <span class="cmeta"><i data-lucide="clock"></i> Thứ 5 · 07:00–09:30</span>
+                <span class="cmeta"><i data-lucide="map-pin"></i> P.302-G2</span>
+              </div>
+            </div>
+            <div class="crow-right">
+              <div class="slots">Còn <b>23</b>/60 chỗ</div>
+              <button class="reg-btn"><i data-lucide="plus"></i> Đăng ký</button>
+            </div>
+          </div>
+
+          <div class="crow" data-id="sec" data-type="elective" data-credits="3" data-slots="8">
+            <div class="crow-ico ico-tint-red"><i data-lucide="shield-check"></i></div>
+            <div class="crow-main">
+              <div class="crow-top"><span class="crow-name">An toàn thông tin</span><span class="crow-code">INT3404</span><span class="badge amber">Tự chọn</span></div>
+              <div class="crow-meta">
+                <span class="cmeta"><i data-lucide="award"></i> <b>3</b> tín chỉ</span>
+                <span class="cmeta"><i data-lucide="user"></i> TS. Hoàng Minh Em</span>
+                <span class="cmeta"><i data-lucide="clock"></i> Thứ 6 · 13:00–15:30</span>
+                <span class="cmeta"><i data-lucide="map-pin"></i> P.208-G2</span>
+              </div>
+            </div>
+            <div class="crow-right">
+              <div class="slots low">Còn <b>8</b>/55 chỗ</div>
+              <button class="reg-btn"><i data-lucide="plus"></i> Đăng ký</button>
+            </div>
+          </div>
+
+          <div class="crow" data-id="soft" data-type="elective" data-credits="2" data-slots="30">
+            <div class="crow-ico ico-tint-indigo"><i data-lucide="messages-square"></i></div>
+            <div class="crow-main">
+              <div class="crow-top"><span class="crow-name">Kỹ năng mềm</span><span class="crow-code">PES1010</span><span class="badge amber">Tự chọn</span></div>
+              <div class="crow-meta">
+                <span class="cmeta"><i data-lucide="award"></i> <b>2</b> tín chỉ</span>
+                <span class="cmeta"><i data-lucide="user"></i> ThS. Vũ Thị Hoa</span>
+                <span class="cmeta"><i data-lucide="clock"></i> Thứ 7 · 08:00–10:00</span>
+                <span class="cmeta"><i data-lucide="map-pin"></i> P.401-G3</span>
+              </div>
+            </div>
+            <div class="crow-right">
+              <div class="slots">Còn <b>30</b>/80 chỗ</div>
+              <button class="reg-btn"><i data-lucide="plus"></i> Đăng ký</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="cart-empty" id="noResults" style="display:none;">
+          <i data-lucide="search-x"></i>
+          <div>Không tìm thấy học phần phù hợp.</div>
+        </div>
+
+      </div>
+
+      <!-- =============================== RAIL =============================== -->
+      <aside class="rail">
+        <div class="card card-pad">
+          <div class="cart-head">
+            <h2>Phiếu đăng ký</h2>
+            <span class="badge blue" id="cartCount">0 môn</span>
+          </div>
+
+          <div class="cred-ring">
+            <div>
+              <div class="cred-num"><span id="credNow">0</span><small>/24</small></div>
+              <div class="cred-lbl">tín chỉ đã chọn</div>
+            </div>
+            <div class="cred-bar">
+              <div class="cred-track"><div class="cred-fill" id="credFill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="cart-list" id="cartList"></div>
+          <div class="cart-empty" id="cartEmpty">
+            <i data-lucide="clipboard-list"></i>
+            <div>Chưa chọn học phần nào.<br />Bấm "Đăng ký" để thêm vào phiếu.</div>
+          </div>
+
+          <div class="cart-foot" id="cartFoot" style="display:none;">
+            <div class="cf-line"><span class="cf-l">Tổng tín chỉ</span><span class="cf-v"><span id="footCred">0</span> TC</span></div>
+            <div class="cf-line"><span class="cf-l">Học phí dự kiến</span><span class="cf-v" id="footFee">0đ</span></div>
+            <button class="btn primary" id="confirmBtn" style="width:100%;justify-content:center;margin-top:12px;padding:12px;font-size:14px;"><i data-lucide="check-check" class="icon-sm"></i> Xác nhận đăng ký</button>
+            <p style="font-size:11px;color:hsl(var(--muted-foreground));text-align:center;margin-top:9px;line-height:1.5;">Tối thiểu 12 TC · tối đa 24 TC mỗi học kỳ.</p>
+          </div>
+        </div>
+      </aside>
+
+    </div>

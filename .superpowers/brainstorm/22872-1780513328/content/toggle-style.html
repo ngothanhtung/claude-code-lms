@@ -1,0 +1,209 @@
+<h2>Kiểu dáng nút Toggle Theme</h2>
+<p class="subtitle">Nút sẽ nằm ở <strong>Topbar — bên phải</strong>, trước avatar. Chọn kiểu bạn thích nhất:</p>
+
+<style>
+  .topbar-mock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .topbar-mock .spacer { flex: 1; }
+  .topbar-mock .search-mock {
+    flex: 1;
+    height: 36px;
+    border-radius: 9px;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    color: #94a3b8;
+    font-size: 13px;
+    gap: 8px;
+  }
+  .topbar-mock .icon-btn-mock {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    display: grid; place-items: center;
+    font-size: 16px; color: #64748b;
+    background: #fff;
+  }
+  .topbar-mock .avatar-mock {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: grid; place-items: center;
+    color: #fff; font-weight: 700;
+    font-size: 14px;
+  }
+  /* A: Icon button */
+  .toggle-a {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    display: grid; place-items: center;
+    font-size: 18px; background: #fff;
+    color: #475569;
+  }
+  /* B: Pill toggle */
+  .toggle-b {
+    display: flex;
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 99px;
+    padding: 3px;
+    gap: 2px;
+    border: 1px solid #e2e8f0;
+  }
+  .toggle-b .tb-opt {
+    width: 32px; height: 30px;
+    border-radius: 99px;
+    display: grid; place-items: center;
+    font-size: 14px;
+    color: #94a3b8;
+    transition: all 0.15s;
+  }
+  .toggle-b .tb-opt.active {
+    background: #fff;
+    color: #475569;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+  /* C: Icon + text button */
+  .toggle-c {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+  }
+
+  .preview-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    margin-top: 4px;
+  }
+  .dark-preview .topbar-mock {
+    background: #1e1e2e;
+    border-color: #2d2d3f;
+  }
+  .dark-preview .search-mock {
+    background: #2d2d3f;
+    color: #64748b;
+  }
+  .dark-preview .icon-btn-mock {
+    background: #1e1e2e;
+    border-color: #2d2d3f;
+    color: #94a3b8;
+  }
+  .dark-preview .toggle-a {
+    background: #1e1e2e;
+    border-color: #2d2d3f;
+    color: #94a3b8;
+  }
+  .dark-preview .toggle-b {
+    background: #2d2d3f;
+    border-color: #3d3d50;
+  }
+  .dark-preview .toggle-b .tb-opt.active {
+    background: #3d3d50;
+    color: #e2e8f0;
+  }
+  .dark-preview .toggle-c {
+    background: #1e1e2e;
+    border-color: #2d2d3f;
+    color: #94a3b8;
+  }
+</style>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Icon Button đơn giản</h3>
+      <p>Sun/Moon icon, click để toggle. Gọn, quen thuộc, không chiếm chỗ.</p>
+      <div class="preview-label">☀️ Light mode</div>
+      <div class="topbar-mock">
+        <div class="search-mock">🔍 Tìm kiếm...</div>
+        <div class="icon-btn-mock">🔔</div>
+        <div class="icon-btn-mock">💬</div>
+        <div class="toggle-a">☀️</div>
+        <div class="avatar-mock">A</div>
+      </div>
+      <div class="preview-label dark-preview" style="color:#6366f1">🌙 Dark mode</div>
+      <div class="topbar-mock dark-preview">
+        <div class="search-mock">🔍 Tìm kiếm...</div>
+        <div class="icon-btn-mock">🔔</div>
+        <div class="icon-btn-mock">💬</div>
+        <div class="toggle-a">🌙</div>
+        <div class="avatar-mock">A</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Pill Toggle (Sun / Moon / System)</h3>
+      <p>3 nút chọn: Light, Dark, System. Rõ ràng, cho phép chọn theo hệ thống.</p>
+      <div class="preview-label">☀️ Đang chọn Light</div>
+      <div class="topbar-mock">
+        <div class="search-mock">🔍 Tìm kiếm...</div>
+        <div class="icon-btn-mock">🔔</div>
+        <div class="toggle-b">
+          <div class="tb-opt active">☀️</div>
+          <div class="tb-opt">🌙</div>
+          <div class="tb-opt">💻</div>
+        </div>
+        <div class="avatar-mock">A</div>
+      </div>
+      <div class="preview-label dark-preview" style="color:#6366f1">🌙 Đang chọn Dark</div>
+      <div class="topbar-mock dark-preview">
+        <div class="search-mock">🔍 Tìm kiếm...</div>
+        <div class="icon-btn-mock">🔔</div>
+        <div class="toggle-b" style="background:#2d2d3f;border-color:#3d3d50">
+          <div class="tb-opt">☀️</div>
+          <div class="tb-opt active" style="background:#3d3d50;color:#e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.3)">🌙</div>
+          <div class="tb-opt">💻</div>
+        </div>
+        <div class="avatar-mock">A</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Icon + Text label</h3>
+      <p>Hiện label "Sáng" / "Tối" cạnh icon. Rõ nhất cho người mới, nhưng chiếm nhiều chỗ hơn.</p>
+      <div class="preview-label">☀️ Light mode</div>
+      <div class="topbar-mock">
+        <div class="search-mock">🔍 Tìm kiếm...</div>
+        <div class="icon-btn-mock">🔔</div>
+        <div class="toggle-c">☀️ Sáng</div>
+        <div class="avatar-mock">A</div>
+      </div>
+      <div class="preview-label dark-preview" style="color:#6366f1">🌙 Dark mode</div>
+      <div class="topbar-mock dark-preview">
+        <div class="search-mock">🔍 Tìm kiếm...</div>
+        <div class="icon-btn-mock">🔔</div>
+        <div class="toggle-c">🌙 Tối</div>
+        <div class="avatar-mock">A</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<h2>Rà soát Theme Dark / Light — LMS Portal</h2>
+<p class="subtitle">Tôi đã phân tích codebase. Đây là bức tranh hiện tại trước khi chúng ta lên kế hoạch.</p>
+
+<div class="section">
+  <h3>✅ Những gì đã có sẵn</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+    <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px">
+      <div style="font-weight:700;color:#2e7d32;margin-bottom:8px">🔧 Cơ sở hạ tầng</div>
+      <ul style="margin:0;padding-left:18px;color:#1b5e20;font-size:13px;line-height:1.8">
+        <li><strong>next-themes</strong> đã được cài & dùng</li>
+        <li><strong>ThemeProvider</strong> có sẵn trong <code>components/</code></li>
+        <li>Phím tắt <kbd>D</kbd> để toggle đã được implement</li>
+        <li><code>attribute="class"</code> → class <code>.dark</code> trên <code>&lt;html&gt;</code></li>
+        <li>defaultTheme = <strong>light</strong>, enableSystem = true</li>
+      </ul>
+    </div>
+    <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px">
+      <div style="font-weight:700;color:#2e7d32;margin-bottom:8px">🎨 CSS Variables</div>
+      <ul style="margin:0;padding-left:18px;color:#1b5e20;font-size:13px;line-height:1.8">
+        <li>Light mode: đầy đủ HSL tokens ở <code>:root</code></li>
+        <li>Dark mode: block <code>.dark { }</code> đã có</li>
+        <li>Tailwind v4 + shadcn/ui đã tích hợp</li>
+        <li>Custom variant: <code>dark (&amp;:is(.dark *))</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>⚠️ Vấn đề cần giải quyết</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+    <div style="background:#fff3e0;border:1px solid #ffcc80;border-radius:10px;padding:14px">
+      <div style="font-weight:700;color:#e65100;margin-bottom:8px">🔴 Dark mode tokens thiếu</div>
+      <ul style="margin:0;padding-left:18px;color:#bf360c;font-size:13px;line-height:1.8">
+        <li>Dark block dùng <strong>oklch()</strong> → không đồng nhất với light (HSL)</li>
+        <li>Thiếu: <code>--primary-muted</code>, <code>--success-*</code>, <code>--warning-*</code>, <code>--info-*</code>, <code>--danger-*</code></li>
+        <li>Thiếu: <code>--course-violet/green/blue...</code> cho dark</li>
+        <li>Shadows chưa có dark variant</li>
+      </ul>
+    </div>
+    <div style="background:#fff3e0;border:1px solid #ffcc80;border-radius:10px;padding:14px">
+      <div style="font-weight:700;color:#e65100;margin-bottom:8px">🔴 Hardcoded colors trong CSS</div>
+      <ul style="margin:0;padding-left:18px;color:#bf360c;font-size:13px;line-height:1.8">
+        <li><code>.course { background: #fff; }</code> → không đổi ở dark</li>
+        <li><code>color: hsl(215 18% 38%)</code> hardcoded trong <code>.nav-item</code></li>
+        <li><code>hsl(215 16% 45%)</code> trong <code>.nav-subitem</code></li>
+        <li>Scrollbar thumb hardcoded màu sáng</li>
+        <li><code>.search input:focus { background: #fff; }</code></li>
+        <li><code>.assistant</code> gradient hardcoded light colors</li>
+      </ul>
+    </div>
+    <div style="background:#fce4ec;border:1px solid #f48fb1;border-radius:10px;padding:14px">
+      <div style="font-weight:700;color:#880e4f;margin-bottom:8px">🔴 UI: Thiếu Toggle Button</div>
+      <ul style="margin:0;padding-left:18px;color:#560027;font-size:13px;line-height:1.8">
+        <li>Không có nút toggle Dark/Light trên UI</li>
+        <li>Người dùng không biết phím tắt <kbd>D</kbd></li>
+        <li>Topbar chưa có ThemeToggle component</li>
+      </ul>
+    </div>
+    <div style="background:#fce4ec;border:1px solid #f48fb1;border-radius:10px;padding:14px">
+      <div style="font-weight:700;color:#880e4f;margin-bottom:8px">🔴 Transition & Polish</div>
+      <ul style="margin:0;padding-left:18px;color:#560027;font-size:13px;line-height:1.8">
+        <li><code>disableTransitionOnChange</code> đang bật → flash khi switch</li>
+        <li>Chưa có smooth color transition</li>
+        <li>Scrollbar chưa đổi màu theo dark mode</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📐 Phạm vi công việc ước tính</h3>
+  <div style="background:#e3f2fd;border:1px solid #90caf9;border-radius:10px;padding:14px;margin-top:12px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">
+      <div>
+        <div style="font-size:24px;font-weight:800;color:#1565c0">1</div>
+        <div style="font-size:12px;color:#0d47a1"><strong>globals.css</strong><br>Fix dark tokens + hardcoded colors</div>
+      </div>
+      <div>
+        <div style="font-size:24px;font-weight:800;color:#1565c0">1</div>
+        <div style="font-size:12px;color:#0d47a1"><strong>ThemeToggle</strong><br>Component mới cho topbar</div>
+      </div>
+      <div>
+        <div style="font-size:24px;font-weight:800;color:#1565c0">1</div>
+        <div style="font-size:12px;color:#0d47a1"><strong>Polish</strong><br>Transition, scrollbar, system pref</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:16px">👇 Câu hỏi đầu tiên: Bạn muốn nơi đặt nút toggle theme ở đâu?</p>

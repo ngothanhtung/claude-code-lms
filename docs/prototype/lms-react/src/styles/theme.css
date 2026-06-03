@@ -1,0 +1,80 @@
+/* ============================================================================
+   UniLMS — Design Tokens
+   shadcn/ui-compatible theme. Drop straight into a Next.js globals.css.
+   All colors are HSL channels (no hsl() wrapper) so they work as:
+       background-color: hsl(var(--primary));
+       background-color: hsl(var(--primary) / 0.1);
+   Tailwind config maps these via: colors: { primary: 'hsl(var(--primary))' } …
+   ========================================================================== */
+
+:root {
+  /* ---- Core surfaces -------------------------------------------------- */
+  --background: 210 40% 98%;        /* slate-50  page canvas        */
+  --foreground: 222 47% 11%;        /* slate-900 primary text       */
+
+  --card: 0 0% 100%;                /* white card surface           */
+  --card-foreground: 222 47% 11%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  /* ---- Brand ---------------------------------------------------------- */
+  --primary: 243 75% 59%;           /* indigo-600  #4f46e5          */
+  --primary-foreground: 0 0% 100%;
+  --primary-muted: 243 75% 96%;     /* indigo wash for active nav   */
+
+  --secondary: 210 40% 96%;         /* slate-100                    */
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 210 40% 96%;             /* slate-100                    */
+  --muted-foreground: 215 16% 47%;  /* slate-500                    */
+
+  --accent: 243 75% 96%;
+  --accent-foreground: 243 75% 40%;
+
+  /* ---- Lines & focus -------------------------------------------------- */
+  --border: 214 32% 91%;            /* slate-200                    */
+  --input: 214 32% 91%;
+  --ring: 243 75% 59%;              /* indigo focus ring            */
+
+  --radius: 0.875rem;               /* 14px — card corner radius    */
+
+  /* ---- Semantic / status --------------------------------------------- */
+  --success: 142 71% 45%;           /* emerald-500/600              */
+  --success-foreground: 0 0% 100%;
+  --success-muted: 142 76% 95%;
+
+  --info: 217 91% 60%;              /* blue-500                     */
+  --info-foreground: 0 0% 100%;
+  --info-muted: 214 95% 95%;
+
+  --warning: 38 92% 50%;            /* amber-500                    */
+  --warning-foreground: 0 0% 100%;
+  --warning-muted: 48 96% 92%;
+
+  --danger: 0 72% 51%;              /* red-600                      */
+  --danger-foreground: 0 0% 100%;
+  --danger-muted: 0 86% 97%;
+
+  /* ---- Chart / category palette (donut + course cards) --------------- */
+  --chart-1: 142 71% 45%;           /* green  — Tốt (A,B)           */
+  --chart-2: 217 91% 60%;           /* blue   — Khá (C)             */
+  --chart-3: 38 92% 50%;            /* amber  — Trung bình (D)      */
+  --chart-4: 0 72% 51%;             /* red    — Yếu (F)             */
+
+  --course-violet: 262 83% 58%;
+  --course-green:  142 71% 45%;
+  --course-blue:   221 83% 53%;
+  --course-amber:  32 95% 52%;
+  --course-teal:   172 66% 40%;
+
+  /* ---- Elevation ------------------------------------------------------ */
+  --shadow-sm: 0 1px 2px 0 hsl(222 47% 11% / 0.04);
+  --shadow-card: 0 1px 3px 0 hsl(222 47% 11% / 0.06), 0 1px 2px -1px hsl(222 47% 11% / 0.05);
+  --shadow-pop: 0 10px 30px -10px hsl(222 47% 11% / 0.18);
+
+  /* ---- Layout metrics ------------------------------------------------- */
+  --sidebar-w: 248px;
+  --rail-w: 404px;
+  --topbar-h: 72px;
+}

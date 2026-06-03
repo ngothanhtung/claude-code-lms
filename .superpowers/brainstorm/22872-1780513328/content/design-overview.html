@@ -1,0 +1,303 @@
+<h2>Design: Dark / Light Theme — Full Polish</h2>
+<p class="subtitle">Toàn bộ thiết kế trước khi viết code. Xem qua và cho tôi biết nếu muốn thay đổi gì.</p>
+
+<style>
+  .design-section {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+    background: #fff;
+  }
+  .design-section h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-new { background: #dbeafe; color: #1d4ed8; }
+  .tag-fix { background: #fef3c7; color: #b45309; }
+  .tag-mod { background: #f3e8ff; color: #7c3aed; }
+
+  .file-list { margin: 0; padding: 0; list-style: none; }
+  .file-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    font-size: 13px;
+    background: #f8fafc;
+  }
+  .file-list code {
+    font-family: monospace;
+    font-size: 12px;
+    background: #e2e8f0;
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .file-desc { color: #475569; line-height: 1.5; }
+
+  .token-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .token-group {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .token-group-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #475569;
+    margin-bottom: 3px;
+  }
+  .token-swatch {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    flex: none;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  /* Toggle preview */
+  .toggle-pill-demo {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 99px;
+    padding: 3px;
+    gap: 2px;
+    border: 1px solid #e2e8f0;
+    margin: 8px 0;
+  }
+  .toggle-pill-demo .tp-opt {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .toggle-pill-demo .tp-opt.active {
+    background: #fff;
+    color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    font-weight: 600;
+  }
+  .transition-demo {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .td-box {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .step-list { margin: 0; padding-left: 18px; }
+  .step-list li { font-size: 13px; color: #475569; margin-bottom: 4px; line-height: 1.5; }
+
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .ba-col { background: #f8fafc; border-radius: 8px; padding: 10px; }
+  .ba-col.before { border-left: 3px solid #f87171; }
+  .ba-col.after { border-left: 3px solid #34d399; }
+  .ba-title { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+  .ba-col.before .ba-title { color: #dc2626; }
+  .ba-col.after .ba-title { color: #059669; }
+  .ba-col code { font-size: 11px; font-family: monospace; color: #374151; display: block; margin-bottom: 3px; }
+</style>
+
+<!-- Section 1: Architecture -->
+<div class="design-section">
+  <h3>🏗️ 1. Architecture & Files</h3>
+  <ul class="file-list">
+    <li>
+      <span class="tag tag-new">NEW</span>
+      <div>
+        <code>components/theme-toggle.tsx</code>
+        <div class="file-desc">Pill toggle component (☀️ Sáng / 🌙 Tối / 💻 Hệ thống). Dùng <code>useTheme()</code> từ next-themes. Có animation xoay icon.</div>
+      </div>
+    </li>
+    <li>
+      <span class="tag tag-mod">MOD</span>
+      <div>
+        <code>components/app-topbar.tsx</code>
+        <div class="file-desc">Import và render <code>&lt;ThemeToggle /&gt;</code> vào <code>.topbar-right</code>, trước avatar dropdown.</div>
+      </div>
+    </li>
+    <li>
+      <span class="tag tag-fix">FIX</span>
+      <div>
+        <code>app/globals.css</code>
+        <div class="file-desc">3 thay đổi: (1) Chuẩn hoá dark tokens sang HSL, thêm tokens thiếu. (2) Fix hardcoded colors → dùng CSS variables. (3) Thêm smooth color-scheme transition.</div>
+      </div>
+    </li>
+    <li>
+      <span class="tag tag-mod">MOD</span>
+      <div>
+        <code>components/theme-provider.tsx</code>
+        <div class="file-desc">Bỏ <code>disableTransitionOnChange</code> → cho phép smooth transition. Giữ nguyên phím tắt <kbd>D</kbd>.</div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- Section 2: Dark Token Palette -->
+<div class="design-section">
+  <h3>🎨 2. Dark Mode Token Palette (Navy/Indigo)</h3>
+  <div class="token-grid">
+    <div class="token-group">
+      <div class="token-group-title">Surfaces</div>
+      <div class="token-row"><div class="token-swatch" style="background:#0d1117"></div><code>--background</code>: #0d1117</div>
+      <div class="token-row"><div class="token-swatch" style="background:#161b27"></div><code>--card</code>: #161b27</div>
+      <div class="token-row"><div class="token-swatch" style="background:#161b27"></div><code>--popover</code>: #161b27</div>
+      <div class="token-row"><div class="token-swatch" style="background:#21293a"></div><code>--border</code>: #21293a</div>
+      <div class="token-row"><div class="token-swatch" style="background:#2a3448"></div><code>--input</code>: #2a3448</div>
+      <div class="token-row"><div class="token-swatch" style="background:#21293a"></div><code>--muted</code>: #21293a</div>
+    </div>
+    <div class="token-group">
+      <div class="token-group-title">Brand & Text</div>
+      <div class="token-row"><div class="token-swatch" style="background:#818cf8"></div><code>--primary</code>: #818cf8 (indigo-400)</div>
+      <div class="token-row"><div class="token-swatch" style="background:#312e81"></div><code>--primary-muted</code>: tím muted</div>
+      <div class="token-row"><div class="token-swatch" style="background:#e2e8f0"></div><code>--foreground</code>: #e2e8f0</div>
+      <div class="token-row"><div class="token-swatch" style="background:#94a3b8"></div><code>--muted-foreground</code>: #94a3b8</div>
+      <div class="token-row"><div class="token-swatch" style="background:#7c3aed"></div><code>--ring</code>: violet-600</div>
+    </div>
+    <div class="token-group">
+      <div class="token-group-title">Semantic Colors (dark-adjusted)</div>
+      <div class="token-row"><div class="token-swatch" style="background:#34d399"></div><code>--success</code>: emerald-400</div>
+      <div class="token-row"><div class="token-swatch" style="background:#fbbf24"></div><code>--warning</code>: amber-400</div>
+      <div class="token-row"><div class="token-swatch" style="background:#60a5fa"></div><code>--info</code>: blue-400</div>
+      <div class="token-row"><div class="token-swatch" style="background:#f87171"></div><code>--destructive</code>: red-400</div>
+      <div class="token-row" style="font-size:11px;color:#94a3b8;margin-top:4px">✓ Tất cả *-muted variants sẽ được thêm</div>
+    </div>
+    <div class="token-group">
+      <div class="token-group-title">Sidebar (dark)</div>
+      <div class="token-row"><div class="token-swatch" style="background:#161b27"></div><code>--sidebar</code>: = card</div>
+      <div class="token-row"><div class="token-swatch" style="background:#818cf8"></div><code>--sidebar-primary</code>: indigo-400</div>
+      <div class="token-row"><div class="token-swatch" style="background:#1e2a45"></div><code>--sidebar-accent</code>: navy tint</div>
+      <div class="token-row" style="font-size:11px;color:#94a3b8;margin-top:4px">✓ Course colors giữ nguyên (chỉ sáng hơn ~10%)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 3: ThemeToggle Component -->
+<div class="design-section">
+  <h3>🔘 3. ThemeToggle Component</h3>
+  <div style="font-size:13px;color:#475569;margin-bottom:10px">
+    Pill 3 options, active state slide animation. Demo (static):
+  </div>
+  <div class="toggle-pill-demo">
+    <div class="tp-opt active">☀️ Sáng</div>
+    <div class="tp-opt">🌙 Tối</div>
+    <div class="tp-opt">💻 Hệ thống</div>
+  </div>
+  <div style="font-size:12px;color:#94a3b8;margin-top:4px">
+    → Khi dark: <strong>🌙 Tối</strong> được active. Label hiện trên màn hình rộng, ẩn trên mobile.
+  </div>
+  <div style="margin-top:10px;font-size:13px;color:#475569">
+    <strong>API:</strong> <code>useTheme()</code> → <code>theme</code> + <code>setTheme("light" | "dark" | "system")</code><br>
+    <strong>Position:</strong> Trong <code>.topbar-right</code>, trước <code>&lt;DropdownMenu&gt;</code> (profile)
+  </div>
+</div>
+
+<!-- Section 4: Hardcoded Colors Fix -->
+<div class="design-section">
+  <h3>🔧 4. Fix Hardcoded Colors trong globals.css</h3>
+  <div class="before-after">
+    <div class="ba-col before">
+      <div class="ba-title">❌ Trước (hardcoded)</div>
+      <code>.course { background: #fff }</code>
+      <code>.nav-item { color: hsl(215 18% 38%) }</code>
+      <code>.nav-subitem { color: hsl(215 16% 45%) }</code>
+      <code>search input:focus { background: #fff }</code>
+      <code>scrollbar-thumb: hsl(214 32% 88%)</code>
+    </div>
+    <div class="ba-col after">
+      <div class="ba-title">✅ Sau (CSS variables)</div>
+      <code>.course { background: hsl(var(--card)) }</code>
+      <code>.nav-item { color: hsl(var(--muted-foreground)) }</code>
+      <code>.nav-subitem { color: hsl(var(--muted-foreground)) }</code>
+      <code>search input:focus { background: hsl(var(--card)) }</code>
+      <code>scrollbar-thumb: hsl(var(--border))</code>
+    </div>
+  </div>
+  <div style="margin-top:10px;font-size:13px;color:#475569">
+    <strong>Assistant block</strong> (sidebar): gradient hardcoded sáng → thêm <code>.dark .assistant</code> variant với màu navy phù hợp.
+  </div>
+</div>
+
+<!-- Section 5: Transitions -->
+<div class="design-section">
+  <h3>✨ 5. Smooth Theme Transition</h3>
+  <div class="transition-demo">
+    <div class="td-box" style="background:#f0fdf4;border:1px solid #bbf7d0">
+      <div style="font-weight:700;color:#166534;margin-bottom:6px">Cách thực hiện</div>
+      <div style="font-size:12px;color:#15803d;text-align:left">
+        Thêm vào globals.css:<br>
+        <code style="font-family:monospace;background:#dcfce7;padding:2px 4px;border-radius:4px;font-size:11px">
+          *,*::before,*::after {<br>
+          &nbsp;&nbsp;transition: background-color 0.2s, border-color 0.2s, color 0.1s;<br>
+          }
+        </code>
+        <br><br>
+        Bỏ <code>disableTransitionOnChange</code> khỏi ThemeProvider.
+      </div>
+    </div>
+    <div class="td-box" style="background:#fff7ed;border:1px solid #fed7aa">
+      <div style="font-weight:700;color:#9a3412;margin-bottom:6px">Lưu ý</div>
+      <div style="font-size:12px;color:#c2410c;text-align:left">
+        Transition toàn bộ <code>*</code> có thể ảnh hưởng perf → Chỉ apply cho các selector quan trọng:
+        <code style="font-family:monospace;background:#ffedd5;padding:2px 4px;border-radius:4px;font-size:11px">body, .sidebar, .topbar, .card, .nav-item, input</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="background:#e0f2fe;border:1px solid #7dd3fc;border-radius:10px;padding:14px;margin-top:8px">
+  <div style="font-weight:700;color:#0369a1;margin-bottom:6px">📋 Tóm tắt scope</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;color:#0c4a6e">
+    <div>✅ 1 file mới: <code>theme-toggle.tsx</code></div>
+    <div>✅ Fix globals.css (tokens + hardcoded)</div>
+    <div>✅ Sửa app-topbar.tsx</div>
+    <div>✅ Sửa theme-provider.tsx</div>
+    <div>✅ Smooth transition CSS</div>
+    <div>✅ Dark scrollbar variant</div>
+  </div>
+</div>

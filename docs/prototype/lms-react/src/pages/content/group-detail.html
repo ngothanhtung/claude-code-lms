@@ -1,0 +1,243 @@
+<style>
+  /* ---- Group detail page ------------------------------------------------ */
+  .gd-page { grid-template-columns: 1fr; }
+  .breadcrumb { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-bottom: 16px; }
+  .breadcrumb a { color: hsl(var(--muted-foreground)); text-decoration: none; }
+  .breadcrumb a:hover { color: hsl(var(--primary)); }
+  .breadcrumb svg { width: 14px; height: 14px; }
+  .breadcrumb .cur { color: hsl(var(--foreground)); font-weight: 600; }
+
+  /* Hero */
+  .gd-hero { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 18px; padding: 20px 22px; box-shadow: var(--shadow-card); margin-bottom: 18px; position: relative; overflow: hidden; }
+  .gd-hero::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: linear-gradient(hsl(15 60% 56%), hsl(14 52% 46%)); }
+  .gd-hero-ico { width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; color: #fff; background: linear-gradient(155deg, hsl(16 60% 60%), hsl(14 52% 48%)); flex-shrink: 0; }
+  .gd-hero-ico svg { width: 26px; height: 26px; }
+  .gd-hero-main { flex: 1; min-width: 240px; }
+  .gd-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: hsl(15 56% 50%); }
+  .gd-hero-main h1 { font-size: 23px; font-weight: 800; letter-spacing: -0.02em; margin-top: 4px; }
+  .gd-hero-main .gh-sub { font-size: 13px; color: hsl(var(--muted-foreground)); margin-top: 4px; }
+  .gd-hero-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 13px; }
+  .ghm { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: hsl(var(--foreground)); }
+  .ghm svg { width: 14px; height: 14px; color: hsl(var(--muted-foreground)); }
+  .gd-hero-actions { display: flex; flex-direction: column; gap: 9px; align-items: flex-end; }
+  .gd-hero-actions .btn { white-space: nowrap; }
+
+  /* Two-column layout */
+  .gd-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
+  .card-pad { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 18px; box-shadow: var(--shadow-card); }
+  .card-pad + .card-pad { margin-top: 18px; }
+  .sec-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+  .sec-h h2 { font-size: 15px; font-weight: 700; }
+  .sec-h .sh-cnt { font-size: 12px; color: hsl(var(--muted-foreground)); }
+
+  /* Members */
+  .member { display: grid; grid-template-columns: 44px 1fr auto; gap: 13px; align-items: center; padding: 13px 0; border-top: 1px solid hsl(var(--border)); }
+  .member:first-of-type { border-top: none; padding-top: 0; }
+  .member .av { width: 44px; height: 44px; border-radius: 99px; display: grid; place-items: center; font-size: 15px; font-weight: 700; color: #fff; }
+  .av.a1 { background: hsl(262 70% 58%); } .av.a2 { background: hsl(142 60% 42%); }
+  .av.a3 { background: hsl(221 75% 56%); } .av.a4 { background: hsl(32 85% 52%); }
+  .av.lead { box-shadow: 0 0 0 2px hsl(var(--card)), 0 0 0 4px hsl(var(--primary)); }
+  .m-info .m-name { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .m-info .m-name .crown { color: hsl(38 92% 50%); display: inline-flex; }
+  .m-info .m-name .crown svg { width: 14px; height: 14px; }
+  .m-info .m-meta { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 3px 12px; }
+  .m-info .m-meta span { display: flex; align-items: center; gap: 5px; }
+  .m-info .m-meta svg { width: 12px; height: 12px; }
+  .m-role { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; }
+  .role-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: hsl(var(--muted)); color: hsl(var(--foreground)); white-space: nowrap; }
+  .role-tag.lead { background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); }
+  .role-tag.me { background: hsl(15 56% 54% / .14); color: hsl(15 56% 46%); }
+  .m-contrib { font-size: 11.5px; color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 6px; }
+  .m-contrib b { color: hsl(var(--foreground)); }
+
+  /* Task allocation */
+  .alloc { display: flex; flex-direction: column; gap: 13px; }
+  .alloc-row { }
+  .alloc-top { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; margin-bottom: 6px; }
+  .alloc-top .at-name { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .alloc-top .at-name .dot { width: 9px; height: 9px; border-radius: 99px; }
+  .alloc-top .at-val { color: hsl(var(--muted-foreground)); font-weight: 600; }
+  .alloc-track { height: 8px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; }
+  .alloc-track span { display: block; height: 100%; border-radius: 99px; }
+
+  /* Progress ring + stats */
+  .gd-prog { display: flex; align-items: center; gap: 16px; }
+  .ring { --p: 40; position: relative; width: 78px; height: 78px; border-radius: 99px; background: conic-gradient(hsl(var(--primary)) calc(var(--p) * 1%), hsl(var(--muted)) 0); display: grid; place-items: center; flex-shrink: 0; }
+  .ring::before { content: ""; position: absolute; width: 60px; height: 60px; border-radius: 99px; background: hsl(var(--card)); }
+  .ring b { position: relative; font-size: 18px; font-weight: 800; }
+  .gd-prog-stats { flex: 1; }
+  .gps-row { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; padding: 5px 0; }
+  .gps-row + .gps-row { border-top: 1px solid hsl(var(--border)); }
+  .gps-row .v { font-weight: 700; }
+  .gps-row .v.soon { color: hsl(var(--danger)); }
+
+  /* Activity feed */
+  .feed { display: flex; flex-direction: column; }
+  .feed-item { display: grid; grid-template-columns: 30px 1fr; gap: 11px; padding: 11px 0; position: relative; }
+  .feed-item:not(:last-child)::before { content: ""; position: absolute; left: 14px; top: 30px; bottom: -11px; width: 2px; background: hsl(var(--border)); }
+  .feed-ico { width: 30px; height: 30px; border-radius: 99px; display: grid; place-items: center; z-index: 1; }
+  .feed-ico svg { width: 14px; height: 14px; }
+  .feed-body .fb-text { font-size: 12.5px; line-height: 1.45; }
+  .feed-body .fb-text b { font-weight: 700; }
+  .feed-body .fb-time { font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+
+  @media (max-width: 980px) { .gd-grid { grid-template-columns: 1fr; } }
+</style>
+<div class="content gd-page">
+      <div class="col-main">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+          <a href="assignments-group.html">Bài tập nhóm</a>
+          <i data-lucide="chevron-right"></i>
+          <span class="cur">Nhóm 3 · Claude Code for BackEnd</span>
+        </div>
+
+        <!-- Hero -->
+        <div class="gd-hero">
+          <div class="gd-hero-ico"><i data-lucide="users"></i></div>
+          <div class="gd-hero-main">
+            <div class="gd-eyebrow">Nhóm 3 · 4 thành viên</div>
+            <h1>Xây dựng API cho hệ thống TMĐT</h1>
+            <div class="gh-sub">Claude Code for BackEnd · GV: Hoàng Anh Khoa</div>
+            <div class="gd-hero-meta">
+              <div class="ghm"><i data-lucide="calendar-clock"></i> Hạn nộp: 20/06/2026</div>
+              <div class="ghm"><i data-lucide="alarm-clock"></i> Còn 20 ngày</div>
+              <div class="ghm"><i data-lucide="git-branch"></i> github.com/nhom3/ecom-api</div>
+            </div>
+          </div>
+          <div class="gd-hero-actions">
+            <a class="btn primary" href="workspace.html"><i data-lucide="layout-dashboard" class="icon-sm"></i> Mở workspace</a>
+            <button class="btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat nhóm</button>
+          </div>
+        </div>
+
+        <div class="gd-grid">
+
+          <!-- LEFT column -->
+          <div>
+            <!-- Members -->
+            <div class="card-pad">
+              <div class="sec-h"><h2>Thành viên nhóm</h2><span class="sh-cnt">4 người</span></div>
+
+              <div class="member">
+                <div class="av a4 lead">T</div>
+                <div class="m-info">
+                  <div class="m-name">Ngô Thanh Tùng <span class="crown"><i data-lucide="crown"></i></span></div>
+                  <div class="m-meta"><span><i data-lucide="hash"></i> 21123456</span><span><i data-lucide="mail"></i> tung.nt@sv.edu.vn</span></div>
+                </div>
+                <div class="m-role">
+                  <span class="role-tag lead">Nhóm trưởng</span>
+                  <span class="m-contrib"><b>5</b> task · <b>32%</b></span>
+                </div>
+              </div>
+
+              <div class="member">
+                <div class="av a1">H</div>
+                <div class="m-info">
+                  <div class="m-name">Trần Thu Hà</div>
+                  <div class="m-meta"><span><i data-lucide="hash"></i> 21123480</span><span><i data-lucide="mail"></i> ha.tt@sv.edu.vn</span></div>
+                </div>
+                <div class="m-role">
+                  <span class="role-tag">Backend</span>
+                  <span class="m-contrib"><b>4</b> task · <b>26%</b></span>
+                </div>
+              </div>
+
+              <div class="member">
+                <div class="av a3">M</div>
+                <div class="m-info">
+                  <div class="m-name">Lê Hoàng Minh</div>
+                  <div class="m-meta"><span><i data-lucide="hash"></i> 21123502</span><span><i data-lucide="mail"></i> minh.lh@sv.edu.vn</span></div>
+                </div>
+                <div class="m-role">
+                  <span class="role-tag">Database · DevOps</span>
+                  <span class="m-contrib"><b>4</b> task · <b>24%</b></span>
+                </div>
+              </div>
+
+              <div class="member">
+                <div class="av a2">L</div>
+                <div class="m-info">
+                  <div class="m-name">Phạm Khánh Lan</div>
+                  <div class="m-meta"><span><i data-lucide="hash"></i> 21123517</span><span><i data-lucide="mail"></i> lan.pk@sv.edu.vn</span></div>
+                </div>
+                <div class="m-role">
+                  <span class="role-tag">Test · Docs</span>
+                  <span class="m-contrib"><b>3</b> task · <b>18%</b></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task allocation -->
+            <div class="card-pad">
+              <div class="sec-h"><h2>Phân công công việc</h2><span class="sh-cnt">16 task</span></div>
+              <div class="alloc">
+                <div class="alloc-row">
+                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(32 85% 52%)"></span> Ngô Thanh Tùng</span><span class="at-val">5 task · 4 xong</span></div>
+                  <div class="alloc-track"><span style="width:80%; background:hsl(32 85% 52%)"></span></div>
+                </div>
+                <div class="alloc-row">
+                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(262 70% 58%)"></span> Trần Thu Hà</span><span class="at-val">4 task · 2 xong</span></div>
+                  <div class="alloc-track"><span style="width:50%; background:hsl(262 70% 58%)"></span></div>
+                </div>
+                <div class="alloc-row">
+                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(221 75% 56%)"></span> Lê Hoàng Minh</span><span class="at-val">4 task · 3 xong</span></div>
+                  <div class="alloc-track"><span style="width:75%; background:hsl(221 75% 56%)"></span></div>
+                </div>
+                <div class="alloc-row">
+                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(142 60% 42%)"></span> Phạm Khánh Lan</span><span class="at-val">3 task · 1 xong</span></div>
+                  <div class="alloc-track"><span style="width:33%; background:hsl(142 60% 42%)"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT column -->
+          <div>
+            <!-- Progress -->
+            <div class="card-pad">
+              <div class="sec-h"><h2>Tiến độ nhóm</h2></div>
+              <div class="gd-prog">
+                <div class="ring" style="--p:40"><b>40%</b></div>
+                <div class="gd-prog-stats">
+                  <div class="gps-row"><span>Task hoàn thành</span><span class="v">10 / 16</span></div>
+                  <div class="gps-row"><span>Đang thực hiện</span><span class="v">4</span></div>
+                  <div class="gps-row"><span>Milestone hiện tại</span><span class="v">4 / 8</span></div>
+                  <div class="gps-row"><span>Hạn nộp</span><span class="v soon">Còn 20 ngày</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity feed -->
+            <div class="card-pad">
+              <div class="sec-h"><h2>Hoạt động gần đây</h2></div>
+              <div class="feed">
+                <div class="feed-item">
+                  <div class="feed-ico ico-tint-green"><i data-lucide="git-merge"></i></div>
+                  <div class="feed-body"><div class="fb-text"><b>Tùng</b> merge PR #28 — CRUD sản phẩm &amp; danh mục</div><div class="fb-time">Hôm nay · 09:24</div></div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico ico-tint-red"><i data-lucide="circle-dot"></i></div>
+                  <div class="feed-body"><div class="fb-text"><b>Hà</b> mở issue #34 — Token JWT hết hạn không trả về 401</div><div class="fb-time">Hôm nay · 08:10</div></div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico ico-tint-blue"><i data-lucide="upload"></i></div>
+                  <div class="feed-body"><div class="fb-text"><b>Lan</b> tải lên <b>Phan-cong-cong-viec.xlsx</b></div><div class="fb-time">Hôm qua · 21:40</div></div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico ico-tint-amber"><i data-lucide="check-square"></i></div>
+                  <div class="feed-body"><div class="fb-text"><b>Minh</b> hoàn thành task — Dockerfile &amp; docker-compose</div><div class="fb-time">28/05 · 16:05</div></div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-ico ico-tint-indigo"><i data-lucide="git-commit-horizontal"></i></div>
+                  <div class="feed-body"><div class="fb-text"><b>Tùng</b> push 6 commit lên nhánh <b>feature/products</b></div><div class="fb-time">28/05 · 14:30</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>

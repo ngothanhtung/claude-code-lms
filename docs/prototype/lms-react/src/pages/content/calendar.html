@@ -1,0 +1,262 @@
+<style>
+  /* ---- Calendar page-specific ------------------------------------------- */
+  .cal-page { grid-template-columns: 1fr; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 16px; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+
+  .week-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .week-nav .view-btn { font: inherit; font-size: 14px; font-weight: 700; padding: 10px 20px; border-radius: 12px; cursor: pointer; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); color: hsl(var(--foreground)); transition: background .15s, color .15s, border-color .15s, box-shadow .15s; }
+  .week-nav .view-btn:hover { background: hsl(var(--muted)); }
+  .week-nav .view-btn.active { background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: #fff; box-shadow: var(--shadow-card); }
+  .week-nav .view-btn.active:hover { background: hsl(var(--primary)); }
+  .week-nav .wk-label { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 700; color: hsl(var(--primary)); background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 12px; padding: 10px 16px; }
+  .week-nav .wk-label svg { width: 17px; height: 17px; color: hsl(var(--primary)); }
+  .week-nav .sched-nav { display: inline-flex; gap: 6px; }
+  .week-nav .sched-nav button { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); border-radius: 12px; cursor: pointer; color: hsl(var(--foreground)); transition: background .15s; }
+  .week-nav .sched-nav button:hover { background: hsl(var(--muted)); }
+
+  /* Timetable grid */
+  .cal-wrap { padding: 0; overflow: hidden; }
+  .cal-scroll { overflow-x: auto; }
+  .cal { display: grid; grid-template-columns: 76px repeat(6, minmax(150px, 1fr)); grid-template-rows: 56px repeat(10, 62px); min-width: 880px; }
+  .cal-corner { grid-row: 1; grid-column: 1; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); }
+  .cal-dayhead { grid-row: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); }
+  .cal-dayhead .dh-day { font-size: 13px; font-weight: 700; }
+  .cal-dayhead .dh-date { font-size: 11.5px; color: hsl(var(--muted-foreground)); }
+  .cal-dayhead.is-today { background: hsl(var(--primary) / 0.06); }
+  .cal-dayhead.is-today .dh-day { color: hsl(var(--primary)); }
+  .cal-dayhead.is-today .dh-date { color: hsl(var(--primary)); font-weight: 600; }
+
+  .cal-time { grid-column: 1; display: flex; justify-content: flex-end; padding: 6px 10px 0 0; font-size: 11.5px; font-weight: 600; color: hsl(var(--muted-foreground)); border-right: 1px solid hsl(var(--border)); }
+  .cal-col { grid-row: 2 / span 10; border-right: 1px solid hsl(var(--border)); background-image: repeating-linear-gradient(to bottom, transparent, transparent 61px, hsl(var(--border)) 61px, hsl(var(--border)) 62px); }
+  .cal-col.is-today { background-color: hsl(var(--primary) / 0.035); }
+
+  /* Event block */
+  .ev { margin: 4px 5px; border-radius: 11px; padding: 9px 11px; color: #fff; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 4px; box-shadow: var(--shadow-card); cursor: pointer; transition: transform .1s ease, box-shadow .12s ease; z-index: 2; }
+  .ev:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+  .ev .ev-time { font-size: 11px; font-weight: 700; opacity: .92; }
+  .ev .ev-title { font-size: 13px; font-weight: 700; line-height: 1.22; }
+  .ev .ev-room { font-size: 11px; opacity: .92; display: flex; align-items: center; gap: 4px; margin-top: auto; }
+  .ev .ev-room svg { width: 12px; height: 12px; }
+  .ev.violet { background: linear-gradient(155deg, hsl(262 83% 62%), hsl(262 83% 50%)); }
+  .ev.green  { background: linear-gradient(155deg, hsl(142 65% 48%), hsl(142 71% 38%)); }
+  .ev.blue   { background: linear-gradient(155deg, hsl(221 83% 58%), hsl(221 83% 46%)); }
+  .ev.amber  { background: linear-gradient(155deg, hsl(36 95% 56%), hsl(28 92% 50%)); }
+  .ev.teal   { background: linear-gradient(155deg, hsl(172 60% 44%), hsl(174 66% 34%)); }
+  .ev.rust   { background: linear-gradient(155deg, hsl(16 60% 60%), hsl(14 52% 48%)); }
+
+  /* View-mode toggle buttons styled inline in .week-nav above */
+
+  /* Month grid */
+  .month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); min-width: 760px; border-top: 1px solid hsl(var(--border)); border-left: 1px solid hsl(var(--border)); }
+  .m-dayhead { padding: 12px 10px; text-align: center; font-size: 12.5px; font-weight: 700; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); }
+  .m-dayhead.wknd { color: hsl(var(--muted-foreground)); }
+  .m-cell { min-height: 118px; padding: 8px; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); display: flex; flex-direction: column; }
+  .m-cell.other { background: hsl(var(--muted) / 0.45); }
+  .m-date { font-size: 12.5px; font-weight: 700; color: hsl(var(--foreground)); width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; }
+  .m-cell.other .m-date { color: hsl(var(--muted-foreground)); font-weight: 600; }
+  .m-cell.is-today .m-date { background: hsl(var(--primary)); color: #fff; }
+  .m-evs { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+  .m-ev { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; line-height: 1.25; padding: 4px 7px; border-radius: 7px; cursor: pointer; transition: filter .12s; }
+  .m-ev:hover { filter: brightness(0.96); }
+  .m-ev .mdot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .m-ev .met { font-weight: 700; }
+  .m-ev.violet { background: hsl(262 83% 96%); color: hsl(262 55% 44%); } .m-ev.violet .mdot { background: hsl(262 83% 56%); }
+  .m-ev.green  { background: hsl(142 58% 93%); color: hsl(142 55% 30%); } .m-ev.green .mdot { background: hsl(142 68% 43%); }
+  .m-ev.blue   { background: hsl(221 90% 95%); color: hsl(221 65% 46%); } .m-ev.blue .mdot { background: hsl(221 83% 52%); }
+  .m-ev.amber  { background: hsl(36 95% 92%); color: hsl(28 75% 42%); } .m-ev.amber .mdot { background: hsl(32 93% 53%); }
+  .m-ev.teal   { background: hsl(173 58% 92%); color: hsl(174 58% 30%); } .m-ev.teal .mdot { background: hsl(173 63% 39%); }
+  .m-ev.rust   { background: hsl(15 68% 94%); color: hsl(14 50% 45%); } .m-ev.rust .mdot { background: hsl(15 56% 54%); }
+  .m-ev.deadline { background: hsl(0 80% 95%); color: hsl(0 65% 45%); } .m-ev.deadline .mdot { background: hsl(0 72% 51%); }
+
+  /* Legend */
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+  .lg { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: hsl(var(--foreground)); }
+  .lg .sw { width: 12px; height: 12px; border-radius: 4px; }
+  .lg .sw.violet { background: hsl(262 83% 56%); }
+  .lg .sw.green  { background: hsl(142 68% 43%); }
+  .lg .sw.blue   { background: hsl(221 83% 52%); }
+  .lg .sw.amber  { background: hsl(32 93% 53%); }
+  .lg .sw.teal   { background: hsl(173 63% 39%); }
+  .lg .sw.rust   { background: hsl(15 56% 54%); }
+
+  @media (max-width: 680px) {
+    .page-head { align-items: flex-start; }
+    .week-nav .wk-label { min-width: 0; }
+  }
+</style>
+<div class="content cal-page">
+      <div class="col-main">
+
+        <!-- Page header -->
+        <div class="page-head">
+          <div>
+            <h1>Lịch học</h1>
+            <p id="calSubtitle">Học kỳ II, năm học 2025 - 2026 · Thời khóa biểu tuần</p>
+          </div>
+          <div class="week-nav">
+            <button class="view-btn active" data-view="week">Tuần này</button>
+            <button class="view-btn" data-view="month">Tháng này</button>
+            <div class="wk-label" id="calRange"><i data-lucide="calendar"></i> <span id="calRangeText">01/06 – 06/06/2026</span></div>
+            <div class="sched-nav">
+              <button id="calPrev" aria-label="Trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+              <button id="calNext" aria-label="Sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timetable (week view) -->
+        <div class="card cal-wrap" id="weekView">
+          <div class="cal-scroll">
+            <div class="cal">
+
+              <!-- Header row -->
+              <div class="cal-corner"></div>
+              <div class="cal-dayhead is-today" style="grid-column:2"><div class="dh-day">Thứ 2</div><div class="dh-date">01/06</div></div>
+              <div class="cal-dayhead" style="grid-column:3"><div class="dh-day">Thứ 3</div><div class="dh-date">02/06</div></div>
+              <div class="cal-dayhead" style="grid-column:4"><div class="dh-day">Thứ 4</div><div class="dh-date">03/06</div></div>
+              <div class="cal-dayhead" style="grid-column:5"><div class="dh-day">Thứ 5</div><div class="dh-date">04/06</div></div>
+              <div class="cal-dayhead" style="grid-column:6"><div class="dh-day">Thứ 6</div><div class="dh-date">05/06</div></div>
+              <div class="cal-dayhead" style="grid-column:7"><div class="dh-day">Thứ 7</div><div class="dh-date">06/06</div></div>
+
+              <!-- Time labels (col 1) -->
+              <div class="cal-time" style="grid-row:2">07:00</div>
+              <div class="cal-time" style="grid-row:3">08:00</div>
+              <div class="cal-time" style="grid-row:4">09:00</div>
+              <div class="cal-time" style="grid-row:5">10:00</div>
+              <div class="cal-time" style="grid-row:6">11:00</div>
+              <div class="cal-time" style="grid-row:7">12:00</div>
+              <div class="cal-time" style="grid-row:8">13:00</div>
+              <div class="cal-time" style="grid-row:9">14:00</div>
+              <div class="cal-time" style="grid-row:10">15:00</div>
+              <div class="cal-time" style="grid-row:11">16:00</div>
+
+              <!-- Day background columns -->
+              <div class="cal-col is-today" style="grid-column:2"></div>
+              <div class="cal-col" style="grid-column:3"></div>
+              <div class="cal-col" style="grid-column:4"></div>
+              <div class="cal-col" style="grid-column:5"></div>
+              <div class="cal-col" style="grid-column:6"></div>
+              <div class="cal-col" style="grid-column:7"></div>
+
+              <!-- Events -->
+              <!-- Thứ 2: OOP 07:00-09:00 -->
+              <div class="ev violet" style="grid-column:2; grid-row:2 / span 2">
+                <div class="ev-time">07:00 – 09:00</div>
+                <div class="ev-title">Lập trình hướng đối tượng</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> A2-201</div>
+              </div>
+
+              <!-- Thứ 3: CSDL 09:00-11:00 -->
+              <div class="ev green" style="grid-column:3; grid-row:4 / span 2">
+                <div class="ev-time">09:00 – 11:00</div>
+                <div class="ev-title">Cơ sở dữ liệu</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> B1-105</div>
+              </div>
+
+              <!-- Thứ 4: CTDL&GT 13:00-15:00 -->
+              <div class="ev blue" style="grid-column:4; grid-row:8 / span 2">
+                <div class="ev-time">13:00 – 15:00</div>
+                <div class="ev-title">Cấu trúc dữ liệu và giải thuật</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> A3-302</div>
+              </div>
+
+              <!-- Thứ 5: Java 07:00-09:00 -->
+              <div class="ev amber" style="grid-column:5; grid-row:2 / span 2">
+                <div class="ev-time">07:00 – 09:00</div>
+                <div class="ev-title">Lập trình Java</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> Lab CNTT-201</div>
+              </div>
+
+              <!-- Thứ 6: Tiếng Anh 09:00-11:00 -->
+              <div class="ev teal" style="grid-column:6; grid-row:4 / span 2">
+                <div class="ev-time">09:00 – 11:00</div>
+                <div class="ev-title">Tiếng Anh học thuật</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> NN-110</div>
+              </div>
+
+              <!-- Thứ 7: Claude Code 13:00-15:00 -->
+              <div class="ev rust" style="grid-column:7; grid-row:8 / span 2">
+                <div class="ev-time">13:00 – 15:00</div>
+                <div class="ev-title">Claude Code for BackEnd</div>
+                <div class="ev-room"><i data-lucide="map-pin"></i> Lab CNTT-301</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Month view -->
+        <div class="card cal-wrap" id="monthView" style="display:none">
+          <div class="cal-scroll">
+            <div class="month-grid">
+              <!-- Day headers -->
+              <div class="m-dayhead">Thứ 2</div>
+              <div class="m-dayhead">Thứ 3</div>
+              <div class="m-dayhead">Thứ 4</div>
+              <div class="m-dayhead">Thứ 5</div>
+              <div class="m-dayhead">Thứ 6</div>
+              <div class="m-dayhead wknd">Thứ 7</div>
+              <div class="m-dayhead wknd">Chủ nhật</div>
+
+              <!-- Week 1 -->
+              <div class="m-cell is-today"><div class="m-date">1</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">2</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell"><div class="m-date">3</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">4</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">5</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">6</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">7</div></div>
+
+              <!-- Week 2 -->
+              <div class="m-cell"><div class="m-date">8</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">9</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div><div class="m-ev deadline"><span class="mdot"></span>Hạn: BTL2</div></div></div>
+              <div class="m-cell"><div class="m-date">10</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">11</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">12</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">13</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">14</div></div>
+
+              <!-- Week 3 -->
+              <div class="m-cell"><div class="m-date">15</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">16</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell"><div class="m-date">17</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">18</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">19</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">20</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">21</div></div>
+
+              <!-- Week 4 -->
+              <div class="m-cell"><div class="m-date">22</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">23</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell"><div class="m-date">24</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">25</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">26</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">27</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">28</div></div>
+
+              <!-- Week 5 -->
+              <div class="m-cell"><div class="m-date">29</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">30</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell other"><div class="m-date">1</div></div>
+              <div class="m-cell other"><div class="m-date">2</div></div>
+              <div class="m-cell other"><div class="m-date">3</div></div>
+              <div class="m-cell other"><div class="m-date">4</div></div>
+              <div class="m-cell other"><div class="m-date">5</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="cal-legend">
+          <div class="lg"><span class="sw violet"></span> Lập trình hướng đối tượng</div>
+          <div class="lg"><span class="sw green"></span> Cơ sở dữ liệu</div>
+          <div class="lg"><span class="sw blue"></span> Cấu trúc dữ liệu và giải thuật</div>
+          <div class="lg"><span class="sw amber"></span> Lập trình Java</div>
+          <div class="lg"><span class="sw teal"></span> Tiếng Anh học thuật</div>
+          <div class="lg"><span class="sw rust"></span> Claude Code for BackEnd</div>
+        </div>
+
+      </div>
+    </div>

@@ -1,0 +1,244 @@
+<h2>Tông màu Dark Mode</h2>
+<p class="subtitle">Background chính của app khi bật Dark mode. Chọn hướng bạn thấy phù hợp với LMS Portal.</p>
+
+<style>
+  .palette-preview {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    margin-top: 10px;
+  }
+  /* Simulate mini app shell */
+  .mini-app {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    height: 160px;
+    font-size: 11px;
+  }
+  .mini-sidebar {
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .mini-brand {
+    height: 20px;
+    border-radius: 5px;
+    margin-bottom: 4px;
+  }
+  .mini-nav-item {
+    height: 18px;
+    border-radius: 4px;
+  }
+  .mini-nav-item.active {
+    opacity: 1 !important;
+  }
+  .mini-main {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mini-topbar {
+    height: 22px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    gap: 6px;
+  }
+  .mini-search {
+    flex: 1;
+    height: 14px;
+    border-radius: 4px;
+  }
+  .mini-avatar {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  }
+  .mini-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    flex: 1;
+  }
+  .mini-card {
+    border-radius: 5px;
+  }
+  .color-chips {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #64748b;
+  }
+  .chip-dot {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  /* ===== OPTION A: Pure Dark (Charcoal / Near-black) ===== */
+  .dark-pure .mini-app { background: #0f0f0f; }
+  .dark-pure .mini-sidebar { background: #1a1a1a; border-right: 1px solid #2a2a2a; }
+  .dark-pure .mini-brand { background: #6366f1; opacity: 0.9; }
+  .dark-pure .mini-nav-item { background: #2a2a2a; opacity: 0.6; }
+  .dark-pure .mini-nav-item.active { background: #6366f1; opacity: 0.25; }
+  .dark-pure .mini-main { background: #0f0f0f; }
+  .dark-pure .mini-topbar { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; }
+  .dark-pure .mini-search { background: #2a2a2a; }
+  .dark-pure .mini-card { background: #1a1a1a; border: 1px solid #2a2a2a; }
+
+  /* ===== OPTION B: Navy / Indigo-tinted Dark ===== */
+  .dark-navy .mini-app { background: #0d1117; }
+  .dark-navy .mini-sidebar { background: #161b27; border-right: 1px solid #21293a; }
+  .dark-navy .mini-brand { background: #6366f1; opacity: 0.9; }
+  .dark-navy .mini-nav-item { background: #21293a; opacity: 0.6; }
+  .dark-navy .mini-nav-item.active { background: #6366f1; opacity: 0.3; }
+  .dark-navy .mini-main { background: #0d1117; }
+  .dark-navy .mini-topbar { background: #161b27; border-bottom: 1px solid #21293a; }
+  .dark-navy .mini-search { background: #21293a; }
+  .dark-navy .mini-card { background: #161b27; border: 1px solid #21293a; }
+
+  /* ===== OPTION C: Slate / Zinc (warm dark) ===== */
+  .dark-slate .mini-app { background: #18181b; }
+  .dark-slate .mini-sidebar { background: #1f1f23; border-right: 1px solid #2d2d33; }
+  .dark-slate .mini-brand { background: #6366f1; opacity: 0.9; }
+  .dark-slate .mini-nav-item { background: #2d2d33; opacity: 0.6; }
+  .dark-slate .mini-nav-item.active { background: #6366f1; opacity: 0.25; }
+  .dark-slate .mini-main { background: #18181b; }
+  .dark-slate .mini-topbar { background: #1f1f23; border-bottom: 1px solid #2d2d33; }
+  .dark-slate .mini-search { background: #2d2d33; }
+  .dark-slate .mini-card { background: #1f1f23; border: 1px solid #2d2d33; }
+</style>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Pure Dark (Charcoal)</h3>
+      <p>Background gần black thuần. Contrast cao, phong cách tối giản như VS Code / Linear.</p>
+      <div class="palette-preview dark-pure">
+        <div class="mini-app">
+          <div class="mini-sidebar">
+            <div class="mini-brand"></div>
+            <div class="mini-nav-item active"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+          </div>
+          <div class="mini-main">
+            <div class="mini-topbar">
+              <div class="mini-search"></div>
+              <div class="mini-avatar"></div>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);opacity:0.8"></div>
+              <div class="mini-card"></div>
+              <div class="mini-card"></div>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card"></div>
+              <div class="mini-card"></div>
+              <div class="mini-card" style="background:linear-gradient(135deg,#10b981,#059669);opacity:0.7"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="color-chips">
+        <div class="chip"><div class="chip-dot" style="background:#0f0f0f"></div>BG #0f0f0f</div>
+        <div class="chip"><div class="chip-dot" style="background:#1a1a1a"></div>Card #1a1a1a</div>
+        <div class="chip"><div class="chip-dot" style="background:#2a2a2a"></div>Border #2a2a2a</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Navy / Indigo-tinted ⭐ Đề xuất</h3>
+      <p>Background có tông xanh navy nhẹ. Phù hợp với brand color tím/indigo, cảm giác premium như Notion / GitHub.</p>
+      <div class="palette-preview dark-navy">
+        <div class="mini-app">
+          <div class="mini-sidebar">
+            <div class="mini-brand"></div>
+            <div class="mini-nav-item active"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+          </div>
+          <div class="mini-main">
+            <div class="mini-topbar">
+              <div class="mini-search"></div>
+              <div class="mini-avatar"></div>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);opacity:0.85"></div>
+              <div class="mini-card"></div>
+              <div class="mini-card"></div>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card"></div>
+              <div class="mini-card"></div>
+              <div class="mini-card" style="background:linear-gradient(135deg,#10b981,#059669);opacity:0.75"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="color-chips">
+        <div class="chip"><div class="chip-dot" style="background:#0d1117"></div>BG #0d1117</div>
+        <div class="chip"><div class="chip-dot" style="background:#161b27"></div>Card #161b27</div>
+        <div class="chip"><div class="chip-dot" style="background:#21293a"></div>Border #21293a</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Slate / Zinc (Warm Dark)</h3>
+      <p>Background ấm hơn, tông xám-zinc. Nhẹ nhàng hơn cho mắt, gần với shadcn/ui default dark.</p>
+      <div class="palette-preview dark-slate">
+        <div class="mini-app">
+          <div class="mini-sidebar">
+            <div class="mini-brand"></div>
+            <div class="mini-nav-item active"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+            <div class="mini-nav-item"></div>
+          </div>
+          <div class="mini-main">
+            <div class="mini-topbar">
+              <div class="mini-search"></div>
+              <div class="mini-avatar"></div>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);opacity:0.8"></div>
+              <div class="mini-card"></div>
+              <div class="mini-card"></div>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card"></div>
+              <div class="mini-card"></div>
+              <div class="mini-card" style="background:linear-gradient(135deg,#10b981,#059669);opacity:0.7"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="color-chips">
+        <div class="chip"><div class="chip-dot" style="background:#18181b"></div>BG #18181b</div>
+        <div class="chip"><div class="chip-dot" style="background:#1f1f23"></div>Card #1f1f23</div>
+        <div class="chip"><div class="chip-dot" style="background:#2d2d33"></div>Border #2d2d33</div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,180 @@
+<style>
+  .quiz-page { grid-template-columns: 1fr; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .breadcrumb { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-bottom: 16px; }
+  .breadcrumb a { color: hsl(var(--muted-foreground)); text-decoration: none; }
+  .breadcrumb a:hover { color: hsl(var(--primary)); }
+  .breadcrumb svg { width: 14px; height: 14px; }
+  .breadcrumb .cur { color: hsl(var(--foreground)); font-weight: 600; }
+
+  /* Quiz header */
+  .quiz-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .quiz-head h1 { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
+  .quiz-head .qh-sub { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+  .timer { display: flex; align-items: center; gap: 9px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 12px; padding: 9px 15px; box-shadow: var(--shadow-card); }
+  .timer .t-ico { width: 34px; height: 34px; border-radius: 9px; background: hsl(var(--warning-muted)); color: hsl(32 80% 44%); display: grid; place-items: center; }
+  .timer .t-ico svg { width: 18px; height: 18px; }
+  .timer.low .t-ico { background: hsl(var(--danger-muted)); color: hsl(var(--danger)); }
+  .timer .t-val { font-size: 19px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .timer.low .t-val { color: hsl(var(--danger)); }
+  .timer .t-lbl { font-size: 10.5px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+
+  .quiz-grid { display: grid; grid-template-columns: 1fr 270px; gap: 18px; align-items: start; }
+
+  /* Question card */
+  .q-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 22px 24px; box-shadow: var(--shadow-card); }
+  .q-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .q-num { font-size: 12.5px; font-weight: 700; color: hsl(var(--primary)); text-transform: uppercase; letter-spacing: .04em; }
+  .q-flag { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 12px; font-weight: 600; color: hsl(var(--muted-foreground)); background: transparent; border: 1px solid hsl(var(--border)); border-radius: 8px; padding: 5px 11px; cursor: pointer; transition: all .14s; }
+  .q-flag svg { width: 14px; height: 14px; }
+  .q-flag:hover { border-color: hsl(38 92% 55%); color: hsl(32 80% 44%); }
+  .q-flag.on { background: hsl(var(--warning-muted)); border-color: hsl(38 92% 70%); color: hsl(32 80% 42%); }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.45; }
+  .q-code { margin-top: 14px; background: hsl(222 30% 14%); color: hsl(210 30% 90%); border-radius: 11px; padding: 15px 17px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre; }
+  .q-code .kw { color: hsl(280 60% 75%); } .q-code .ty { color: hsl(190 60% 65%); }
+  .q-code .nm { color: hsl(30 80% 70%); } .q-code .cm { color: hsl(140 20% 55%); }
+  .q-code .st { color: hsl(95 45% 68%); }
+
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+  .opt { display: flex; align-items: center; gap: 13px; border: 1.5px solid hsl(var(--border)); border-radius: 12px; padding: 13px 16px; cursor: pointer; transition: border-color .14s, background .14s; }
+  .opt:hover { border-color: hsl(var(--primary) / 0.5); background: hsl(var(--primary) / 0.03); }
+  .opt.sel { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.07); }
+  .opt .opt-key { width: 30px; height: 30px; border-radius: 8px; background: hsl(var(--muted)); color: hsl(var(--foreground)); font-weight: 700; font-size: 13px; display: grid; place-items: center; flex-shrink: 0; transition: all .14s; }
+  .opt.sel .opt-key { background: hsl(var(--primary)); color: #fff; }
+  .opt .opt-text { font-size: 14px; font-weight: 500; }
+  .opt .opt-text.mono { font-size: 13px; }
+
+  .q-foot { display: flex; align-items: center; gap: 10px; margin-top: 22px; }
+  .q-foot .spacer { flex: 1; }
+
+  /* Side panel */
+  .side-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 17px; box-shadow: var(--shadow-card); }
+  .side-card + .side-card { margin-top: 16px; }
+  .side-h { font-size: 13px; font-weight: 700; margin-bottom: 13px; display: flex; align-items: center; justify-content: space-between; }
+  .side-h .sh-cnt { font-size: 12px; font-weight: 600; color: hsl(var(--muted-foreground)); }
+  .prog-track { height: 8px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; margin-bottom: 14px; }
+  .prog-track span { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, hsl(var(--primary)), hsl(262 83% 64%)); transition: width .3s ease; }
+  .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .pal { aspect-ratio: 1; border: 1.5px solid hsl(var(--border)); border-radius: 9px; background: hsl(var(--card)); font: inherit; font-size: 13px; font-weight: 700; color: hsl(var(--muted-foreground)); cursor: pointer; display: grid; place-items: center; position: relative; transition: all .12s; }
+  .pal:hover { border-color: hsl(var(--primary) / 0.6); }
+  .pal.answered { background: hsl(var(--primary) / 0.12); border-color: hsl(var(--primary) / 0.4); color: hsl(var(--primary)); }
+  .pal.current { border-color: hsl(var(--primary)); border-width: 2px; color: hsl(var(--primary)); }
+  .pal.flagged::after { content: ""; position: absolute; top: 3px; right: 3px; width: 7px; height: 7px; border-radius: 99px; background: hsl(38 92% 52%); }
+  .legend { display: flex; flex-direction: column; gap: 7px; margin-top: 14px; font-size: 11.5px; color: hsl(var(--muted-foreground)); }
+  .legend .lg { display: flex; align-items: center; gap: 8px; }
+  .legend .sw { width: 14px; height: 14px; border-radius: 5px; border: 1.5px solid hsl(var(--border)); flex-shrink: 0; }
+  .legend .sw.answered { background: hsl(var(--primary) / 0.12); border-color: hsl(var(--primary) / 0.4); }
+  .legend .sw.current { border-color: hsl(var(--primary)); border-width: 2px; }
+  .legend .sw.flagged { position: relative; } .legend .sw.flagged::after { content:""; position:absolute; top:-2px; right:-2px; width:6px; height:6px; border-radius:99px; background: hsl(38 92% 52%); }
+
+  /* Result modal */
+  .modal-overlay { position: fixed; inset: 0; background: hsl(222 30% 12% / 0.5); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 100; }
+  .modal-overlay.open { display: flex; }
+  .modal { width: 100%; max-width: 440px; background: hsl(var(--card)); border-radius: 18px; box-shadow: 0 24px 60px -12px hsl(222 40% 12% / 0.45); overflow: hidden; }
+  .modal-pad { padding: 26px 24px; text-align: center; }
+  .modal-pad .res-ring { width: 92px; height: 92px; border-radius: 99px; display: grid; place-items: center; margin: 0 auto 16px; position: relative; }
+  .modal-pad .res-ring b { font-size: 22px; font-weight: 800; }
+  .modal-pad h3 { font-size: 19px; font-weight: 800; }
+  .modal-pad p { font-size: 13px; color: hsl(var(--muted-foreground)); margin-top: 6px; }
+  .res-stats { display: flex; gap: 10px; margin: 20px 0 4px; }
+  .res-stat { flex: 1; background: hsl(var(--muted) / 0.5); border-radius: 11px; padding: 12px; }
+  .res-stat .rs-num { font-size: 18px; font-weight: 800; } .res-stat .rs-lbl { font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
+  .modal-foot { display: flex; gap: 10px; padding: 16px 24px; border-top: 1px solid hsl(var(--border)); }
+  .modal-foot .btn { flex: 1; justify-content: center; }
+  .confirm-text { font-size: 13.5px; line-height: 1.5; color: hsl(var(--muted-foreground)); }
+  .confirm-text b { color: hsl(var(--foreground)); }
+
+  @media (max-width: 900px) { .quiz-grid { grid-template-columns: 1fr; } }
+</style>
+<div class="content quiz-page">
+      <div class="col-main">
+
+        <div class="breadcrumb">
+          <a href="assignments-personal.html">Bài tập cá nhân</a>
+          <i data-lucide="chevron-right"></i>
+          <span class="cur">Quiz 2 · Lập trình Java</span>
+        </div>
+
+        <div class="quiz-head">
+          <div>
+            <h1>Quiz 2 – Vòng lặp &amp; Mảng</h1>
+            <div class="qh-sub">Lập trình Java · GV: Phạm Quốc Bảo · 10 câu · 1 lần nộp</div>
+          </div>
+          <div class="timer" id="timer">
+            <div class="t-ico"><i data-lucide="timer"></i></div>
+            <div><div class="t-val" id="timerVal">14:32</div><div class="t-lbl">Thời gian còn lại</div></div>
+          </div>
+        </div>
+
+        <div class="quiz-grid">
+          <!-- Question -->
+          <div class="q-card">
+            <div class="q-top">
+              <div class="q-num" id="qNum">Câu 1 / 10</div>
+              <button class="q-flag" id="flagBtn"><i data-lucide="flag"></i> Đánh dấu</button>
+            </div>
+            <div class="q-text" id="qText"></div>
+            <div class="q-code" id="qCode" style="display:none"></div>
+            <div class="options" id="options"></div>
+            <div class="q-foot">
+              <button class="btn" id="prevBtn"><i data-lucide="arrow-left" class="icon-sm"></i> Câu trước</button>
+              <div class="spacer"></div>
+              <button class="btn primary" id="nextBtn">Câu sau <i data-lucide="arrow-right" class="icon-sm"></i></button>
+            </div>
+          </div>
+
+          <!-- Side panel -->
+          <div>
+            <div class="side-card">
+              <div class="side-h">Tiến độ <span class="sh-cnt" id="progCnt">4/10</span></div>
+              <div class="prog-track"><span id="progBar" style="width:40%"></span></div>
+              <div class="palette" id="palette"></div>
+              <div class="legend">
+                <div class="lg"><span class="sw answered"></span> Đã trả lời</div>
+                <div class="lg"><span class="sw current"></span> Câu hiện tại</div>
+                <div class="lg"><span class="sw flagged"></span> Đã đánh dấu</div>
+              </div>
+            </div>
+            <div class="side-card">
+              <button class="btn primary" id="submitBtn" style="width:100%; justify-content:center"><i data-lucide="send" class="icon-sm"></i> Nộp bài</button>
+              <div style="font-size:11.5px; color:hsl(var(--muted-foreground)); text-align:center; margin-top:9px">Câu trả lời được lưu tự động</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm submit modal -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-pad">
+      <div class="res-ring" style="background:hsl(var(--warning-muted)); color:hsl(32 80% 44%)"><i data-lucide="help-circle" style="width:40px;height:40px"></i></div>
+      <h3>Nộp bài làm?</h3>
+      <p class="confirm-text" id="confirmText">Bạn đã trả lời <b>4/10</b> câu. Sau khi nộp, bạn không thể chỉnh sửa.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="confirmCancel">Tiếp tục làm</button>
+      <button class="btn primary" id="confirmSubmit">Nộp bài</button>
+    </div>
+  </div>
+</div>
+
+<!-- Result modal -->
+<div class="modal-overlay" id="resultModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-pad">
+      <div class="res-ring" id="resRing"><b id="resScore">8.0</b></div>
+      <h3 id="resTitle">Hoàn thành!</h3>
+      <p id="resMsg">Bạn đã hoàn thành Quiz 2 – Vòng lặp &amp; Mảng.</p>
+      <div class="res-stats">
+        <div class="res-stat"><div class="rs-num" id="resCorrect" style="color:hsl(142 71% 36%)">8</div><div class="rs-lbl">Đúng</div></div>
+        <div class="res-stat"><div class="rs-num" id="resWrong" style="color:hsl(var(--danger))">2</div><div class="rs-lbl">Sai</div></div>
+        <div class="res-stat"><div class="rs-num" id="resTime">5:28</div><div class="rs-lbl">Thời gian</div></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a class="btn primary" href="assignments-personal.html" style="flex:1; justify-content:center">Về danh sách bài tập</a>
+    </div>

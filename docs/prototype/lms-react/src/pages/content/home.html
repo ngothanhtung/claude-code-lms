@@ -1,0 +1,881 @@
+<style>
+  /* ---- Contact instructor modal -------------------------------------- */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: hsl(222 47% 11% / 0.45);
+    backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; opacity: 0; visibility: hidden;
+    transition: opacity .2s ease, visibility .2s ease;
+  }
+  .modal-overlay.open { opacity: 1; visibility: visible; }
+  .modal {
+    width: 100%; max-width: 560px; max-height: calc(100vh - 48px);
+    background: hsl(var(--card)); border: 1px solid hsl(var(--border));
+    border-radius: calc(var(--radius) + 4px); box-shadow: var(--shadow-pop);
+    display: flex; flex-direction: column; overflow: hidden;
+    transform: translateY(12px) scale(.98); transition: transform .22s cubic-bezier(.16,1,.3,1);
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+  .modal-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding: 22px 22px 18px; border-bottom: 1px solid hsl(var(--border));
+  }
+  .modal-head-l { display: flex; gap: 14px; align-items: flex-start; }
+  .modal-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+  .modal-head h2 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .modal-head p { margin: 3px 0 0; font-size: 13px; color: hsl(var(--muted-foreground)); line-height: 1.4; }
+  .modal-close {
+    flex: none; width: 34px; height: 34px; border-radius: 9px; cursor: pointer;
+    border: 1px solid transparent; background: transparent; color: hsl(var(--muted-foreground));
+    display: grid; place-items: center; transition: background .15s, color .15s;
+  }
+  .modal-close:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+
+  .modal-body { padding: 20px 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field > label { font-size: 13px; font-weight: 600; color: hsl(var(--foreground)); }
+  .field .req { color: hsl(var(--danger)); }
+  .field input[type=text], .field textarea, .field select {
+    width: 100%; font: inherit; font-size: 13.5px; color: hsl(var(--foreground));
+    background: hsl(var(--background)); border: 1px solid hsl(var(--input));
+    border-radius: 10px; padding: 11px 13px; outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .field textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+  .field input::placeholder, .field textarea::placeholder { color: hsl(var(--muted-foreground)); }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: hsl(var(--ring)); background: #fff;
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.14);
+  }
+  .field input.invalid, .field textarea.invalid, .select-wrap.invalid select {
+    border-color: hsl(var(--danger)); box-shadow: 0 0 0 3px hsl(var(--danger) / 0.12);
+  }
+  .select-wrap { position: relative; }
+  .select-wrap select { appearance: none; -webkit-appearance: none; padding-right: 38px; cursor: pointer; }
+  .select-caret { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: hsl(var(--muted-foreground)); pointer-events: none; }
+  .field-hint { display: flex; align-items: center; gap: 6px; font-size: 12px; color: hsl(var(--muted-foreground)); }
+  .field-hint svg { flex: none; }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    padding: 7px 14px; border-radius: 99px; border: 1px solid hsl(var(--border));
+    background: #fff; color: hsl(var(--muted-foreground)); transition: all .15s;
+  }
+  .chip:hover { background: hsl(var(--muted)); }
+  .chip.active { background: hsl(var(--primary) / 0.1); border-color: hsl(243 75% 82%); color: hsl(var(--primary)); }
+
+  .dropzone {
+    display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center;
+    padding: 20px; border: 1.5px dashed hsl(var(--border)); border-radius: 12px;
+    background: hsl(var(--background)); color: hsl(var(--muted-foreground)); cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .dropzone:hover, .dropzone.drag { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.04); }
+  .dropzone svg { color: hsl(var(--muted-foreground)); }
+  .dropzone span { font-size: 13px; }
+  .dropzone strong { color: hsl(var(--primary)); font-weight: 600; }
+  .dropzone small { font-size: 11.5px; }
+  .file-list { display: flex; flex-direction: column; gap: 6px; }
+  .file-list:empty { display: none; }
+  .file-chip {
+    display: flex; align-items: center; gap: 9px; font-size: 12.5px;
+    padding: 8px 11px; border-radius: 9px; border: 1px solid hsl(var(--border)); background: #fff;
+  }
+  .file-chip svg { flex: none; color: hsl(var(--primary)); }
+  .file-chip .fc-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+  .file-chip .fc-size { color: hsl(var(--muted-foreground)); font-size: 11.5px; flex: none; }
+  .file-chip .fc-x { flex: none; cursor: pointer; color: hsl(var(--muted-foreground)); display: grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent; }
+  .file-chip .fc-x:hover { background: hsl(var(--muted)); color: hsl(var(--danger)); }
+
+  .cc-row { padding-top: 2px; }
+  .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+  .switch input { position: absolute; opacity: 0; pointer-events: none; }
+  .switch-track {
+    width: 38px; height: 22px; border-radius: 99px; background: hsl(var(--border));
+    flex: none; position: relative; transition: background .18s;
+  }
+  .switch-thumb {
+    position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; box-shadow: var(--shadow-sm); transition: transform .18s;
+  }
+  .switch input:checked + .switch-track { background: hsl(var(--primary)); }
+  .switch input:checked + .switch-track .switch-thumb { transform: translateX(16px); }
+  .switch-label { font-size: 13px; color: hsl(var(--foreground)); }
+
+  .modal-foot {
+    display: flex; justify-content: flex-end; gap: 10px;
+    padding: 16px 22px; border-top: 1px solid hsl(var(--border)); background: hsl(var(--background) / 0.6);
+  }
+  .modal-foot .btn { padding: 9px 18px; font-size: 13px; }
+
+  .modal-success {
+    position: absolute; inset: 0; background: hsl(var(--card)); z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 10px; padding: 32px;
+  }
+  .success-ico {
+    width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+    background: hsl(var(--success) / 0.12); color: hsl(var(--success)); margin-bottom: 6px;
+  }
+  .icon-xl { width: 32px; height: 32px; }
+  .modal-success h3 { margin: 0; font-size: 19px; font-weight: 700; }
+  .modal-success p { margin: 0; font-size: 13.5px; color: hsl(var(--muted-foreground)); max-width: 360px; line-height: 1.5; }
+  .modal-success .btn { margin-top: 10px; padding: 9px 22px; }
+</style>
+<div class="content">
+
+      <!-- ---------------------- MAIN COLUMN ---------------------- -->
+      <div class="col-main">
+
+        <div class="greeting card">
+          <div class="greeting-text">
+            <h1>Xin chào, Ngô Thanh Tùng!</h1>
+            <p>Học kỳ II, năm học 2025 - 2026</p>
+          </div>
+          <div class="greeting-date">
+            <i data-lucide="calendar-check-2" class="icon"></i>
+            <div>
+              <div class="gd-label">Hôm nay</div>
+              <div class="gd-value" id="gdValue">Thứ 6, 29/05/2026</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico indigo"><i data-lucide="trending-up" class="icon-lg"></i></div>
+              <svg class="spark" viewBox="0 0 64 34" fill="none">
+                <polyline points="0,28 12,22 22,25 34,14 44,17 56,6 64,9" stroke="hsl(var(--primary))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-label" style="margin-top:14px">GPA hiện tại</div>
+            <div class="stat-value">3.45</div>
+            <a class="link" href="results.html" style="margin-top:10px;display:inline-flex">Xem chi tiết <i data-lucide="arrow-right" class="icon-sm"></i></a>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico green"><i data-lucide="database" class="icon-lg"></i></div>
+              <i data-lucide="book-marked" class="icon-lg" style="color:hsl(var(--muted-foreground));opacity:.6"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Tín chỉ tích lũy</div>
+            <div class="stat-value">96 <span class="of">/ 140</span></div>
+            <div class="stat-foot" style="margin-bottom:5px">Hoàn thành 68.6%</div>
+            <div class="progress"><span style="width:68.6%"></span></div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico blue"><i data-lucide="layers" class="icon-lg"></i></div>
+              <i data-lucide="notebook-pen" class="icon-lg" style="color:hsl(var(--muted-foreground));opacity:.6"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Tín chỉ học kỳ này</div>
+            <div class="stat-value">18</div>
+            <div class="stat-foot">6 môn học</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico amber"><i data-lucide="clipboard-list" class="icon-lg"></i></div>
+              <i data-lucide="alarm-clock" class="icon-lg" style="color:hsl(var(--warning));opacity:.7"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Việc cần làm</div>
+            <div class="stat-value" style="color:hsl(var(--danger))">4</div>
+            <div class="stat-foot">Bài tập sắp đến hạn</div>
+          </div>
+        </div>
+
+        <!-- Announcement banner -->
+        <div class="banner" id="banner">
+          <div class="banner-ico"><i data-lucide="megaphone" class="icon"></i></div>
+          <div>
+            <h3>Thông báo quan trọng</h3>
+            <p>Sinh viên khóa K21 đăng ký học phần học kỳ III từ ngày 20/05 – 30/05/2026. Xem chi tiết tại đây</p>
+          </div>
+          <button class="banner-x" id="bannerClose" aria-label="Đóng"><i data-lucide="x" class="icon"></i></button>
+        </div>
+
+        <!-- Todos + Schedule -->
+        <div class="two-col">
+          <!-- Danh sách công việc cần làm hôm nay -->
+          <div class="card card-pad">
+            <div class="section-head">
+              <h2>Danh sách công việc cần làm hôm nay</h2>
+              <a class="link" href="#">Xem tất cả</a>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-red"><i data-lucide="file-question" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Nộp Assignment OOP – Bài tập lớn chương 3</div>
+                <div class="task-sub">Lập trình hướng đối tượng</div>
+              </div>
+              <div class="task-due"><span class="badge red">Hạn hôm nay</span><div class="when">23:59</div></div>
+              <button class="btn primary">Nộp bài</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-red"><i data-lucide="terminal" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Nộp Lab 1 – Build REST API với Claude Code</div>
+                <div class="task-sub">Claude Code for BackEnd</div>
+              </div>
+              <div class="task-due"><span class="badge amber">Còn 4 giờ</span><div class="when">22:00</div></div>
+              <button class="btn primary">Nộp bài</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-amber"><i data-lucide="help-circle" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Quiz Java - Quiz 2</div>
+                <div class="task-sub">Lập trình Java</div>
+              </div>
+              <div class="task-due"><span class="badge amber">Còn 2 giờ</span><div class="when">20:00</div></div>
+              <button class="btn">Làm quiz</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-blue"><i data-lucide="book-open" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Đọc tài liệu trước buổi học</div>
+                <div class="task-sub">Cơ sở dữ liệu</div>
+              </div>
+              <div class="task-due"><span class="badge blue">Ngày mai</span><div class="when">21/05</div></div>
+              <button class="btn">Xem ngay</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-indigo"><i data-lucide="calendar-clock" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Lịch thi giữa kỳ CTDL&amp;GT</div>
+                <div class="task-sub">Cấu trúc dữ liệu và giải thuật</div>
+              </div>
+              <div class="task-due"><span class="badge blue">Ngày mai</span><div class="when">21/05</div></div>
+              <button class="btn">Xem lịch thi</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-green"><i data-lucide="circle-dollar-sign" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Đóng học phí học kỳ II</div>
+                <div class="task-sub">Phòng Tài chính</div>
+              </div>
+              <div class="task-due"><span class="badge green">Còn 5 ngày</span><div class="when">25/05</div></div>
+              <button class="btn">Thanh toán</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-indigo"><i data-lucide="folder-git-2" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Đọc yêu cầu đồ án cuối kỳ</div>
+                <div class="task-sub">Lập trình hướng đối tượng</div>
+              </div>
+              <div class="task-due"><span class="badge green">Còn 20 ngày</span><div class="when">09/06</div></div>
+              <button class="btn">Xem ngay</button>
+            </div>
+          </div>
+
+          <!-- Lịch học hôm nay -->
+          <div class="card card-pad">
+            <div class="sched-head">
+              <div>
+                <h2 style="margin:0;font-size:16.5px;font-weight:700">Lịch học hôm nay</h2>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="day">Thứ 6, 29/05/2026</span>
+                <div class="sched-nav">
+                  <button aria-label="Trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+                  <button aria-label="Sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot live">
+              <div class="slot-time">08:00 - 09:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Cơ sở dữ liệu</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> A1-201</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(142 71% 36%)">Đang diễn ra</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot">
+              <div class="slot-time">10:00 - 11:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Lập trình hướng đối tượng</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> B1-302</div>
+                  </div>
+                  <button class="btn btn-outline-primary">Tham gia online</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot">
+              <div class="slot-time">13:00 - 14:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Tiếng Anh học thuật</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> C2-405</div>
+                  </div>
+                  <button class="btn">Xem chi tiết</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sched-subhead"><span>NGÀY MAI · THỨ 7, 30/05/2026</span></div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">07:30 - 09:20</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Cấu trúc dữ liệu và giải thuật</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> A2-105</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">10:00 - 11:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Lập trình Java</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> B1-204</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">13:00 - 14:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Claude Code for BackEnd</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> Lab CNTT-301</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sched-subhead"><span>NGÀY MỐT · CHỦ NHẬT, 31/05/2026</span></div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">08:00 - 09:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Ôn tập Cơ sở dữ liệu (buổi bù)</div>
+                    <div class="slot-room"><i data-lucide="video" class="icon-sm"></i> Học trực tuyến</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">14:00 - 16:00</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+              <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">CLB Lập trình · Workshop Git</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> Lab CNTT-201</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Tự chọn</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-foot">
+              <a class="link" href="calendar.html">Xem toàn bộ lịch học <i data-lucide="arrow-right" class="icon-sm"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Các môn học đang học -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Các môn học đang học</h2>
+            <a class="link" href="my-courses.html">Xem tất cả</a>
+          </div>
+          <div class="courses">
+            <div class="course">
+              <div class="course-top violet">
+                <div class="course-emblem"><i data-lucide="code-xml"></i></div>
+                <div class="course-name">Lập trình hướng đối tượng</div>
+                <div class="course-gv">GV: Nguyễn Minh Tuấn</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>66%</span></div>
+                  <div class="course-track"><span style="width:66%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">2</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">8.5</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top green">
+                <div class="course-emblem"><i data-lucide="database"></i></div>
+                <div class="course-name">Cơ sở dữ liệu</div>
+                <div class="course-gv">GV: Trần Thị Hương</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>48%</span></div>
+                  <div class="course-track"><span style="width:48%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">1</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">7.0</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top blue">
+                <div class="course-emblem"><i data-lucide="network"></i></div>
+                <div class="course-name">Cấu trúc dữ liệu và giải thuật</div>
+                <div class="course-gv">GV: Lê Văn Nam</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>72%</span></div>
+                  <div class="course-track"><span style="width:72%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">0</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">8.0</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top amber">
+                <div class="course-emblem"><i data-lucide="coffee"></i></div>
+                <div class="course-name">Lập trình Java</div>
+                <div class="course-gv">GV: Phạm Quốc Bảo</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>30%</span></div>
+                  <div class="course-track"><span style="width:30%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">3</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">6.5</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top teal">
+                <div class="course-emblem"><i data-lucide="book-open"></i></div>
+                <div class="course-name">Tiếng Anh học thuật</div>
+                <div class="course-gv">GV: Đỗ Thu Trang</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>60%</span></div>
+                  <div class="course-track"><span style="width:60%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">1</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">9.0</div></div>
+              </div>
+            </div>
+
+            <div class="course">
+              <div class="course-top rust">
+                <div class="course-emblem"><i data-lucide="terminal"></i></div>
+                <div class="course-name">Claude Code for BackEnd</div>
+                <div class="course-gv">GV: Hoàng Anh Khoa</div>
+                <div class="course-prog">
+                  <div class="course-prog-row"><span>Tiến độ</span><span>15%</span></div>
+                  <div class="course-track"><span style="width:15%"></span></div>
+                </div>
+              </div>
+              <div class="course-foot">
+                <div class="course-stat"><div class="k"><i data-lucide="file-text" class="icon-sm"></i> Bài tập</div><div class="v">1</div></div>
+                <div class="course-stat"><div class="k"><i data-lucide="star" class="icon-sm"></i> Điểm</div><div class="v">—</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ---------------------- RIGHT RAIL ---------------------- -->
+      <aside class="rail">
+
+        <!-- Thông báo gần đây -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Thông báo gần đây</h2>
+            <a class="link" href="#">Xem tất cả</a>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-indigo"><i data-lucide="file-text" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Giảng viên thông báo bài tập mới</div>
+              <div class="notif-sub">Lập trình Java - Bài tập số 4</div>
+              <div class="notif-time">10 phút trước</div>
+            </div>
+            <span class="notif-unread"></span>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-green"><i data-lucide="bar-chart-3" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Điểm mới được công bố</div>
+              <div class="notif-sub">Cơ sở dữ liệu - Quiz 1</div>
+              <div class="notif-time">1 giờ trước</div>
+            </div>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-amber"><i data-lucide="megaphone" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Thông báo từ Phòng Đào tạo</div>
+              <div class="notif-sub">Về việc đăng ký học phần học kỳ III</div>
+              <div class="notif-time">3 giờ trước</div>
+            </div>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-red"><i data-lucide="calendar-heart" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Sự kiện sắp diễn ra</div>
+              <div class="notif-sub">Ngày hội việc làm mùa Hè 2026</div>
+              <div class="notif-time">1 ngày trước</div>
+            </div>
+          </div>
+
+          <div class="rail-foot"><a class="link" href="#">Xem tất cả thông báo <i data-lucide="arrow-right" class="icon-sm"></i></a></div>
+        </div>
+
+        <!-- Kết quả học tập -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Kết quả học tập</h2>
+            <a class="link" href="results.html">Xem chi tiết</a>
+          </div>
+          <div class="results-body">
+            <div class="donut">
+              <svg width="132" height="132" viewBox="0 0 132 132">
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--muted))" stroke-width="16"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-1))" stroke-width="16" stroke-dasharray="200.5 351.9" stroke-dashoffset="0" stroke-linecap="butt"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-2))" stroke-width="16" stroke-dasharray="102.0 351.9" stroke-dashoffset="-200.5"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-3))" stroke-width="16" stroke-dasharray="35.2 351.9" stroke-dashoffset="-302.6"/>
+                <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-4))" stroke-width="16" stroke-dasharray="14.1 351.9" stroke-dashoffset="-337.8"/>
+              </svg>
+              <div class="donut-center">
+                <div>
+                  <div class="big">21</div>
+                  <div class="small">môn học</div>
+                </div>
+              </div>
+            </div>
+            <div class="legend">
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-1))"></span><span class="lbl">Tốt (A, B)</span><span class="val">12 môn (57%)</span></div>
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-2))"></span><span class="lbl">Khá (C)</span><span class="val">6 môn (29%)</span></div>
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-3))"></span><span class="lbl">Trung bình (D)</span><span class="val">2 môn (10%)</span></div>
+              <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-4))"></span><span class="lbl">Yếu (F)</span><span class="val">1 môn (4%)</span></div>
+            </div>
+          </div>
+          <div class="cpa">
+            <div><div class="k">CPA hiện tại</div><div class="v">3.38</div></div>
+            <div><div class="k">Xếp loại</div><div class="v" style="color:hsl(var(--primary))">Khá</div></div>
+          </div>
+        </div>
+
+        <!-- Thao tác nhanh -->
+        <div class="card card-pad">
+          <div class="section-head"><h2>Thao tác nhanh</h2></div>
+          <div class="qa-grid">
+            <a class="qa" href="#"><div class="qa-ico ico-tint-blue"><i data-lucide="video" class="icon-lg"></i></div><div class="qa-label">Tham gia lớp học</div></a>
+            <a class="qa" href="results.html"><div class="qa-ico ico-tint-amber"><i data-lucide="bar-chart-3" class="icon-lg"></i></div><div class="qa-label">Xem điểm</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-indigo"><i data-lucide="upload" class="icon-lg"></i></div><div class="qa-label">Nộp bài tập</div></a>
+            <a class="qa" href="exams.html"><div class="qa-ico ico-tint-red"><i data-lucide="calendar-clock" class="icon-lg"></i></div><div class="qa-label">Lịch thi</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-indigo"><i data-lucide="clipboard-check" class="icon-lg"></i></div><div class="qa-label">Đăng ký môn học</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-green"><i data-lucide="circle-dollar-sign" class="icon-lg"></i></div><div class="qa-label">Học phí</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-blue"><i data-lucide="folder-open" class="icon-lg"></i></div><div class="qa-label">Tài liệu</div></a>
+            <a class="qa" href="#" id="contactTeacherBtn"><div class="qa-ico ico-tint-amber"><i data-lucide="mail" class="icon-lg"></i></div><div class="qa-label">Liên hệ giảng viên</div></a>
+          </div>
+        </div>
+
+        <!-- Hoạt động gần đây -->
+        <div class="card card-pad">
+          <div class="section-head"><h2>Hoạt động gần đây</h2></div>
+          <div class="activity activity-rail">
+            <div class="act">
+              <div class="act-ico ico-tint-red"><i data-lucide="book-open" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã xem tài liệu</div>
+                <div class="act-sub">Lecture 3 - OOP Principles.pdf</div>
+                <div class="act-time">2 giờ trước</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-green"><i data-lucide="upload" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã nộp bài tập</div>
+                <div class="act-sub">BTL_OOP_Chuong2.zip</div>
+                <div class="act-time">Hôm qua</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-blue"><i data-lucide="video" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã tham gia lớp học</div>
+                <div class="act-sub">CSDL - Online Class</div>
+                <div class="act-time">Hôm qua</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-amber"><i data-lucide="bar-chart-3" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã xem điểm</div>
+                <div class="act-sub">Quiz 1 - Cơ sở dữ liệu</div>
+                <div class="act-time">2 ngày trước</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<!-- ====================== CONTACT INSTRUCTOR MODAL ====================== -->
+<div class="modal-overlay" id="contactModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cmTitle">
+    <div class="modal-head">
+      <div class="modal-head-l">
+        <div class="modal-ico ico-tint-amber"><i data-lucide="mail" class="icon-lg"></i></div>
+        <div>
+          <h2 id="cmTitle">Liên hệ giảng viên</h2>
+          <p>Gửi tin nhắn trực tiếp đến giảng viên phụ trách môn học</p>
+        </div>
+      </div>
+      <button class="modal-close" id="cmClose" type="button" aria-label="Đóng"><i data-lucide="x" class="icon-lg"></i></button>
+    </div>
+
+    <form class="modal-body" id="contactForm" novalidate>
+      <div class="field">
+        <label for="cmTeacher">Giảng viên <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="cmTeacher" required>
+            <option value="" disabled selected>Chọn giảng viên...</option>
+            <option>TS. Nguyễn Văn Hùng — Lập trình hướng đối tượng</option>
+            <option>ThS. Trần Thị Mai — Cơ sở dữ liệu</option>
+            <option>TS. Lê Quang Đạt — Cấu trúc dữ liệu &amp; Giải thuật</option>
+            <option>ThS. Phạm Hoàng Long — Mạng máy tính</option>
+          </select>
+          <i data-lucide="chevron-down" class="icon-sm select-caret"></i>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="cmSubject">Chủ đề <span class="req">*</span></label>
+        <input type="text" id="cmSubject" placeholder="VD: Xin gia hạn nộp bài tập lớn" required />
+      </div>
+
+      <div class="field">
+        <label>Mức độ ưu tiên</label>
+        <div class="chips" id="cmPriority">
+          <button type="button" class="chip active" data-val="normal">Bình thường</button>
+          <button type="button" class="chip" data-val="important">Quan trọng</button>
+          <button type="button" class="chip" data-val="urgent">Khẩn cấp</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="cmMessage">Nội dung <span class="req">*</span></label>
+        <textarea id="cmMessage" rows="5" placeholder="Nhập nội dung tin nhắn của bạn..." required></textarea>
+        <div class="field-hint"><i data-lucide="info" class="icon-sm"></i> Giảng viên thường phản hồi trong vòng 24 giờ làm việc.</div>
+      </div>
+
+      <div class="field">
+        <label>Đính kèm</label>
+        <label class="dropzone" for="cmFile">
+          <i data-lucide="paperclip" class="icon-lg"></i>
+          <span><strong>Chọn tệp</strong> hoặc kéo thả vào đây</span>
+          <small>PDF, DOCX, PNG, ZIP — tối đa 10MB</small>
+          <input type="file" id="cmFile" hidden multiple />
+        </label>
+        <div class="file-list" id="cmFileList"></div>
+      </div>
+
+      <div class="cc-row">
+        <label class="switch">
+          <input type="checkbox" id="cmCopy" checked />
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+          <span class="switch-label">Gửi một bản sao vào email của tôi</span>
+        </label>
+      </div>
+    </form>
+
+    <div class="modal-foot">
+      <button class="btn" type="button" id="cmCancel">Hủy</button>
+      <button class="btn primary" type="submit" form="contactForm"><i data-lucide="send" class="icon-sm"></i> Gửi tin nhắn</button>
+    </div>
+
+    <div class="modal-success" id="cmSuccess" hidden>
+      <div class="success-ico"><i data-lucide="check" class="icon-xl"></i></div>
+      <h3>Đã gửi tin nhắn!</h3>
+      <p>Tin nhắn của bạn đã được gửi đến giảng viên. Bạn sẽ nhận được phản hồi qua mục Thông báo.</p>
+      <button class="btn primary" type="button" id="cmDone">Hoàn tất</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ---- Contact instructor modal -------------------------------------- */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: hsl(222 47% 11% / 0.45);
+    backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; opacity: 0; visibility: hidden;
+    transition: opacity .2s ease, visibility .2s ease;
+  }
+  .modal-overlay.open { opacity: 1; visibility: visible; }
+  .modal {
+    width: 100%; max-width: 560px; max-height: calc(100vh - 48px);
+    background: hsl(var(--card)); border: 1px solid hsl(var(--border));
+    border-radius: calc(var(--radius) + 4px); box-shadow: var(--shadow-pop);
+    display: flex; flex-direction: column; overflow: hidden;
+    transform: translateY(12px) scale(.98); transition: transform .22s cubic-bezier(.16,1,.3,1);
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+  .modal-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding: 22px 22px 18px; border-bottom: 1px solid hsl(var(--border));
+  }
+  .modal-head-l { display: flex; gap: 14px; align-items: flex-start; }
+  .modal-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+  .modal-head h2 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .modal-head p { margin: 3px 0 0; font-size: 13px; color: hsl(var(--muted-foreground)); line-height: 1.4; }
+  .modal-close {
+    flex: none; width: 34px; height: 34px; border-radius: 9px; cursor: pointer;
+    border: 1px solid transparent; background: transparent; color: hsl(var(--muted-foreground));
+    display: grid; place-items: center; transition: background .15s, color .15s;
+  }
+  .modal-close:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+
+  .modal-body { padding: 20px 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field > label { font-size: 13px; font-weight: 600; color: hsl(var(--foreground)); }
+  .field .req { color: hsl(var(--danger)); }
+  .field input[type=text], .field textarea, .field select {
+    width: 100%; font: inherit; font-size: 13.5px; color: hsl(var(--foreground));
+    background: hsl(var(--background)); border: 1px solid hsl(var(--input));
+    border-radius: 10px; padding: 11px 13px; outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .field textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+  .field input::placeholder, .field textarea::placeholder { color: hsl(var(--muted-foreground)); }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: hsl(var(--ring)); background: #fff;
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.14);
+  }
+  .field input.invalid, .field textarea.invalid, .select-wrap.invalid select {
+    border-color: hsl(var(--danger)); box-shadow: 0 0 0 3px hsl(var(--danger) / 0.12);
+  }
+  .select-wrap { position: relative; }
+  .select-wrap select { appearance: none; -webkit-appearance: none; padding-right: 38px; cursor: pointer; }
+  .select-caret { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: hsl(var(--muted-foreground)); pointer-events: none; }
+  .field-hint { display: flex; align-items: center; gap: 6px; font-size: 12px; color: hsl(var(--muted-foreground)); }
+  .field-hint svg { flex: none; }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    padding: 7px 14px; border-radius: 99px; border: 1px solid hsl(var(--border));
+    background: #fff; color: hsl(var(--muted-foreground)); transition: all .15s;
+  }
+  .chip:hover { background: hsl(var(--muted)); }
+  .chip.active { background: hsl(var(--primary) / 0.1); border-color: hsl(243 75% 82%); color: hsl(var(--primary)); }
+
+  .dropzone {
+    display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center;
+    padding: 20px; border: 1.5px dashed hsl(var(--border)); border-radius: 12px;
+    background: hsl(var(--background)); color: hsl(var(--muted-foreground)); cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .dropzone:hover, .dropzone.drag { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.04); }
+  .dropzone svg { color: hsl(var(--muted-foreground)); }
+  .dropzone span { font-size: 13px; }
+  .dropzone strong { color: hsl(var(--primary)); font-weight: 600; }
+  .dropzone small { font-size: 11.5px; }
+  .file-list { display: flex; flex-direction: column; gap: 6px; }
+  .file-list:empty { display: none; }
+  .file-chip {
+    display: flex; align-items: center; gap: 9px; font-size: 12.5px;
+    padding: 8px 11px; border-radius: 9px; border: 1px solid hsl(var(--border)); background: #fff;
+  }
+  .file-chip svg { flex: none; color: hsl(var(--primary)); }
+  .file-chip .fc-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+  .file-chip .fc-size { color: hsl(var(--muted-foreground)); font-size: 11.5px; flex: none; }
+  .file-chip .fc-x { flex: none; cursor: pointer; color: hsl(var(--muted-foreground)); display: grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent; }
+  .file-chip .fc-x:hover { background: hsl(var(--muted)); color: hsl(var(--danger)); }
+
+  .cc-row { padding-top: 2px; }
+  .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+  .switch input { position: absolute; opacity: 0; pointer-events: none; }
+  .switch-track {
+    width: 38px; height: 22px; border-radius: 99px; background: hsl(var(--border));
+    flex: none; position: relative; transition: background .18s;
+  }
+  .switch-thumb {
+    position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; box-shadow: var(--shadow-sm); transition: transform .18s;
+  }
+  .switch input:checked + .switch-track { background: hsl(var(--primary)); }
+  .switch input:checked + .switch-track .switch-thumb { transform: translateX(16px); }
+  .switch-label { font-size: 13px; color: hsl(var(--foreground)); }
+
+  .modal-foot {
+    display: flex; justify-content: flex-end; gap: 10px;
+    padding: 16px 22px; border-top: 1px solid hsl(var(--border)); background: hsl(var(--background) / 0.6);
+  }
+  .modal-foot .btn { padding: 9px 18px; font-size: 13px; }
+
+  .modal-success {
+    position: absolute; inset: 0; background: hsl(var(--card)); z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 10px; padding: 32px;
+  }
+  .success-ico {
+    width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+    background: hsl(var(--success) / 0.12); color: hsl(var(--success)); margin-bottom: 6px;
+  }
+  .icon-xl { width: 32px; height: 32px; }
+  .modal-success h3 { margin: 0; font-size: 19px; font-weight: 700; }
+  .modal-success p { margin: 0; font-size: 13.5px; color: hsl(var(--muted-foreground)); max-width: 360px; line-height: 1.5; }
+  .modal-success .btn { margin-top: 10px; padding: 9px 22px; }
+</style>
