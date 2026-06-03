@@ -48,6 +48,9 @@
   --color-info: hsl(var(--info));
   --color-info-foreground: hsl(var(--info-foreground));
   --color-info-muted: hsl(var(--info-muted));
+  --color-danger: hsl(var(--danger));
+  --color-danger-foreground: hsl(var(--danger-foreground));
+  --color-danger-muted: hsl(var(--danger-muted));
   --color-course-violet: hsl(var(--course-violet));
   --color-course-green: hsl(var(--course-green));
   --color-course-blue: hsl(var(--course-blue));

@@ -8,11 +8,11 @@ interface IconTintProps {
 }
 
 const variantClasses = {
-  indigo: "bg-[oklch(0.96_0.04_277)] text-[oklch(0.41_0.17_277)]",
-  green: "bg-[oklch(0.96_0.03_152)] text-[oklch(0.63_0.19_152)]",
-  amber: "bg-[oklch(0.96_0.05_75)] text-[oklch(0.70_0.18_75)]",
-  red: "bg-[oklch(0.96_0.03_27)] text-[oklch(0.55_0.22_27)]",
-  blue: "bg-[oklch(0.96_0.04_250)] text-[oklch(0.60_0.18_250)]",
+  indigo: "bg-primary-muted text-primary",
+  green: "bg-success-muted text-success",
+  amber: "bg-warning-muted text-warning",
+  red: "bg-danger-muted text-danger",
+  blue: "bg-info-muted text-info",
 }
 
 const sizeClasses = {

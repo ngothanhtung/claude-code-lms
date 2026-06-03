@@ -5,3 +5,4 @@
 {"source":"user-event","type":"click","text":"B\n    \n      Pill Toggle (Sun / Moon / System)\n      3 nút chọn: Light, Dark, System. Rõ ràng, cho phép chọn theo hệ thống.\n      ☀️ Đang chọn Light\n      \n        🔍 Tìm kiếm...\n        🔔\n        \n          ☀️\n          🌙\n          💻\n        \n        A\n      \n      🌙 Đang chọn Dark\n      \n        🔍 Tìm kiếm...\n        🔔\n        \n          ☀️\n          🌙\n          💻\n        \n        A","choice":"b","id":null,"timestamp":1780513507982}
 {"type":"screen-added","file":"/Users/tony/GitHub/claude-code-lms/next-lms/.superpowers/brainstorm/22872-1780513328/content/dark-palette.html"}
 {"type":"screen-added","file":"/Users/tony/GitHub/claude-code-lms/next-lms/.superpowers/brainstorm/22872-1780513328/content/design-overview.html"}
+{"type":"server-stopped","reason":"idle timeout"}

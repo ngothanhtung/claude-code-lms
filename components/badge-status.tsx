@@ -17,10 +17,10 @@ interface BadgeStatusProps {
 
 const variantClasses: Record<BadgeVariant, string> = {
   default: "bg-primary text-primary-foreground",
-  success: "bg-[oklch(0.96_0.03_152)] text-[oklch(0.63_0.19_152)]",
-  warning: "bg-[oklch(0.96_0.05_75)] text-[oklch(0.70_0.18_75)]",
-  destructive: "bg-[oklch(0.96_0.03_27)] text-[oklch(0.55_0.22_27)]",
-  info: "bg-[oklch(0.96_0.04_250)] text-[oklch(0.60_0.18_250)]",
+  success: "bg-success-muted text-success",
+  warning: "bg-warning-muted text-warning",
+  destructive: "bg-danger-muted text-danger",
+  info: "bg-info-muted text-info",
   outline: "border border-border bg-transparent text-foreground",
 }
 

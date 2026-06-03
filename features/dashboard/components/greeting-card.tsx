@@ -14,11 +14,10 @@ export function GreetingCard({
 }: GreetingCardProps) {
   return (
     <Card
-      className="flex-row items-center justify-between gap-4 rounded-[var(--radius)] border border-[hsl(243_50%_91%)] bg-[linear-gradient(180deg,#fff,#fff)] px-6 py-5 shadow-none ring-0"
+      className="greeting-card flex-row items-center justify-between gap-4 rounded-[var(--radius)] border border-primary/20 bg-card px-6 py-5 shadow-none ring-0"
       style={{
         backgroundImage:
-          "radial-gradient(ellipse 80% 100% at 105% -10%, oklch(0.96 0.04 277 / 0.08) 0%, transparent 55%), linear-gradient(180deg, #fff, #fff)",
-        backgroundSize: "100% 100%",
+          "radial-gradient(ellipse 80% 100% at 105% -10%, hsl(var(--primary) / 0.06) 0%, transparent 55%)",
       }}
     >
       <div>
@@ -30,7 +29,7 @@ export function GreetingCard({
         </h1>
         <p className="mt-[5px] text-[14px] text-muted-foreground">{semester}</p>
       </div>
-      <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-primary shadow-[var(--shadow-sm)]">
+      <div className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-primary shadow-[var(--shadow-sm)]">
         <CalendarCheck2Icon className="h-[18px] w-[18px]" />
         <div>
           <div className="text-[11.5px] font-medium text-muted-foreground">

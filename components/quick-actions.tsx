@@ -65,11 +65,11 @@ const quickActions: QuickAction[] = [
 ]
 
 const tintClasses = {
-  blue: "bg-[oklch(0.96_0.04_250)] text-[oklch(0.60_0.18_250)]",
-  amber: "bg-[oklch(0.96_0.05_75)] text-[oklch(0.70_0.18_75)]",
-  indigo: "bg-[oklch(0.96_0.04_277)] text-[oklch(0.41_0.17_277)]",
-  red: "bg-[oklch(0.96_0.03_27)] text-[oklch(0.55_0.22_27)]",
-  green: "bg-[oklch(0.96_0.03_152)] text-[oklch(0.63_0.19_152)]",
+  blue: "bg-info-muted text-info",
+  amber: "bg-warning-muted text-warning",
+  indigo: "bg-primary-muted text-primary",
+  red: "bg-danger-muted text-danger",
+  green: "bg-success-muted text-success",
 }
 
 export function QuickActions() {
@@ -81,7 +81,7 @@ export function QuickActions() {
             asChild
             variant="outline"
             key={i}
-            className="h-auto w-[74px] flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:border-[hsl(243_60%_86%)] hover:bg-muted"
+            className="h-auto w-[74px] flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted"
           >
             <Link href={qa.href}>
               <div
@@ -89,7 +89,7 @@ export function QuickActions() {
               >
                 {qa.icon}
               </div>
-              <div className="text-center text-[11px] leading-tight font-medium text-[hsl(215_18%_38%)]">
+              <div className="text-center text-[11px] leading-tight font-medium text-muted-foreground">
                 {qa.label}
               </div>
             </Link>
@@ -98,14 +98,14 @@ export function QuickActions() {
           <Button
             variant="outline"
             key={i}
-            className="h-auto w-[74px] flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:border-[hsl(243_60%_86%)] hover:bg-muted"
+            className="h-auto w-[74px] flex-col items-center gap-2 rounded-[12px] border border-border bg-card p-[14px_4px] text-center transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted"
           >
             <div
               className={`flex h-[38px] w-[38px] items-center justify-center rounded-[11px] ${tintClasses[qa.tint]}`}
             >
               {qa.icon}
             </div>
-            <div className="text-center text-[11px] leading-tight font-medium text-[hsl(215_18%_38%)]">
+            <div className="text-center text-[11px] leading-tight font-medium text-muted-foreground">
               {qa.label}
             </div>
           </Button>

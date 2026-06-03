@@ -26,7 +26,7 @@ export function ScheduleSlot({
         {time}
       </div>
       <div
-        className={`w-[3px] shrink-0 rounded-full ${status === "live" ? "bg-[oklch(0.63_0.19_152)]" : "bg-border"}`}
+        className={`w-[3px] shrink-0 rounded-full ${status === "live" ? "bg-success" : "bg-border"}`}
         style={{ minHeight: "40px" }}
       />
       <div className="min-w-0 flex-1 pt-[2px]">
@@ -54,7 +54,7 @@ export function ScheduleSlot({
               size="sm"
               className={`h-7 shrink-0 px-3.5 text-[12.5px] font-semibold ${
                 action.variant === "outline"
-                  ? "border-[hsl(243_75%_85%)] bg-[oklch(0.96_0.04_277/0.06)] text-[oklch(0.41_0.17_277)] hover:bg-[oklch(0.96_0.04_277/0.12)]"
+                  ? "border-primary/30 bg-primary-muted text-primary hover:bg-primary/10"
                   : ""
               }`}
             >

@@ -32,8 +32,8 @@ export function StatCard({
             className={cn(
               "text-xs font-semibold",
               trend.value >= 0
-                ? "text-[oklch(0.63_0.19_152)]"
-                : "text-[oklch(0.55_0.22_27)]"
+                ? "text-success"
+                : "text-danger"
             )}
           >
             {trend.value >= 0 ? "+" : ""}

@@ -21,15 +21,15 @@ export function AnnouncementBanner({
   if (!visible) return null
 
   return (
-    <Card className="flex-row items-start gap-3.5 rounded-[var(--radius)] border border-[hsl(45_90%_80%)] bg-[linear-gradient(100deg,hsl(48_96%_94%),hsl(45_96%_90%))] px-4 py-4 shadow-none ring-0">
-      <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[10px] bg-[hsl(38_92%_50%)] text-white">
+    <Card className="flex-row items-start gap-3.5 rounded-[var(--radius)] border border-warning/30 bg-warning-muted px-4 py-4 shadow-none ring-0">
+      <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[10px] bg-warning text-warning-foreground">
         <MegaphoneIcon className="h-[18px] w-[18px]" />
       </div>
       <div className="min-w-0 flex-1">
-        <h3 className="m-0 mb-0.5 text-[14.5px] font-bold text-[hsl(32_70%_28%)]">
+        <h3 className="m-0 mb-0.5 text-[14.5px] font-bold text-foreground">
           {title}
         </h3>
-        <p className="m-0 text-[13px] text-[hsl(32_45%_35%)]">
+        <p className="m-0 text-[13px] text-muted-foreground">
           {href ? (
             <>
               {message.split("tại đây")[0]}
@@ -47,7 +47,7 @@ export function AnnouncementBanner({
         variant="ghost"
         size="icon"
         onClick={() => setVisible(false)}
-        className="ml-auto h-[30px] w-[30px] shrink-0 rounded-[8px] border-0 bg-transparent text-[hsl(32_40%_45%)] hover:bg-[hsl(45_70%_84%)]"
+        className="ml-auto h-[30px] w-[30px] shrink-0 rounded-[8px] border-0 bg-transparent text-muted-foreground hover:bg-warning/20"
       >
         <XIcon className="h-[18px] w-[18px]" />
       </Button>

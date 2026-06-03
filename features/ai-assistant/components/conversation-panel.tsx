@@ -54,7 +54,7 @@ export function ConversationPanel({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Tìm cuộc trò chuyện..."
-            className="w-full rounded-lg border border-input bg-background py-2 pr-3 pl-9 text-sm transition-all outline-none focus:border-ring focus:bg-white focus:shadow-[0_0_0_3px_hsl(var(--ring)_/_0.12)]"
+            className="w-full rounded-lg border border-input bg-background py-2 pr-3 pl-9 text-sm transition-all outline-none focus:border-ring focus:bg-card focus:shadow-[0_0_0_3px_hsl(var(--ring)_/_0.12)]"
           />
         </div>
       </div>

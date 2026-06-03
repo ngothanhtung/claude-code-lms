@@ -426,7 +426,7 @@ export default function CourseDetailPage({ params }: PageProps) {
                   <input
                     type="text"
                     placeholder="Chia sẻ điều gì đó với lớp..."
-                    className="flex-1 rounded-full border border-input bg-background px-4.5 py-3 text-xs transition-all outline-none focus:border-ring focus:bg-white focus:shadow-[0_0_0_3px_hsl(var(--ring)_/_0.12)] sm:text-sm"
+                    className="flex-1 rounded-full border border-input bg-background px-4.5 py-3 text-xs transition-all outline-none focus:border-ring focus:bg-card focus:shadow-[0_0_0_3px_hsl(var(--ring)_/_0.12)] sm:text-sm"
                   />
                 </div>
               </div>
@@ -467,7 +467,7 @@ export default function CourseDetailPage({ params }: PageProps) {
 
                         {/* Attachment block */}
                         {post.attach && (
-                          <div className="mt-3.5 flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-background p-3 transition-all select-none hover:border-indigo-400 hover:bg-primary/3">
+                          <div className="mt-3.5 flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-background p-3 transition-all select-none hover:border-primary/50 hover:bg-primary/3">
                             <div
                               className={`flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-lg ${
                                 post.attach.type === "pdf"
@@ -532,7 +532,7 @@ export default function CourseDetailPage({ params }: PageProps) {
                 {fullDetails.syllabus.map((w) => (
                   <div
                     key={w.id}
-                    className={`overflow-hidden rounded-xl border border-border bg-white ${
+                    className={`overflow-hidden rounded-xl border border-border bg-card ${
                       openWeeks[w.id] ? "shadow-xs" : ""
                     }`}
                   >
@@ -573,7 +573,7 @@ export default function CourseDetailPage({ params }: PageProps) {
                                   <Check className="h-3.5 w-3.5" />
                                 </div>
                               ) : (
-                                <div className="flex h-5.5 w-5.5 rounded-full border-2 border-border bg-white" />
+                                <div className="flex h-5.5 w-5.5 rounded-full border-2 border-border bg-card" />
                               )}
                             </div>
                             <div
@@ -637,7 +637,7 @@ export default function CourseDetailPage({ params }: PageProps) {
                 {fullDetails.assignments.map((a) => (
                   <div
                     key={a.id}
-                    className="flex flex-col gap-4.5 rounded-2xl border border-border bg-white p-4 transition-all hover:border-indigo-400 hover:shadow-xs sm:flex-row sm:items-center sm:gap-4.5"
+                    className="flex flex-col gap-4.5 rounded-2xl border border-border bg-card p-4 transition-all hover:border-primary/50 hover:shadow-xs sm:flex-row sm:items-center sm:gap-4.5"
                   >
                     <div
                       className={`flex h-10.5 w-10.5 shrink-0 items-center justify-center rounded-xl ${
@@ -728,7 +728,7 @@ export default function CourseDetailPage({ params }: PageProps) {
                 {fullDetails.materials.map((f) => (
                   <div
                     key={f.id}
-                    className="flex items-center gap-3.5 rounded-2xl border border-border bg-white p-3.5 transition-colors hover:border-indigo-400 hover:bg-primary/2"
+                    className="flex items-center gap-3.5 rounded-2xl border border-border bg-card p-3.5 transition-colors hover:border-primary/50 hover:bg-primary/2"
                   >
                     <div
                       className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
@@ -759,7 +759,7 @@ export default function CourseDetailPage({ params }: PageProps) {
                         {f.meta}
                       </div>
                     </div>
-                    <button className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-border bg-white text-muted-foreground transition-all hover:bg-primary/8 hover:text-primary active:scale-95">
+                    <button className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition-all hover:bg-primary/8 hover:text-primary active:scale-95">
                       <Download className="h-4 w-4" />
                     </button>
                   </div>
