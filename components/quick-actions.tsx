@@ -83,7 +83,7 @@ export function QuickActions() {
             >
               {qa.icon}
             </div>
-            <div className="flex min-h-[2.5em] w-full items-center justify-center overflow-hidden wrap-break-word text-center text-[11px] leading-tight font-medium text-muted-foreground">
+            <div className="flex min-h-[2.5em] w-full items-start justify-center px-3 text-center text-[11px] leading-tight font-bold wrap-break-word text-muted-foreground">
               {qa.label}
             </div>
           </>
@@ -111,4 +111,3 @@ export function QuickActions() {
     </div>
   )
 }
-
