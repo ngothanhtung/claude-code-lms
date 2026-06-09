@@ -28,13 +28,19 @@ export function LoginForm() {
 
     setLoading(true)
 
-    const result = await mockLogin(username.trim(), password)
+    try {
+      const result = await mockLogin(username.trim(), password)
 
-    if (result.success) {
-      router.push("/dashboard")
-    } else {
-      toast.error(result.error)
+      if (result.success) {
+        router.push("/dashboard")
+      } else {
+        toast.error(result.error)
+        setPassword("")
+      }
+    } catch {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại")
       setPassword("")
+    } finally {
       setLoading(false)
     }
   }
