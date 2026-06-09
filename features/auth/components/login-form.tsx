@@ -21,7 +21,10 @@ export function LoginForm() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    if (!username.trim() || !password.trim()) return
+    if (!username.trim() || !password.trim()) {
+      toast.error("Vui lòng nhập tên đăng nhập và mật khẩu")
+      return
+    }
 
     setLoading(true)
 
