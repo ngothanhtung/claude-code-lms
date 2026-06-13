@@ -11,6 +11,7 @@ import {
   LogOutIcon,
   UserRoundIcon,
 } from "lucide-react"
+import { signOut, useSession } from "next-auth/react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +34,10 @@ export function AppTopbar({
   onMenuClick,
   sidebarCollapsed = false,
 }: AppTopbarProps) {
+  const { data: session } = useSession()
+  const displayName = session?.user?.name ?? "Ngô Thanh Tùng"
+  const avatarInitial = displayName.trim().charAt(0).toUpperCase() || "A"
+
   return (
     <header className="topbar">
       <Button
@@ -104,12 +109,12 @@ export function AppTopbar({
           <DropdownMenuTrigger asChild>
             <button className="profile" type="button">
               <div className="profile-meta">
-                <div className="profile-name">Ngô Thanh Tùng</div>
+                <div className="profile-name">{displayName}</div>
                 <div className="profile-sub">MSSV: 21123456</div>
               </div>
               <Avatar className="avatar" size="lg">
                 <AvatarFallback className="rounded-[11px] bg-transparent text-[15px] font-bold text-white">
-                  A
+                  {avatarInitial}
                 </AvatarFallback>
               </Avatar>
               <ChevronDownIcon className="icon-sm profile-caret text-muted-foreground" />
@@ -125,7 +130,10 @@ export function AppTopbar({
               Cấu hình
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-3 text-destructive focus:text-destructive">
+            <DropdownMenuItem
+              className="gap-3 text-destructive focus:text-destructive"
+              onSelect={() => signOut({ callbackUrl: "/login" })}
+            >
               <LogOutIcon className="h-4 w-4" />
               Thoát
             </DropdownMenuItem>

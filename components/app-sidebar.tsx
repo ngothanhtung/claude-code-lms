@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   BarChart3Icon,
   BellIcon,
@@ -79,6 +79,8 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const scrollEndTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [navScrolling, setNavScrolling] = useState(false)
   const initialOpenGroups = useMemo(() => {
     return navItems.reduce<Record<string, boolean>>((groups, item) => {
       if (item.sub) {
@@ -118,6 +120,27 @@ export function AppSidebar({
     setOpenGroups((current) => ({ ...current, [title]: open }))
   }
 
+  function handleNavScroll() {
+    setNavScrolling(true)
+
+    if (scrollEndTimer.current) {
+      clearTimeout(scrollEndTimer.current)
+    }
+
+    scrollEndTimer.current = setTimeout(() => {
+      setNavScrolling(false)
+      scrollEndTimer.current = null
+    }, 700)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (scrollEndTimer.current) {
+        clearTimeout(scrollEndTimer.current)
+      }
+    }
+  }, [])
+
   return (
     <aside
       aria-hidden={!interactive}
@@ -147,7 +170,10 @@ export function AppSidebar({
         </button>
       </div>
 
-      <nav className="nav">
+      <nav
+        className={cn("nav", navScrolling && "scrolling")}
+        onScroll={handleNavScroll}
+      >
         {navItems.map((item) => {
           const Icon = item.icon
           const hasActiveChild = item.sub?.some((sub) =>

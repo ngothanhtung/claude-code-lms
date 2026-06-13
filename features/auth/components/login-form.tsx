@@ -1,8 +1,11 @@
 "use client"
 
-import { useState, type FormEvent } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { signIn } from "next-auth/react"
+import { useForm } from "react-hook-form"
 import {
   ArrowRight,
   CalendarClock,
@@ -12,16 +15,29 @@ import {
   LoaderCircle,
   LockKeyhole,
   LogIn,
+  OctagonX,
   ShieldCheck,
   UserRound,
   Volume2,
 } from "lucide-react"
-import { toast } from "sonner"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { mockLogin } from "@/features/auth/mock/auth-mock"
+import {
+  loginSchema,
+  type LoginFormValues,
+} from "@/features/auth/schemas/login.schema"
 
 const featuredFeatures = [
   {
@@ -66,41 +82,92 @@ const englishLearningItems = [
   },
 ]
 
+function getSafeCallbackUrl() {
+  const callbackUrl = new URLSearchParams(window.location.search).get(
+    "callbackUrl"
+  )
+
+  if (!callbackUrl?.startsWith("/") || callbackUrl.startsWith("//")) {
+    return "/dashboard"
+  }
+
+  return callbackUrl
+}
+
 export function LoginForm() {
   const router = useRouter()
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
+  const form = useForm<LoginFormValues>({
+    defaultValues: {
+      password: "",
+      username: "",
+    },
+    resolver: zodResolver(loginSchema),
+  })
+  const [authAlert, setAuthAlert] = useState<{
+    description: string
+    title: string
+  } | null>(null)
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-
-    if (!username.trim() || !password.trim()) {
-      toast.error("Vui lòng nhập tên đăng nhập và mật khẩu")
-      return
-    }
-
-    setLoading(true)
-
+  async function handleLogin(values: LoginFormValues) {
     try {
-      const result = await mockLogin(username.trim(), password)
+      const result = await signIn("credentials", {
+        username: values.username,
+        password: values.password,
+        redirect: false,
+      })
 
-      if (result.success) {
-        router.push("/dashboard")
-      } else {
-        toast.error(result.error)
-        setPassword("")
+      if (result?.error) {
+        form.setError("password", {
+          message: "Tên đăng nhập hoặc mật khẩu không đúng",
+          type: "validate",
+        })
+        setAuthAlert({
+          title: "Đăng nhập không thành công",
+          description:
+            "Tên đăng nhập hoặc mật khẩu không đúng. Vui lòng kiểm tra lại thông tin.",
+        })
+        form.setValue("password", "")
+        return
       }
+
+      router.push(getSafeCallbackUrl())
+      router.refresh()
     } catch {
-      toast.error("Có lỗi xảy ra, vui lòng thử lại")
-      setPassword("")
-    } finally {
-      setLoading(false)
+      setAuthAlert({
+        title: "Không thể đăng nhập",
+        description:
+          "Có lỗi xảy ra trong quá trình đăng nhập, vui lòng thử lại.",
+      })
+      form.setValue("password", "")
     }
   }
 
   return (
     <main className="min-h-svh overflow-hidden bg-[radial-gradient(circle_at_18%_12%,hsl(var(--primary)/0.13),transparent_28%),radial-gradient(circle_at_82%_82%,hsl(var(--success)/0.12),transparent_24%),linear-gradient(135deg,hsl(var(--background)),hsl(var(--muted)))] px-4 py-6 text-foreground sm:px-6 lg:px-8">
+      <AlertDialog
+        open={Boolean(authAlert)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setAuthAlert(null)
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogMedia className="bg-destructive/10 text-destructive">
+              <OctagonX className="size-5" />
+            </AlertDialogMedia>
+            <AlertDialogTitle>{authAlert?.title}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {authAlert?.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction variant="destructive">Đã hiểu</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="mx-auto flex min-h-[calc(100svh-48px)] w-full max-w-6xl items-center">
         <div className="relative w-full lg:perspective-[1800px]">
           <div className="pointer-events-none absolute -inset-x-4 bottom-4 hidden h-10 rounded-[50%] bg-foreground/10 blur-2xl lg:block" />
@@ -229,7 +296,11 @@ export function LoginForm() {
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form
+                  onSubmit={form.handleSubmit(handleLogin)}
+                  className="space-y-5"
+                  noValidate
+                >
                   <div className="space-y-2">
                     <Label htmlFor="username">Tên đăng nhập</Label>
                     <div className="relative">
@@ -239,13 +310,17 @@ export function LoginForm() {
                         type="text"
                         placeholder="Nhập mã tên đăng nhập"
                         className="h-11 pl-9"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        disabled={loading}
+                        aria-invalid={Boolean(form.formState.errors.username)}
+                        disabled={form.formState.isSubmitting}
                         autoComplete="username"
+                        {...form.register("username")}
                       />
                     </div>
+                    {form.formState.errors.username?.message && (
+                      <p className="text-xs font-medium text-destructive">
+                        {form.formState.errors.username.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -265,21 +340,25 @@ export function LoginForm() {
                         type="password"
                         placeholder="Nhập mật khẩu"
                         className="h-11 pl-9"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        disabled={loading}
+                        aria-invalid={Boolean(form.formState.errors.password)}
+                        disabled={form.formState.isSubmitting}
                         autoComplete="current-password"
+                        {...form.register("password")}
                       />
                     </div>
+                    {form.formState.errors.password?.message && (
+                      <p className="text-xs font-medium text-destructive">
+                        {form.formState.errors.password.message}
+                      </p>
+                    )}
                   </div>
 
                   <Button
                     type="submit"
                     className="h-11 w-full text-sm font-bold"
-                    disabled={loading}
+                    disabled={form.formState.isSubmitting}
                   >
-                    {loading ? (
+                    {form.formState.isSubmitting ? (
                       <>
                         <LoaderCircle className="size-4 animate-spin" />
                         Đang đăng nhập...
@@ -295,10 +374,10 @@ export function LoginForm() {
 
                 <div className="mt-6 rounded-xl border border-dashed border-border bg-muted/40 p-4 text-sm text-muted-foreground">
                   Tài khoản demo:{" "}
-                  <span className="font-semibold text-foreground">ames</span> /
+                  <span className="font-semibold text-foreground">root</span> /
                   <span className="font-semibold text-foreground">
                     {" "}
-                    iloveames
+                    147258369
                   </span>
                 </div>
 

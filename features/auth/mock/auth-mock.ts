@@ -1,6 +1,6 @@
 export const MOCK_CREDENTIALS = {
-  username: "ames",
-  password: "iloveames",
+  username: "root",
+  password: "147258369",
 }
 
 export type MockLoginResult =
@@ -17,7 +17,7 @@ export async function mockLogin(
     username === MOCK_CREDENTIALS.username &&
     password === MOCK_CREDENTIALS.password
   ) {
-    return { success: true, user: { name: "ames" } }
+    return { success: true, user: { name: "root" } }
   }
 
   return { success: false, error: "Tên đăng nhập hoặc mật khẩu không đúng" }

@@ -386,7 +386,8 @@ html {
   display: none;
 }
 .sidebar.collapsed .nav {
-  padding-right: 0;
+  margin-right: -14px;
+  padding-right: 14px;
 }
 .sidebar.collapsed .nav-item {
   width: 52px;
@@ -404,8 +405,50 @@ html {
   gap: 3px;
   flex: 1;
   min-height: 0;
+  margin-right: -16px;
   overflow-y: auto;
-  padding-right: 2px;
+  padding-right: 16px;
+  scrollbar-color: transparent transparent;
+  scrollbar-width: none;
+}
+.nav.scrolling {
+  scrollbar-color: hsl(214 20% 84% / 0.7) transparent;
+  scrollbar-width: thin;
+}
+.nav::-webkit-scrollbar {
+  width: 0;
+}
+.nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.nav::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 2px 6px 2px 2px;
+  background-clip: content-box;
+}
+.nav.scrolling::-webkit-scrollbar {
+  width: 14px;
+}
+.nav.scrolling::-webkit-scrollbar-thumb {
+  background: hsl(214 20% 84% / 0.7);
+  background-clip: content-box;
+}
+.nav.scrolling::-webkit-scrollbar-thumb:hover {
+  background: hsl(214 18% 76% / 0.85);
+  background-clip: content-box;
+}
+.dark .nav.scrolling {
+  scrollbar-color: hsl(var(--muted-foreground) / 0.22) transparent;
+}
+.dark .nav.scrolling::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.22);
+  background-clip: content-box;
+}
+.dark .nav.scrolling::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.34);
+  background-clip: content-box;
 }
 .nav-item {
   display: flex;
@@ -1018,8 +1061,10 @@ html {
   .sidebar.collapsed .nav-sub {
     display: grid;
   }
+  .nav,
   .sidebar.collapsed .nav {
-    padding-right: 2px;
+    margin-right: -14px;
+    padding-right: 14px;
   }
   .sidebar.collapsed .nav-item {
     width: 100%;
