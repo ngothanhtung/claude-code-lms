@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import Google from "next-auth/providers/google"
 import { mockLogin } from "@/features/auth/mock/auth-mock"
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -11,6 +12,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     Credentials({
       credentials: {
         username: { label: "Tên đăng nhập", type: "text" },

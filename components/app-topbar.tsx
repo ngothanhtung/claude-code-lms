@@ -19,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -36,6 +36,7 @@ export function AppTopbar({
 }: AppTopbarProps) {
   const { data: session } = useSession()
   const displayName = session?.user?.name ?? "Ngô Thanh Tùng"
+  const userImage = session?.user?.image
   const avatarInitial = displayName.trim().charAt(0).toUpperCase() || "A"
 
   return (
@@ -113,6 +114,13 @@ export function AppTopbar({
                 <div className="profile-sub">MSSV: 21123456</div>
               </div>
               <Avatar className="avatar" size="lg">
+                {userImage && (
+                  <AvatarImage
+                    src={userImage}
+                    alt={displayName}
+                    className="rounded-[11px]"
+                  />
+                )}
                 <AvatarFallback className="rounded-[11px] bg-transparent text-[15px] font-bold text-white">
                   {avatarInitial}
                 </AvatarFallback>
