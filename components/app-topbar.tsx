@@ -22,14 +22,39 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-export function AppTopbar() {
+type AppTopbarProps = {
+  mobileSidebarOpen?: boolean
+  onMenuClick?: () => void
+  sidebarCollapsed?: boolean
+}
+
+export function AppTopbar({
+  mobileSidebarOpen = false,
+  onMenuClick,
+  sidebarCollapsed = false,
+}: AppTopbarProps) {
   return (
     <header className="topbar">
       <Button
-        className="icon-btn"
+        className="icon-btn menu-btn menu-btn-desktop"
         variant="ghost"
         size="icon"
-        aria-label="Thu gọn menu"
+        aria-controls="app-sidebar"
+        aria-expanded={!sidebarCollapsed}
+        aria-label={sidebarCollapsed ? "Mở rộng menu" : "Thu gọn menu"}
+        onClick={onMenuClick}
+        type="button"
+      >
+        <MenuIcon className="icon-lg" />
+      </Button>
+      <Button
+        className="icon-btn menu-btn menu-btn-mobile"
+        variant="ghost"
+        size="icon"
+        aria-controls="app-sidebar"
+        aria-expanded={mobileSidebarOpen}
+        aria-label={mobileSidebarOpen ? "Đóng menu" : "Mở menu"}
+        onClick={onMenuClick}
         type="button"
       >
         <MenuIcon className="icon-lg" />
@@ -45,7 +70,7 @@ export function AppTopbar() {
 
       <div className="topbar-right">
         <Button
-          className="icon-btn"
+          className="icon-btn topbar-action-secondary"
           variant="ghost"
           size="icon"
           aria-label="Lịch"
@@ -64,7 +89,7 @@ export function AppTopbar() {
           <span className="dot-badge">6</span>
         </Button>
         <Button
-          className="icon-btn"
+          className="icon-btn topbar-action-secondary"
           variant="ghost"
           size="icon"
           aria-label="Tin nhắn"

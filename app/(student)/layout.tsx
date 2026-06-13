@@ -1,18 +1,9 @@
-import { AppSidebar } from "@/components/app-sidebar"
-import { AppTopbar } from "@/components/app-topbar"
+import { StudentShell } from "@/components/student-shell"
 
 export default function PortalLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <div className="app">
-      <AppSidebar />
-      <div className="main">
-        <AppTopbar />
-        <main className="content">{children}</main>
-      </div>
-    </div>
-  )
+  return <StudentShell>{children}</StudentShell>
 }

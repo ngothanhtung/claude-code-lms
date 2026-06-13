@@ -21,6 +21,7 @@ import {
   SettingsIcon,
   SparklesIcon,
   UserCheckIcon,
+  XIcon,
 } from "lucide-react"
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { cn } from "@/lib/utils"
@@ -63,7 +64,19 @@ function isRouteActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  collapsed?: boolean
+  interactive?: boolean
+  mobileOpen?: boolean
+  onNavigate?: () => void
+}
+
+export function AppSidebar({
+  collapsed = false,
+  interactive = true,
+  mobileOpen = false,
+  onNavigate,
+}: AppSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const initialOpenGroups = useMemo(() => {
@@ -106,7 +119,16 @@ export function AppSidebar() {
   }
 
   return (
-    <aside className="sidebar">
+    <aside
+      aria-hidden={!interactive}
+      className={cn(
+        collapsed && "collapsed",
+        mobileOpen && "mobile-open",
+        "sidebar"
+      )}
+      id="app-sidebar"
+      inert={!interactive}
+    >
       <div className="brand">
         <div className="brand-mark">
           <GraduationCapIcon className="h-6 w-6" />
@@ -115,6 +137,14 @@ export function AppSidebar() {
           <div className="brand-name">LMS Portal</div>
           <div className="brand-sub">Dành cho Sinh viên</div>
         </div>
+        <button
+          aria-label="Đóng menu"
+          className="sidebar-close"
+          onClick={onNavigate}
+          type="button"
+        >
+          <XIcon className="icon-sm" />
+        </button>
       </div>
 
       <nav className="nav">
@@ -159,6 +189,7 @@ export function AppSidebar() {
                         )}
                         href={sub.href}
                         key={sub.title}
+                        onClick={onNavigate}
                       >
                         <span className="nav-dot" />
                         {sub.title}
@@ -176,9 +207,10 @@ export function AppSidebar() {
               data-tip={item.title}
               href={item.href}
               key={item.title}
+              onClick={onNavigate}
             >
               <Icon className="icon" />
-              {item.title}
+              <span>{item.title}</span>
               {item.badge && <span className="nav-badge">{item.badge}</span>}
             </Link>
           )
@@ -195,7 +227,14 @@ export function AppSidebar() {
             <div className="assistant-sub">Bạn cần hỗ trợ gì?</div>
           </div>
         </div>
-        <button className="assistant-btn" type="button" onClick={() => router.push("/ai-assistant")}>
+        <button
+          className="assistant-btn"
+          type="button"
+          onClick={() => {
+            onNavigate?.()
+            router.push("/ai-assistant")
+          }}
+        >
           <MessageCircleIcon className="icon-sm" />
           Chat ngay
         </button>
