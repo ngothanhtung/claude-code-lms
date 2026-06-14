@@ -132,7 +132,17 @@
 
 .content {
   flex: 1;
-  padding: 24px 32px;
+  display: grid;
+  grid-template-columns: 1fr 404px;
+  gap: 22px;
+  padding: 26px 24px 40px;
+  align-items: start;
+}
+
+@media (max-width: 1320px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ─── Responsive ─── */
