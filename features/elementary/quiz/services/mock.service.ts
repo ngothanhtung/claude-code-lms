@@ -8,108 +8,108 @@ import {
 import { db } from "@/lib/firebase/firestore"
 
 /* ───────────────────────────────────────────────────
-   Mock question data — Vietnamese elementary school
+   Mock question data — Elementary English Quiz
    ─────────────────────────────────────────────────── */
 
 const MOCK_QUESTIONS = [
   {
-    content: "Từ nào sau đây là từ đồng nghĩa với 'vui'?",
+    content: "What does 'Hello' mean in Vietnamese?",
     type: "quiz",
     options: [
-      { content: "Buồn", isCorrect: false },
-      { content: "Hạnh phúc", isCorrect: true },
-      { content: "Mệt mỏi", isCorrect: false },
-      { content: "Tức giận", isCorrect: false },
+      { content: "Tạm biệt", isCorrect: false },
+      { content: "Xin chào", isCorrect: true },
+      { content: "Cảm ơn", isCorrect: false },
+      { content: "Xin lỗi", isCorrect: false },
     ],
   },
   {
-    content: "Hình nào sau đây là hình tròn?",
+    content: "Which one is a color?",
     type: "quiz",
     options: [
-      { content: "Hình vuông", isCorrect: false },
-      { content: "Hình tam giác", isCorrect: false },
-      { content: "Hình tròn", isCorrect: true },
-      { content: "Hình chữ nhật", isCorrect: false },
+      { content: "Apple", isCorrect: false },
+      { content: "Blue", isCorrect: true },
+      { content: "Run", isCorrect: false },
+      { content: "Happy", isCorrect: false },
     ],
   },
   {
-    content: "Con vật nào sau đây biết bay?",
+    content: "Choose the correct word: 'I ___ a cat.'",
     type: "quiz",
     options: [
-      { content: "Con chó", isCorrect: false },
-      { content: "Con mèo", isCorrect: false },
-      { content: "Con chim", isCorrect: true },
-      { content: "Con cá", isCorrect: false },
+      { content: "has", isCorrect: false },
+      { content: "am", isCorrect: false },
+      { content: "have", isCorrect: true },
+      { content: "is", isCorrect: false },
     ],
   },
   {
-    content: "1 + 1 = ?",
+    content: "What is the opposite of 'big'?",
     type: "quiz",
     options: [
-      { content: "1", isCorrect: false },
-      { content: "2", isCorrect: true },
-      { content: "3", isCorrect: false },
-      { content: "4", isCorrect: false },
+      { content: "Tall", isCorrect: false },
+      { content: "Small", isCorrect: true },
+      { content: "Fast", isCorrect: false },
+      { content: "Hot", isCorrect: false },
     ],
   },
   {
-    content: "Màu của bầu trời là gì?",
+    content: "How do you say 'con chó' in English?",
     type: "quiz",
     options: [
-      { content: "Xanh lá", isCorrect: false },
-      { content: "Đỏ", isCorrect: false },
-      { content: "Vàng", isCorrect: false },
-      { content: "Xanh dương", isCorrect: true },
+      { content: "Cat", isCorrect: false },
+      { content: "Bird", isCorrect: false },
+      { content: "Dog", isCorrect: true },
+      { content: "Fish", isCorrect: false },
     ],
   },
   {
-    content: "Nước nào có hình dáng giống chữ S?",
+    content: "Which word means 'một' in English?",
     type: "quiz",
     options: [
-      { content: "Trung Quốc", isCorrect: false },
-      { content: "Việt Nam", isCorrect: true },
-      { content: "Nhật Bản", isCorrect: false },
-      { content: "Hàn Quốc", isCorrect: false },
+      { content: "Three", isCorrect: false },
+      { content: "Two", isCorrect: false },
+      { content: "One", isCorrect: true },
+      { content: "Four", isCorrect: false },
     ],
   },
   {
-    content: "Mùa nào có tuyết rơi ở miền Bắc?",
+    content: "Choose the correct word: 'She ___ happy.'",
     type: "quiz",
     options: [
-      { content: "Mùa xuân", isCorrect: false },
-      { content: "Mùa hạ", isCorrect: false },
-      { content: "Mùa đông", isCorrect: true },
-      { content: "Mùa thu", isCorrect: false },
+      { content: "are", isCorrect: false },
+      { content: "is", isCorrect: true },
+      { content: "am", isCorrect: false },
+      { content: "be", isCorrect: false },
     ],
   },
   {
-    content: "Từ trái nghĩa với 'nóng' là gì?",
+    content: "What does 'Thank you' mean in Vietnamese?",
     type: "quiz",
     options: [
-      { content: "Lạnh", isCorrect: true },
-      { content: "Nắng", isCorrect: false },
-      { content: "Khô", isCorrect: false },
-      { content: "Ẩm", isCorrect: false },
+      { content: "Xin lỗi", isCorrect: false },
+      { content: "Không sao", isCorrect: false },
+      { content: "Cảm ơn", isCorrect: true },
+      { content: "Chào mừng", isCorrect: false },
     ],
   },
   {
-    content: "Cái nào dùng để viết trên bảng?",
+    content: "Which one is a fruit?",
     type: "quiz",
     options: [
-      { content: "Giấy", isCorrect: false },
-      { content: "Bút chì", isCorrect: false },
-      { content: "Phấn", isCorrect: true },
-      { content: "Cọ vẽ", isCorrect: false },
+      { content: "Car", isCorrect: false },
+      { content: "Banana", isCorrect: true },
+      { content: "Chair", isCorrect: false },
+      { content: "Book", isCorrect: false },
     ],
   },
   {
-    content: "3 + 4 = ?",
+    content: "What is the plural of 'box'?",
     type: "quiz",
     options: [
-      { content: "5", isCorrect: false },
-      { content: "6", isCorrect: false },
-      { content: "7", isCorrect: true },
-      { content: "8", isCorrect: false },
+      { content: "Boxs", isCorrect: false },
+      { content: "Boxies", isCorrect: false },
+      { content: "Boxes", isCorrect: true },
+      { content: "Box", isCorrect: false },
     ],
   },
 ]
@@ -249,6 +249,23 @@ export async function clearQuizAnswers(quizId: string): Promise<void> {
       batch.delete(d.ref)
     }
   }
+
+  await batch.commit()
+}
+
+/**
+ * Clear ALL questions and answers — for full re-seed.
+ * Call seedQuestions() + generateMockAnswers() after this.
+ */
+export async function clearAllQuizData(): Promise<void> {
+  const [questionsSnap, answersSnap] = await Promise.all([
+    getDocs(collection(db, "questions")),
+    getDocs(collection(db, "answers")),
+  ])
+
+  const batch = writeBatch(db)
+  for (const d of questionsSnap.docs) batch.delete(d.ref)
+  for (const d of answersSnap.docs) batch.delete(d.ref)
 
   await batch.commit()
 }
