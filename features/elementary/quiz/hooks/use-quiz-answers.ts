@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import {
   collection,
   addDoc,
@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore"
 import { db } from "@/lib/firebase/firestore"
 import type { QuizAnswer } from "../types/quiz.types"
+import { generateMockAnswers } from "../services/mock.service"
 
 interface UseQuizAnswersReturn {
   allAnswers: QuizAnswer[]
@@ -29,6 +30,7 @@ export function useQuizAnswers(
 ): UseQuizAnswersReturn {
   const [allAnswers, setAllAnswers] = useState<QuizAnswer[]>([])
   const [loading, setLoading] = useState(true)
+  const seededRef = useRef(false)
 
   useEffect(() => {
     const q = query(
@@ -38,28 +40,38 @@ export function useQuizAnswers(
 
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
-        const answers: QuizAnswer[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          questionId: doc.data().questionId,
-          groupId: doc.data().groupId,
-          quizId: doc.data().quizId,
-          selectedOption: doc.data().selectedOption,
-          isCorrect: doc.data().isCorrect,
-          answeredAt: doc.data().answeredAt,
+      async (snapshot) => {
+        const answers: QuizAnswer[] = snapshot.docs.map((d) => ({
+          id: d.id,
+          questionId: d.data().questionId,
+          groupId: d.data().groupId,
+          quizId: d.data().quizId,
+          selectedOption: d.data().selectedOption,
+          isCorrect: d.data().isCorrect,
+          answeredAt: d.data().answeredAt,
         }))
         setAllAnswers(answers)
         setLoading(false)
+
+        // Auto-seed mock answers for OTHER groups on first load (dev only)
+        if (!seededRef.current && answers.length === 0) {
+          seededRef.current = true
+          try {
+            await generateMockAnswers(quizId, { excludeGroupId: groupId })
+          } catch (err) {
+            console.warn("Failed to seed mock answers:", err)
+          }
+        }
       },
       (err) => {
-        console.warn("Firestore subscription error, using empty answers:", err)
+        console.error("Firestore subscription error:", err)
         setAllAnswers([])
         setLoading(false)
       }
     )
 
     return () => unsubscribe()
-  }, [quizId])
+  }, [quizId, groupId])
 
   const groupAnswers = allAnswers.filter((a) => a.groupId === groupId)
 

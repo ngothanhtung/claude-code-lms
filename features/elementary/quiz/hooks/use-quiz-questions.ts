@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "@/lib/firebase/firestore"
 import type { QuizQuestion } from "../types/quiz.types"
-import { mockQuestions } from "../mock/quiz.mock"
+import { seedQuestions } from "../services/mock.service"
 
 interface UseQuizQuestionsReturn {
   questions: QuizQuestion[]
@@ -30,21 +30,31 @@ export function useQuizQuestions(quizId: string): UseQuizQuestionsReturn {
         if (cancelled) return
 
         if (snapshot.empty) {
-          setQuestions(mockQuestions)
+          // No questions yet — seed mock data into Firestore, then re-fetch
+          await seedQuestions()
+          const seeded = await getDocs(collection(db, "questions"))
+          if (cancelled) return
+
+          const fetched: QuizQuestion[] = seeded.docs.map((d) => ({
+            id: d.id,
+            content: d.data().content,
+            type: d.data().type,
+            options: d.data().options,
+          }))
+          setQuestions(fetched)
         } else {
-          const fetched: QuizQuestion[] = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            content: doc.data().content,
-            type: doc.data().type,
-            options: doc.data().options,
+          const fetched: QuizQuestion[] = snapshot.docs.map((d) => ({
+            id: d.id,
+            content: d.data().content,
+            type: d.data().type,
+            options: d.data().options,
           }))
           setQuestions(fetched)
         }
       } catch (err) {
         if (cancelled) return
-        console.warn("Firestore unavailable, using mock data:", err)
-        setQuestions(mockQuestions)
-        setError(null)
+        console.error("Failed to load questions:", err)
+        setError(err instanceof Error ? err.message : "Không thể tải câu hỏi")
       } finally {
         if (!cancelled) setLoading(false)
       }
