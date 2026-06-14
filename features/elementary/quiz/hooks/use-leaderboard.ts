@@ -27,9 +27,11 @@ export function useLeaderboard(
 
     const latestByGroup = new Map<string, Map<string, QuizAnswer>>()
 
-    const sorted = [...allAnswers].sort(
-      (a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis()
-    )
+    const sorted = [...allAnswers]
+      .filter((a) => a.answeredAt && typeof a.answeredAt.toMillis === "function")
+      .sort(
+        (a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis()
+      )
 
     for (const answer of sorted) {
       if (!latestByGroup.has(answer.groupId)) {

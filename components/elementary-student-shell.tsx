@@ -4,16 +4,14 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  BookOpenIcon,
-  ChevronLeftIcon,
   GraduationCapIcon,
+  ChevronLeftIcon,
   HomeIcon,
+  UsersIcon,
   PenSquareIcon,
   StarIcon,
-  UsersIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import styles from "./elementary-student-shell.module.css"
 
 const navItems = [
   { href: "/elementary-student", label: "Trang chủ", icon: HomeIcon },
@@ -27,53 +25,50 @@ export function ElementaryStudentShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <div className={styles.layout}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        {/* Brand */}
-        <div className={styles.brand}>
-          <div className={styles.brandMark}>
-            <GraduationCapIcon className="h-6 w-6" />
+    <div className="elementary-app">
+      <div className="el-app">
+        <aside className="el-sidebar">
+          <div className="el-brand">
+            <div className="el-brand-mark">
+              <GraduationCapIcon className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="el-brand-name">LMS Tiểu học</div>
+              <div className="el-brand-sub">Học sinh</div>
+            </div>
           </div>
-          <div>
-            <div className={styles.brandName}>LMS Tiểu học</div>
-            <div className={styles.brandSub}>Học sinh</div>
+
+          <nav className="el-nav">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive =
+                item.href === "/elementary-student"
+                  ? pathname === item.href
+                  : pathname.startsWith(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn("el-nav-item", isActive && "active")}
+                >
+                  <Icon className="el-nav-icon" />
+                  <span>{item.label}</span>
+                </Link>
+              )
+            })}
+          </nav>
+
+          <div className="el-footer">
+            <Link href="/" className="el-footer-link">
+              <ChevronLeftIcon className="h-4 w-4" />
+              <span>Về trang chủ</span>
+            </Link>
           </div>
+        </aside>
+
+        <div className="el-main">
+          <main className="el-content">{children}</main>
         </div>
-
-        {/* Nav */}
-        <nav className={styles.nav}>
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const isActive =
-              item.href === "/elementary-student"
-                ? pathname === item.href
-                : pathname.startsWith(item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(styles.navItem, isActive && styles.navItemActive)}
-              >
-                <Icon className={styles.navIcon} />
-                <span>{item.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* Footer */}
-        <div className={styles.footer}>
-          <Link href="/" className={styles.footerLink}>
-            <ChevronLeftIcon className="h-4 w-4" />
-            <span>Về trang chủ</span>
-          </Link>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div className={styles.main}>
-        <main className={styles.content}>{children}</main>
       </div>
     </div>
   )

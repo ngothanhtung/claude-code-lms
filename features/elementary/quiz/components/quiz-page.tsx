@@ -35,9 +35,11 @@ export function QuizPage({ groupId = "g-1-1-01", classId = "1-1" }: QuizPageProp
 
   const answeredMap = useMemo(() => {
     const map = new Map<string, { selectedOption: number; isCorrect: boolean }>()
-    const sorted = [...groupAnswers].sort(
-      (a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis()
-    )
+    const sorted = [...groupAnswers]
+      .filter((a) => a.answeredAt && typeof a.answeredAt.toMillis === "function")
+      .sort(
+        (a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis()
+      )
     for (const answer of sorted) {
       map.set(answer.questionId, {
         selectedOption: answer.selectedOption,

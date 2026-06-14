@@ -23,9 +23,11 @@ export function computeScore(answers: QuizAnswer[]): {
 /** Helper: compute total time in seconds from first to last answer */
 export function computeTotalTime(answers: QuizAnswer[]): number {
   if (answers.length < 2) return 0
-  const sorted = [...answers].sort(
-    (a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis()
-  )
+  const sorted = [...answers]
+    .filter((a) => a.answeredAt && typeof a.answeredAt.toMillis === "function")
+    .sort(
+      (a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis()
+    )
   const first = sorted[0].answeredAt.toMillis()
   const last = sorted[sorted.length - 1].answeredAt.toMillis()
   return Math.round((last - first) / 1000)
