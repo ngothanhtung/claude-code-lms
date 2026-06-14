@@ -1,0 +1,104 @@
+.sidebar {
+  width: 240px;
+  border-left: 1px solid hsl(var(--border));
+  padding: 16px;
+  background: hsl(var(--muted) / 0.3);
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.entryGold {
+  background: hsl(48 96% 53% / 0.1);
+}
+
+.entrySilver {
+  background: hsl(142 71% 45% / 0.05);
+}
+
+.entryCurrent {
+  background: hsl(var(--primary) / 0.06);
+  border: 2px solid hsl(var(--primary));
+  font-weight: 600;
+}
+
+.rank {
+  font-size: 16px;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rankNum {
+  font-size: 13px;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+}
+
+.groupName {
+  flex: 1;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score {
+  font-size: 13px;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+
+.footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid hsl(var(--border));
+  text-align: center;
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+}
+
+.liveIndicator {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--success, 142 71% 45%));
+  animation: pulse 1.5s infinite;
+  margin-right: 4px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@media (max-width: 680px) {
+  .sidebar {
+    display: none;
+  }
+}
