@@ -1,0 +1,459 @@
+.pageWrap {
+  width: 100%;
+}
+
+/* ─── Header ─── */
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.titleGroup h1 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.titleGroup p {
+  color: hsl(var(--muted-foreground));
+  font-size: 13.5px;
+  margin-top: 5px;
+}
+
+/* ─── Stats bar ─── */
+
+.stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  padding: 9px 14px;
+  box-shadow: var(--shadow-card);
+}
+
+.statIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.statIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.statIcon[data-variant="coral"] {
+  background: hsl(16 80% 94%);
+  color: hsl(14 68% 52%);
+}
+.dark .statIcon[data-variant="coral"] {
+  background: hsl(14 30% 18%);
+  color: hsl(14 60% 66%);
+}
+
+.statIcon[data-variant="gold"] {
+  background: hsl(38 90% 92%);
+  color: hsl(35 82% 48%);
+}
+.dark .statIcon[data-variant="gold"] {
+  background: hsl(35 35% 16%);
+  color: hsl(38 70% 60%);
+}
+
+.statIcon[data-variant="teal"] {
+  background: hsl(172 55% 92%);
+  color: hsl(172 58% 38%);
+}
+.dark .statIcon[data-variant="teal"] {
+  background: hsl(172 30% 16%);
+  color: hsl(172 50% 54%);
+}
+
+.statIcon[data-variant="sky"] {
+  background: hsl(202 80% 92%);
+  color: hsl(202 72% 46%);
+}
+.dark .statIcon[data-variant="sky"] {
+  background: hsl(202 35% 16%);
+  color: hsl(202 60% 60%);
+}
+
+.statNum {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.statLbl {
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  margin-top: 3px;
+}
+
+/* ─── Grade tabs ─── */
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 7px 18px;
+  border-radius: 99px;
+  border: 1.5px solid hsl(var(--border));
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  border-color: hsl(var(--primary) / 0.4);
+  color: hsl(var(--primary));
+  background: hsl(var(--primary-muted));
+}
+
+.tabActive {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+/* ─── Class grid ─── */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.card {
+  border-radius: 16px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 32px -12px hsl(222 47% 11% / 0.18),
+    0 0 0 1px hsl(var(--primary) / 0.15);
+}
+.dark .card:hover {
+  box-shadow:
+    0 12px 32px -12px hsl(222 47% 2% / 0.6),
+    0 0 0 1px hsl(var(--primary) / 0.25);
+}
+
+.cardTop {
+  padding: 16px 16px 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.classBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px 4px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.classBadge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.classBadge[data-grade="1"] {
+  background: hsl(16 80% 93%);
+  color: hsl(14 62% 44%);
+}
+.dark .classBadge[data-grade="1"] {
+  background: hsl(14 30% 18%);
+  color: hsl(14 60% 62%);
+}
+
+.classBadge[data-grade="2"] {
+  background: hsl(38 86% 90%);
+  color: hsl(34 74% 42%);
+}
+.dark .classBadge[data-grade="2"] {
+  background: hsl(35 35% 16%);
+  color: hsl(38 68% 56%);
+}
+
+.classBadge[data-grade="3"] {
+  background: hsl(172 50% 90%);
+  color: hsl(172 56% 32%);
+}
+.dark .classBadge[data-grade="3"] {
+  background: hsl(172 28% 16%);
+  color: hsl(172 48% 50%);
+}
+
+.classBadge[data-grade="4"] {
+  background: hsl(202 74% 90%);
+  color: hsl(202 64% 38%);
+}
+.dark .classBadge[data-grade="4"] {
+  background: hsl(202 30% 18%);
+  color: hsl(202 56% 56%);
+}
+
+.classBadge[data-grade="5"] {
+  background: hsl(262 52% 92%);
+  color: hsl(262 54% 46%);
+}
+.dark .classBadge[data-grade="5"] {
+  background: hsl(262 30% 18%);
+  color: hsl(262 50% 62%);
+}
+
+.archivedBadge {
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+  line-height: 1;
+}
+
+.cardBody {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.className {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.classTeacher {
+  font-size: 12.5px;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.classTeacher svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.metaRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+}
+
+.metaItem svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.quizSection {
+  border-top: 1px solid hsl(var(--border));
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.quizInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+}
+
+.quizInfo svg {
+  width: 14px;
+  height: 14px;
+  color: hsl(var(--primary));
+}
+
+.quizProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  max-width: 160px;
+}
+
+.quizTrack {
+  flex: 1;
+  height: 5px;
+  border-radius: 99px;
+  background: hsl(var(--muted));
+  overflow: hidden;
+  min-width: 50px;
+}
+
+.quizTrackFill {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, hsl(142 65% 48%), hsl(142 58% 38%));
+  transition: width 0.4s ease;
+}
+
+.quizPct {
+  font-size: 12px;
+  font-weight: 700;
+  color: hsl(142 58% 38%);
+  white-space: nowrap;
+  min-width: 36px;
+  text-align: right;
+}
+.dark .quizPct {
+  color: hsl(142 55% 54%);
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: hsl(38 82% 44%);
+}
+.dark .score {
+  color: hsl(38 68% 58%);
+}
+
+.score svg {
+  width: 14px;
+  height: 14px;
+}
+
+.archivedCard {
+  opacity: 0.65;
+}
+
+.archivedCard:hover {
+  opacity: 1;
+}
+
+/* ─── Empty state ─── */
+
+.empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  gap: 8px;
+  color: hsl(var(--muted-foreground));
+}
+
+.empty svg {
+  width: 40px;
+  height: 40px;
+  opacity: 0.4;
+  margin-bottom: 4px;
+}
+
+.empty p {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 1320px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 980px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    gap: 4px;
+  }
+
+  .tab {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .header {
+    margin-bottom: 18px;
+  }
+
+  .titleGroup h1 {
+    font-size: 22px;
+  }
+}

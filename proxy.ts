@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 
-const publicRoutes = new Set(["/login", "/register", "/forgot-password"])
+const publicRoutes = new Set([
+  "/login",
+  "/login-student",
+  "/register",
+  "/forgot-password",
+])
 
 export default auth((request) => {
   const { nextUrl } = request

@@ -1,6 +1,6 @@
 .pageWrap {
   display: flex;
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 .quizArea {
@@ -38,7 +38,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 60vh;
   gap: 12px;
   color: hsl(var(--muted-foreground));
 }
