@@ -12,17 +12,17 @@ export default function DashboardPage() {
       <div className="col-main">
         <TeacherGreetingCard
           userName="Nguyễn Thị Mai"
-          role="Giáo viên chủ nhiệm"
-          className="Lớp 3A"
+          role="Giáo viên môn Tiếng Anh"
+          className="Lớp 3A & 3B"
           semester="Học kỳ II, năm học 2025 - 2026"
           dateLabel="Thứ 7, 14/06/2026"
         />
 
         <div className="grid grid-cols-4 gap-4 max-[1320px]:grid-cols-2 max-[680px]:grid-cols-2">
           <TeacherStatCard variant="students" />
-          <TeacherStatCard variant="schedule" />
-          <TeacherStatCard variant="submissions" />
-          <TeacherStatCard variant="attendance" />
+          <TeacherStatCard variant="lessons" />
+          <TeacherStatCard variant="quizzes" />
+          <TeacherStatCard variant="progress" />
         </div>
 
         <div className="grid grid-cols-2 items-stretch gap-5 max-[980px]:grid-cols-1">

@@ -1,14 +1,9 @@
 import { Card } from "@/components/ui/card"
 import { BadgeStatus } from "@/components/badge-status"
-
-const attendanceData = [
-  { day: "T2", present: 34, absent: 1 },
-  { day: "T3", present: 33, absent: 2 },
-  { day: "T4", present: 35, absent: 0 },
-  { day: "T5", present: 32, absent: 3 },
-  { day: "T6", present: 34, absent: 1 },
-  { day: "T7", present: 33, absent: 2 },
-]
+import {
+  CheckCircleIcon,
+} from "lucide-react"
+import { lessons } from "@/features/elementary/dashboard/mock"
 
 const classAnnouncements = [
   {
@@ -18,7 +13,7 @@ const classAnnouncements = [
     label: "Sắp tới",
   },
   {
-    title: "Thi học kỳ II",
+    title: "Thi cuối kỳ Tiếng Anh",
     date: "16/06 – 18/06/2026",
     status: "info" as const,
     label: "3 ngày nữa",
@@ -31,6 +26,15 @@ const classAnnouncements = [
   },
 ]
 
+const attendanceData = [
+  { day: "T2", present: 57, absent: 2 },
+  { day: "T3", present: 56, absent: 3 },
+  { day: "T4", present: 59, absent: 0 },
+  { day: "T5", present: 55, absent: 4 },
+  { day: "T6", present: 57, absent: 2 },
+  { day: "T7", present: 56, absent: 3 },
+]
+
 export function TeacherDashboardRail() {
   const totalPresent = attendanceData.reduce((s, d) => s + d.present, 0)
   const totalSlots = attendanceData.reduce(
@@ -41,7 +45,35 @@ export function TeacherDashboardRail() {
 
   return (
     <aside className="rail">
-      {/* Weekly attendance summary */}
+      {/* Lesson progress */}
+      <Card className="gap-0 rounded-[var(--radius)] border border-border bg-card p-5 py-5 shadow-[var(--shadow-card)] ring-0">
+        <h2 className="mb-4 text-[16.5px] font-bold tracking-tight">
+          Tiến độ chương trình
+        </h2>
+        {lessons.map((lesson) => (
+          <div
+            key={lesson.id}
+            className="flex items-center gap-[10px] border-t border-border py-[11px] first:border-t-0 first:pt-0"
+          >
+            <div className="grid h-[28px] w-[28px] shrink-0 place-items-center rounded-[7px] bg-success-muted text-success">
+              <CheckCircleIcon className="h-[14px] w-[14px]" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[12px] font-semibold">
+                L{lesson.lessonNumber}: {lesson.title}
+              </div>
+              <div className="text-[11px] text-muted-foreground">
+                {lesson.totalWords} từ · {lesson.quizCount} quiz
+              </div>
+            </div>
+            <span className="text-[11px] font-medium text-muted-foreground">
+              Unit {lesson.unit}
+            </span>
+          </div>
+        ))}
+      </Card>
+
+      {/* Weekly attendance */}
       <Card className="gap-0 rounded-[var(--radius)] border border-border bg-card p-5 py-5 shadow-[var(--shadow-card)] ring-0">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="m-0 text-[16.5px] font-bold tracking-tight">
@@ -119,53 +151,6 @@ export function TeacherDashboardRail() {
             <BadgeStatus variant={event.status}>{event.label}</BadgeStatus>
           </div>
         ))}
-      </Card>
-
-      {/* Quick class info */}
-      <Card className="gap-0 rounded-[var(--radius)] border border-border bg-card p-5 py-5 shadow-[var(--shadow-card)] ring-0">
-        <h2 className="mb-4 text-[16.5px] font-bold tracking-tight">
-          Thông tin lớp 3A
-        </h2>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl border border-border bg-muted/50 p-3 text-center">
-            <div className="text-[11px] text-muted-foreground">Tổng HS</div>
-            <div
-              className="text-[20px] font-extrabold"
-              style={{ letterSpacing: "-0.01em" }}
-            >
-              35
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-muted/50 p-3 text-center">
-            <div className="text-[11px] text-muted-foreground">Điểm TB</div>
-            <div
-              className="text-[20px] font-extrabold text-success"
-              style={{ letterSpacing: "-0.01em" }}
-            >
-              8.2
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-muted/50 p-3 text-center">
-            <div className="text-[11px] text-muted-foreground">Bài chờ chấm</div>
-            <div
-              className="text-[20px] font-extrabold text-danger"
-              style={{ letterSpacing: "-0.01em" }}
-            >
-              12
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-muted/50 p-3 text-center">
-            <div className="text-[11px] text-muted-foreground">
-              Học sinh giỏi
-            </div>
-            <div
-              className="text-[20px] font-extrabold text-primary"
-              style={{ letterSpacing: "-0.01em" }}
-            >
-              18
-            </div>
-          </div>
-        </div>
       </Card>
     </aside>
   )

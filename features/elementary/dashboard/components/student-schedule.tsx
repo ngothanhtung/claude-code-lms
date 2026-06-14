@@ -1,30 +1,29 @@
 import {
-  BookOpenIcon,
   LanguagesIcon,
+  BookOpenIcon,
 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { IconTint } from "@/components/icon-tint"
 import { BadgeStatus } from "@/components/badge-status"
-import { todaySchedule } from "@/features/elementary/dashboard/mock"
+import { studentTodaySchedule } from "@/features/elementary/dashboard/mock/student-dashboard.mock"
 
 const slotIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  "Tiếng Anh — Lớp 3A": LanguagesIcon,
-  "Tiếng Anh — Lớp 3B": LanguagesIcon,
+  "Tiếng Anh": LanguagesIcon,
 }
 
-export function TodaySchedule() {
+export function StudentSchedule() {
   return (
     <Card className="gap-0 rounded-[var(--radius)] border border-border bg-card p-5 py-5 shadow-[var(--shadow-card)] ring-0">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="m-0 text-[16.5px] font-bold tracking-tight">
-          Lịch dạy hôm nay
+          Lịch học hôm nay
         </h2>
         <span className="text-[13px] font-medium text-muted-foreground">
-          {todaySchedule.length} tiết
+          {studentTodaySchedule.length} tiết
         </span>
       </div>
 
-      {todaySchedule.map((slot) => {
+      {studentTodaySchedule.map((slot) => {
         const SlotIcon = slotIcons[slot.title] ?? BookOpenIcon
         return (
           <div
@@ -46,7 +45,7 @@ export function TodaySchedule() {
             <BadgeStatus
               variant={slot.status === "done" ? "success" : "info"}
             >
-              {slot.status === "done" ? "Đã dạy" : "Sắp tới"}
+              {slot.status === "done" ? "Xong" : "Sắp tới"}
             </BadgeStatus>
           </div>
         )

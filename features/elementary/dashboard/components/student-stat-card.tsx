@@ -2,62 +2,64 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { IconTint } from "@/components/icon-tint"
 import {
-  UsersIcon,
   BookOpenIcon,
-  ClipboardCheckIcon,
-  TrendingUpIcon,
+  StarIcon,
+  FlameIcon,
+  UsersIcon,
 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 
-interface TeacherStatCardProps {
-  variant: "students" | "lessons" | "quizzes" | "progress"
+interface StudentStatCardProps {
+  variant: "lessons" | "score" | "streak" | "group"
   className?: string
 }
 
-export function TeacherStatCard({
+export function StudentStatCard({
   variant,
   className,
-}: TeacherStatCardProps) {
+}: StudentStatCardProps) {
   type StatConfig = {
     icon: React.ComponentType<{ className?: string }>
-    iconTint: "indigo" | "green" | "blue" | "amber"
+    iconTint: "indigo" | "green" | "blue" | "amber" | "red"
     label: string
     value: string
     detail?: string
-    danger?: true
+    trend?: string
+    spark?: true
     progress?: number
   }
 
-  const configs: Record<TeacherStatCardProps["variant"], StatConfig> = {
-    students: {
-      icon: UsersIcon,
-      iconTint: "indigo",
-      label: "Học sinh giảng dạy",
-      value: "59",
-      detail: "Lớp 3A (31) · Lớp 3B (28)",
-    },
+  const configs: Record<StudentStatCardProps["variant"], StatConfig> = {
     lessons: {
       icon: BookOpenIcon,
       iconTint: "blue",
-      label: "Bài học hôm nay",
-      value: "4",
-      detail: "2 tiết 3A · 2 tiết 3B",
+      label: "Bài học đã học",
+      value: "5/8",
+      detail: "Lesson 1 → Lesson 5",
     },
-    quizzes: {
-      icon: ClipboardCheckIcon,
+    score: {
+      icon: StarIcon,
       iconTint: "amber",
-      label: "Quiz chờ chấm điểm",
-      value: "8",
-      detail: "Quiz Lesson 5 — 3A & 3B",
-      danger: true,
+      label: "Điểm trung bình",
+      value: "8.5",
+      detail: "Top 5 lớp 3A",
+      trend: "+0.3",
     },
-    progress: {
-      icon: TrendingUpIcon,
+    streak: {
+      icon: FlameIcon,
+      iconTint: "red",
+      label: "Chuỗi ngày học",
+      value: "12",
+      detail: "ngày liên tiếp 🔥",
+      spark: true,
+    },
+    group: {
+      icon: UsersIcon,
       iconTint: "green",
-      label: "Tiết dạy tuần này",
-      value: "12/16",
-      detail: "Hoàn thành 75%",
-      progress: 75,
+      label: "Nhóm học",
+      value: "Nhóm 2",
+      detail: "Hoàn thành 5/6 quiz",
+      progress: 83,
     },
   }
 
@@ -74,6 +76,22 @@ export function TeacherStatCard({
         <IconTint variant={c.iconTint} size="lg">
           <c.icon className="h-5 w-5" />
         </IconTint>
+        {c.spark && (
+          <svg className="h-[34px] w-[64px]" viewBox="0 0 64 34" fill="none">
+            <polyline
+              points="0,28 12,22 22,25 34,14 44,17 56,6 64,9"
+              stroke="oklch(0.63 0.19 27)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+        {c.trend && (
+          <span className="text-[13px] font-semibold text-success">
+            +{c.trend}
+          </span>
+        )}
       </div>
       <div className="text-[13px] font-medium text-muted-foreground">
         {c.label}
@@ -91,20 +109,13 @@ export function TeacherStatCard({
           </div>
           <div className="mt-[4px] h-[7px] overflow-hidden rounded-full bg-[oklch(0.965_0_0)]">
             <div
-              className="h-full rounded-full bg-[linear-gradient(90deg,hsl(142_71%_50%),hsl(142_71%_42%))]"
+              className="h-full rounded-full bg-[linear-gradient(90deg,hsl(142_71%_50%),hsl(142_71% 42%))]"
               style={{ width: `${c.progress}%` }}
             />
           </div>
         </>
       ) : (
-        <div
-          className={cn(
-            "mt-[10px] text-[12.5px]",
-            c.danger
-              ? "font-semibold text-[oklch(0.55_0.22_27)]"
-              : "text-muted-foreground"
-          )}
-        >
+        <div className="mt-[10px] text-[12.5px] text-muted-foreground">
           {c.detail}
         </div>
       )}
