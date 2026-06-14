@@ -9,7 +9,7 @@ import { StudentDashboardRail } from "@/features/elementary/dashboard/components
 export default function DashboardPage() {
   return (
     <>
-      <div className="col-main">
+      <div className="el-col-main">
         <StudentGreetingCard
           userName="Trần Minh Tuấn"
           className="Lớp 3A"
@@ -17,14 +17,14 @@ export default function DashboardPage() {
           dateLabel="Thứ 7, 14/06/2026"
         />
 
-        <div className="grid grid-cols-4 gap-4 max-[1320px]:grid-cols-2 max-[680px]:grid-cols-2">
+        <div className="el-dash-grid-4">
           <StudentStatCard variant="lessons" />
           <StudentStatCard variant="score" />
           <StudentStatCard variant="streak" />
           <StudentStatCard variant="group" />
         </div>
 
-        <div className="grid grid-cols-2 items-stretch gap-5 max-[980px]:grid-cols-1">
+        <div className="el-dash-grid-2">
           <StudentSchedule />
           <RecentQuizResults />
         </div>

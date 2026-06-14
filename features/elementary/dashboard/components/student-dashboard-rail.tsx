@@ -20,7 +20,7 @@ function getInitials(name: string) {
 
 export function StudentDashboardRail() {
   return (
-    <aside className="rail">
+    <aside className="el-rail">
       {/* Leaderboard */}
       <Card className="gap-0 rounded-[var(--radius)] border border-border bg-card p-5 py-5 shadow-[var(--shadow-card)] ring-0">
         <div className="mb-4 flex items-center justify-between">
