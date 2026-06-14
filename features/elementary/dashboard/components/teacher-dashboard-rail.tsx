@@ -44,7 +44,7 @@ export function TeacherDashboardRail() {
   const avgRate = Math.round((totalPresent / totalSlots) * 100)
 
   return (
-    <aside className="rail">
+    <aside className="el-rail">
       {/* Lesson progress */}
       <Card className="gap-0 rounded-[var(--radius)] border border-border bg-card p-5 py-5 shadow-[var(--shadow-card)] ring-0">
         <h2 className="mb-4 text-[16.5px] font-bold tracking-tight">
