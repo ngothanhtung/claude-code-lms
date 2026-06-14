@@ -13,7 +13,6 @@ import {
 import { cn } from "@/lib/utils"
 import { allClasses, grades, summary } from "@/features/elementary/classes/mock"
 import type { GradeLevel } from "@/features/elementary/classes/mock"
-import styles from "./classes-page.module.css"
 
 /* ─── Grade emoji helper ─── */
 const gradeEmoji: Record<GradeLevel, string> = {
@@ -36,10 +35,10 @@ export function ClassesPage() {
   )
 
   return (
-    <div className={styles.pageWrap}>
+    <div className="el-cls-page">
       {/* ─── Header ─── */}
-      <div className={styles.header}>
-        <div className={styles.titleGroup}>
+      <div className="el-cls-header">
+        <div>
           <h1>Danh sách lớp</h1>
           <p>
             Quản lý lớp học và theo dõi kết quả bài quiz · Năm học 2025–2026
@@ -47,56 +46,56 @@ export function ClassesPage() {
         </div>
 
         {/* Stats chips */}
-        <div className={styles.stats}>
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="coral">
+        <div className="el-cls-stats">
+          <div className="el-cls-stat">
+            <div className="el-cls-stat-icon" data-variant="coral">
               <SchoolIcon />
             </div>
             <div>
-              <div className={styles.statNum}>{summary.totalClasses}</div>
-              <div className={styles.statLbl}>Lớp</div>
+              <div className="el-cls-stat-num">{summary.totalClasses}</div>
+              <div className="el-cls-stat-lbl">Lớp</div>
             </div>
           </div>
 
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="gold">
+          <div className="el-cls-stat">
+            <div className="el-cls-stat-icon" data-variant="gold">
               <UsersIcon />
             </div>
             <div>
-              <div className={styles.statNum}>{summary.totalStudents}</div>
-              <div className={styles.statLbl}>Học sinh</div>
+              <div className="el-cls-stat-num">{summary.totalStudents}</div>
+              <div className="el-cls-stat-lbl">Học sinh</div>
             </div>
           </div>
 
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="teal">
+          <div className="el-cls-stat">
+            <div className="el-cls-stat-icon" data-variant="teal">
               <BookCheckIcon />
             </div>
             <div>
-              <div className={styles.statNum}>
+              <div className="el-cls-stat-num">
                 {summary.totalQuizzesCompleted}/{summary.totalQuizzesAssigned}
               </div>
-              <div className={styles.statLbl}>Bài quiz</div>
+              <div className="el-cls-stat-lbl">Bài quiz</div>
             </div>
           </div>
 
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="sky">
+          <div className="el-cls-stat">
+            <div className="el-cls-stat-icon" data-variant="sky">
               <GraduationCapIcon />
             </div>
             <div>
-              <div className={styles.statNum}>{summary.avgCompletionRate}%</div>
-              <div className={styles.statLbl}>HT rate</div>
+              <div className="el-cls-stat-num">{summary.avgCompletionRate}%</div>
+              <div className="el-cls-stat-lbl">HT rate</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* ─── Grade tabs ─── */}
-      <div className={styles.tabs}>
+      <div className="el-cls-tabs">
         <button
           type="button"
-          className={cn(styles.tab, activeGrade === "all" && styles.tabActive)}
+          className={cn("el-cls-tab", activeGrade === "all" && "active")}
           onClick={() => setActiveGrade("all")}
         >
           Tất cả
@@ -106,8 +105,8 @@ export function ClassesPage() {
             key={g.level}
             type="button"
             className={cn(
-              styles.tab,
-              activeGrade === g.level && styles.tabActive
+              "el-cls-tab",
+              activeGrade === g.level && "active"
             )}
             onClick={() => setActiveGrade(g.level)}
           >
@@ -118,7 +117,7 @@ export function ClassesPage() {
 
       {/* ─── Class grid ─── */}
       {filtered.length > 0 ? (
-        <div className={styles.grid}>
+        <div className="el-cls-grid">
           {filtered.map((cls) => {
             const pct = Math.round(
               (cls.completedQuizzes / cls.totalQuizzes) * 100
@@ -129,38 +128,38 @@ export function ClassesPage() {
                 href={`/elementary-teacher/groups?class=${cls.id}`}
                 key={cls.id}
                 className={cn(
-                  styles.card,
-                  cls.status === "archived" && styles.archivedCard
+                  "el-cls-card",
+                  cls.status === "archived" && "archived"
                 )}
               >
                 {/* Top row: grade chip + archived label */}
-                <div className={styles.cardTop}>
-                  <span className={styles.classBadge} data-grade={cls.grade}>
+                <div className="el-cls-card-top">
+                  <span className="el-cls-badge" data-grade={cls.grade}>
                     {gradeEmoji[cls.grade]} Lớp {cls.grade}
                   </span>
                   {cls.status === "archived" && (
-                    <span className={styles.archivedBadge}>Đã kết thúc</span>
+                    <span className="el-cls-archived-badge">Đã kết thúc</span>
                   )}
                 </div>
 
                 {/* Body: class info */}
-                <div className={styles.cardBody}>
+                <div className="el-cls-card-body">
                   <div>
-                    <div className={styles.className}>
+                    <div className="el-cls-name">
                       Lớp {cls.grade}/{cls.classNumber}
                     </div>
-                    <div className={styles.classTeacher}>
+                    <div className="el-cls-teacher">
                       <UsersIcon />
                       GVCN: {cls.homeroomTeacher}
                     </div>
                   </div>
 
-                  <div className={styles.metaRow}>
-                    <span className={styles.metaItem}>
+                  <div className="el-cls-meta">
+                    <span className="el-cls-meta-item">
                       <UsersIcon />
                       {cls.studentCount} học sinh
                     </span>
-                    <span className={styles.metaItem}>
+                    <span className="el-cls-meta-item">
                       <BookOpenIcon />
                       {cls.totalQuizzes} bài quiz
                     </span>
@@ -168,25 +167,25 @@ export function ClassesPage() {
                 </div>
 
                 {/* Quiz progress bar */}
-                <div className={styles.quizSection}>
-                  <div className={styles.quizInfo}>
+                <div className="el-cls-quiz-section">
+                  <div className="el-cls-quiz-info">
                     <BookCheckIcon />
                     <span>
                       {cls.completedQuizzes}/{cls.totalQuizzes} đã làm
                     </span>
                   </div>
 
-                  <div className={styles.quizProgress}>
-                    <div className={styles.quizTrack}>
+                  <div className="el-progress">
+                    <div className="el-progress-track">
                       <span
-                        className={styles.quizTrackFill}
+                        className="el-progress-fill"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <span className={styles.quizPct}>{pct}%</span>
+                    <span className="el-progress-pct">{pct}%</span>
                   </div>
 
-                  <div className={styles.score}>
+                  <div className="el-cls-score">
                     <StarIcon />
                     {cls.averageScore}
                   </div>
@@ -196,7 +195,7 @@ export function ClassesPage() {
           })}
         </div>
       ) : (
-        <div className={styles.empty}>
+        <div className="el-cls-empty">
           <UsersIcon />
           <p>Không có lớp nào thuộc khối này.</p>
         </div>
