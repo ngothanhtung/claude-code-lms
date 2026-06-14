@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react"
 import { ChevronLeftIcon, ChevronRightIcon, SendIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { QuizQuestion as QuizQuestionType } from "../types/quiz.types"
-import styles from "./quiz-question.module.css"
 
 const OPTION_LETTERS = ["A", "B", "C", "D"]
 
@@ -52,22 +51,22 @@ export function QuizQuestion({
   )
 
   return (
-    <div className={styles.card}>
-      <div className={styles.header}>
-        <span className={styles.questionNum}>
+    <div className="el-q-card">
+      <div className="el-q-header">
+        <span className="el-q-num">
           Câu <strong>{questionNumber}</strong> / {totalQuestions}
         </span>
       </div>
 
-      <div className={styles.questionContent}>{question.content}</div>
+      <div className="el-q-content">{question.content}</div>
 
-      <div className={styles.options}>
+      <div className="el-q-options">
         {question.options.map((option, idx) => {
-          let optionClass = styles.option
+          let optionClass = "el-q-option"
           if (idx === selectedIndex) {
-            if (feedback === "correct") optionClass = cn(styles.option, styles.optionCorrect)
-            else if (feedback === "wrong") optionClass = cn(styles.option, styles.optionWrong)
-            else optionClass = cn(styles.option, styles.optionSelected)
+            if (feedback === "correct") optionClass = cn("el-q-option", "correct")
+            else if (feedback === "wrong") optionClass = cn("el-q-option", "wrong")
+            else optionClass = cn("el-q-option", "selected")
           }
 
           return (
@@ -78,17 +77,17 @@ export function QuizQuestion({
               onClick={() => handleSelect(idx)}
               disabled={feedback !== null}
             >
-              <span className={styles.optionLetter}>{OPTION_LETTERS[idx]}</span>
+              <span className="el-q-letter">{OPTION_LETTERS[idx]}</span>
               <span>{option.content}</span>
             </button>
           )
         })}
       </div>
 
-      <div className={styles.nav}>
+      <div className="el-q-nav">
         <button
           type="button"
-          className={cn(styles.navBtn, styles.navBtnPrev, isFirst && styles.navBtnDisabled)}
+          className={cn("el-q-nav-btn", "prev", isFirst && "disabled")}
           onClick={onPrev}
           disabled={isFirst}
         >
@@ -99,7 +98,7 @@ export function QuizQuestion({
         {isLast && allAnswered ? (
           <button
             type="button"
-            className={cn(styles.navBtn, styles.navBtnSubmit)}
+            className={cn("el-q-nav-btn", "submit")}
             onClick={onSubmit}
           >
             Nộp bài
@@ -108,7 +107,7 @@ export function QuizQuestion({
         ) : (
           <button
             type="button"
-            className={cn(styles.navBtn, styles.navBtnNext)}
+            className={cn("el-q-nav-btn", "next")}
             onClick={onNext}
           >
             Câu tiếp

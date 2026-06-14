@@ -1,7 +1,6 @@
 "use client"
 
 import type { LeaderboardEntry } from "../types/quiz.types"
-import styles from "./quiz-result.module.css"
 
 const MEDALS = ["🥇", "🥈", "🥉"]
 
@@ -33,37 +32,37 @@ export function QuizResult({
   const medal = rank <= 3 ? MEDALS[rank - 1] : null
 
   return (
-    <div className={styles.container}>
-      <div className={styles.medal}>{medal || "🎯"}</div>
+    <div className="el-qr-container">
+      <div className="el-qr-medal">{medal || "🎯"}</div>
 
-      <div className={styles.rankTitle}>Xếp hạng #{rank}</div>
-      <div className={styles.groupLabel}>{groupName}</div>
+      <div className="el-qr-rank">Xếp hạng #{rank}</div>
+      <div className="el-qr-group">{groupName}</div>
 
-      <div className={styles.stats}>
-        <div className={styles.statItem}>
-          <div className={styles.statValue}>{score}</div>
-          <div className={styles.statLabel}>điểm</div>
+      <div className="el-qr-stats">
+        <div className="el-qr-stat">
+          <div className="el-qr-stat-value">{score}</div>
+          <div className="el-qr-stat-label">điểm</div>
         </div>
-        <div className={styles.statItem}>
-          <div className={styles.statValue}>{correctCount}/10</div>
-          <div className={styles.statLabel}>đúng</div>
+        <div className="el-qr-stat">
+          <div className="el-qr-stat-value">{correctCount}/10</div>
+          <div className="el-qr-stat-label">đúng</div>
         </div>
-        <div className={styles.statItem}>
-          <div className={styles.statValue}>{formatTime(totalTime)}</div>
-          <div className={styles.statLabel}>thời gian</div>
+        <div className="el-qr-stat">
+          <div className="el-qr-stat-value">{formatTime(totalTime)}</div>
+          <div className="el-qr-stat-label">thời gian</div>
         </div>
       </div>
 
-      <div className={styles.finalLeaderboard}>
-        <div className={styles.finalTitle}>🏆 Bảng xếp hạng cuối cùng</div>
-        <div className={styles.finalList}>
+      <div className="el-qr-board">
+        <div className="el-qr-board-title">🏆 Bảng xếp hạng cuối cùng</div>
+        <div className="el-qr-board-list">
           {leaderboard.slice(0, 5).map((entry) => {
             const m = entry.rank <= 3 ? MEDALS[entry.rank - 1] : `${entry.rank}.`
             const isCurrent = entry.groupId === groupName
             return (
               <div key={entry.groupId}>
                 {m}{" "}
-                <span className={isCurrent ? styles.finalHighlight : undefined}>
+                <span className={isCurrent ? "el-qr-board-highlight" : undefined}>
                   {entry.groupName}
                 </span>{" "}
                 — {entry.score} điểm
@@ -75,7 +74,7 @@ export function QuizResult({
 
       <button
         type="button"
-        className={styles.backBtn}
+        className="el-qr-back"
         onClick={onBackToGroups}
       >
         Về danh sách nhóm

@@ -12,7 +12,6 @@ import { useLeaderboard } from "../hooks/use-leaderboard"
 import { useQuizTimer } from "../hooks/use-quiz-timer"
 import { MOCK_QUIZ_ID, QUIZ_DURATION_SECONDS } from "../mock/quiz.mock"
 import type { QuizStatus } from "../types/quiz.types"
-import styles from "./quiz-page.module.css"
 
 interface QuizPageProps {
   groupId?: string
@@ -96,9 +95,9 @@ export function QuizPage({ groupId = "g-1-1-01", classId = "1-1" }: QuizPageProp
 
   if (status === "loading" || !currentQuestion) {
     return (
-      <div className={styles.pageWrap}>
-        <div className={styles.loading}>
-          <div className={styles.spinner} />
+      <div className="el-quiz-page">
+        <div className="el-loading">
+          <div className="el-spinner" />
           <span>Đang tải câu hỏi...</span>
         </div>
       </div>
@@ -108,7 +107,7 @@ export function QuizPage({ groupId = "g-1-1-01", classId = "1-1" }: QuizPageProp
   if (status === "result") {
     const currentGroup = leaderboard.find((e) => e.groupId === groupId)
     return (
-      <div className={styles.pageWrap}>
+      <div className="el-quiz-page">
         <QuizResult
           rank={currentRank}
           score={currentGroup?.score ?? 0}
@@ -127,18 +126,18 @@ export function QuizPage({ groupId = "g-1-1-01", classId = "1-1" }: QuizPageProp
   const answeredCount = answeredMap.size
 
   return (
-    <div className={styles.pageWrap}>
-      <div className={styles.quizArea}>
-        <div className={styles.quizHeader}>
-          <span style={{ fontSize: 14, color: "hsl(var(--muted-foreground))" }}>
+    <div className="el-quiz-page">
+      <div className="el-quiz-area">
+        <div className="el-quiz-header">
+          <span style={{ fontSize: 14, color: "hsl(var(--el-muted-foreground))" }}>
             Nhóm {groupId.split("-").pop()}
           </span>
           <QuizTimer timeRemaining={timeRemaining} isWarning={isWarning} />
         </div>
 
-        <div className={styles.progressBar}>
+        <div className="el-quiz-progress">
           <div
-            className={styles.progressFill}
+            className="el-quiz-progress-fill"
             style={{ width: `${((currentIdx + 1) / questions.length) * 100}%` }}
           />
         </div>

@@ -2,7 +2,6 @@
 
 import type { LeaderboardEntry } from "../types/quiz.types"
 import { cn } from "@/lib/utils"
-import styles from "./quiz-leaderboard.module.css"
 
 const MEDALS = ["🥇", "🥈", "🥉"]
 
@@ -16,12 +15,12 @@ export function QuizLeaderboard({
   currentGroupId,
 }: QuizLeaderboardProps) {
   return (
-    <div className={styles.sidebar}>
-      <div className={styles.title}>
+    <div className="el-lb-sidebar">
+      <div className="el-lb-title">
         🏆 Bảng xếp hạng
       </div>
 
-      <div className={styles.list}>
+      <div className="el-lb-list">
         {leaderboard.map((entry) => {
           const isCurrent = entry.groupId === currentGroupId
           const medal = entry.rank <= 3 ? MEDALS[entry.rank - 1] : null
@@ -30,33 +29,33 @@ export function QuizLeaderboard({
             <div
               key={entry.groupId}
               className={cn(
-                styles.entry,
-                entry.rank === 1 && styles.entryGold,
-                entry.rank === 2 && !isCurrent && styles.entrySilver,
-                isCurrent && styles.entryCurrent
+                "el-lb-entry",
+                entry.rank === 1 && "gold",
+                entry.rank === 2 && !isCurrent && "silver",
+                isCurrent && "current"
               )}
             >
-              <span className={styles.rank}>
-                {medal || <span className={styles.rankNum}>{entry.rank}</span>}
+              <span className="el-lb-rank">
+                {medal || <span className="el-lb-rank-num">{entry.rank}</span>}
               </span>
-              <span className={styles.groupName}>
+              <span className="el-lb-group">
                 {entry.groupName}
                 {isCurrent && " (bạn)"}
               </span>
-              <span className={styles.score}>{entry.score}</span>
+              <span className="el-lb-score">{entry.score}</span>
             </div>
           )
         })}
 
         {leaderboard.length === 0 && (
-          <div style={{ textAlign: "center", padding: "16px 0", fontSize: 13, color: "hsl(var(--muted-foreground))" }}>
+          <div style={{ textAlign: "center", padding: "16px 0", fontSize: 13, color: "hsl(var(--el-muted-foreground))" }}>
             Chưa có dữ liệu
           </div>
         )}
       </div>
 
-      <div className={styles.footer}>
-        <span className={styles.liveIndicator} />
+      <div className="el-lb-footer">
+        <span className="el-lb-live" />
         Cập nhật realtime
       </div>
     </div>
