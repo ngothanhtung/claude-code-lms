@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils"
 import { allClasses } from "@/features/elementary/classes/mock"
 import { allGroups, getSummary } from "@/features/elementary/groups/mock"
 import type { GradeLevel, GroupStatus } from "@/features/elementary/groups/mock"
-import styles from "./groups-page.module.css"
 
 /* ─── Grade emoji helper ─── */
 const gradeEmoji: Record<GradeLevel, string> = {
@@ -61,20 +60,19 @@ export function GroupsPage({ classId }: { classId?: string }) {
   const pageSummary = useMemo(() => getSummary(filtered), [filtered])
 
   return (
-    <div className={styles.pageWrap}>
+    <div className="el-grp-page">
       {/* ─── Header ─── */}
-      <div className={styles.header}>
-        <div className={styles.titleGroup}>
+      <div className="el-grp-header">
+        <div>
           {selectedClass && (
-            <div className={styles.breadcrumb}>
+            <div className="el-grp-breadcrumb">
               <Link
                 href="/elementary-teacher/classes"
-                className={styles.breadcrumbLink}
               >
                 Lớp học
               </Link>
-              <ChevronRightIcon className={styles.breadcrumbSep} />
-              <span className={styles.breadcrumbCurrent}>
+              <ChevronRightIcon className="el-grp-breadcrumb-sep" />
+              <span className="el-grp-breadcrumb-current">
                 Lớp {selectedClass.grade}/{selectedClass.classNumber}
               </span>
             </div>
@@ -88,53 +86,53 @@ export function GroupsPage({ classId }: { classId?: string }) {
         </div>
 
         {/* Stats chips */}
-        <div className={styles.stats}>
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="indigo">
+        <div className="el-grp-stats">
+          <div className="el-grp-stat">
+            <div className="el-grp-stat-icon" data-variant="indigo">
               <UsersIcon />
             </div>
             <div>
-              <div className={styles.statNum}>{pageSummary.totalGroups}</div>
-              <div className={styles.statLbl}>Nhóm</div>
+              <div className="el-grp-stat-num">{pageSummary.totalGroups}</div>
+              <div className="el-grp-stat-lbl">Nhóm</div>
             </div>
           </div>
 
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="teal">
+          <div className="el-grp-stat">
+            <div className="el-grp-stat-icon" data-variant="teal">
               <UserPlusIcon />
             </div>
             <div>
-              <div className={styles.statNum}>{pageSummary.totalStudents}</div>
-              <div className={styles.statLbl}>Học sinh</div>
+              <div className="el-grp-stat-num">{pageSummary.totalStudents}</div>
+              <div className="el-grp-stat-lbl">Học sinh</div>
             </div>
           </div>
 
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="amber">
+          <div className="el-grp-stat">
+            <div className="el-grp-stat-icon" data-variant="amber">
               <LinkIcon />
             </div>
             <div>
-              <div className={styles.statNum}>{pageSummary.activeGroups}</div>
-              <div className={styles.statLbl}>Đang hoạt động</div>
+              <div className="el-grp-stat-num">{pageSummary.activeGroups}</div>
+              <div className="el-grp-stat-lbl">Đang hoạt động</div>
             </div>
           </div>
 
-          <div className={styles.stat}>
-            <div className={styles.statIcon} data-variant="sky">
+          <div className="el-grp-stat">
+            <div className="el-grp-stat-icon" data-variant="sky">
               <StarIcon />
             </div>
             <div>
-              <div className={styles.statNum}>{pageSummary.avgScore}</div>
-              <div className={styles.statLbl}>Điểm TB</div>
+              <div className="el-grp-stat-num">{pageSummary.avgScore}</div>
+              <div className="el-grp-stat-lbl">Điểm TB</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* ─── Filters row ─── */}
-      <div className={styles.filters}>
+      <div className="el-grp-filters">
         {/* Status toggle */}
-        <div className={styles.statusTabs}>
+        <div className="el-grp-status-tabs">
           {statusTabs.map((tab) => {
             const scopeGroups = classId
               ? allGroups.filter((g) => g.classId === classId)
@@ -148,13 +146,13 @@ export function GroupsPage({ classId }: { classId?: string }) {
                 key={tab.value}
                 type="button"
                 className={cn(
-                  styles.statusTab,
-                  activeStatus === tab.value && styles.statusTabActive
+                  "el-grp-status-tab",
+                  activeStatus === tab.value && "active"
                 )}
                 onClick={() => setActiveStatus(tab.value)}
               >
                 {tab.label}
-                <span className={styles.statusTabCount}>{count}</span>
+                <span className="el-grp-status-tab-count">{count}</span>
               </button>
             )
           })}
@@ -163,7 +161,7 @@ export function GroupsPage({ classId }: { classId?: string }) {
 
       {/* ─── Groups grid ─── */}
       {filtered.length > 0 ? (
-        <div className={styles.grid}>
+        <div className="el-grp-grid">
           {filtered.map((group) => {
             const pct =
               group.status === "active" && group.totalQuizzes > 0
@@ -173,18 +171,16 @@ export function GroupsPage({ classId }: { classId?: string }) {
                 : null
 
             return (
-              <div key={group.id} className={styles.card}>
+              <div key={group.id} className="el-grp-card">
                 {/* Top: grade + status */}
-                <div className={styles.cardTop}>
-                  <span className={styles.gradeBadge} data-grade={group.grade}>
+                <div className="el-grp-card-top">
+                  <span className="el-scls-grade" data-grade={group.grade}>
                     {gradeEmoji[group.grade]} {group.className}
                   </span>
                   <span
                     className={cn(
-                      styles.statusBadge,
-                      group.status === "active"
-                        ? styles.statusBadgeActive
-                        : styles.statusBadgeWaiting
+                      "el-grp-status-badge",
+                      group.status === "active" ? "active" : "waiting"
                     )}
                   >
                     {group.status === "active" ? "Đang hoạt động" : "Đang chờ"}
@@ -192,28 +188,28 @@ export function GroupsPage({ classId }: { classId?: string }) {
                 </div>
 
                 {/* Members */}
-                <div className={styles.cardBody}>
-                  <div className={styles.className}>Nhóm {group.id.split("-").pop()}</div>
+                <div className="el-grp-card-body">
+                  <div className="el-grp-class-name">Nhóm {group.id.split("-").pop()}</div>
 
-                  <div className={styles.members}>
+                  <div className="el-grp-members">
                     {group.members.map((m, i) => (
-                      <div key={m.studentId} className={styles.member}>
-                        <div className={styles.memberAvatar} data-idx={i}>
+                      <div key={m.studentId} className="el-grp-member">
+                        <div className="el-grp-member-avatar" data-idx={i}>
                           {initials(m.name)}
                         </div>
                         <div>
-                          <div className={styles.memberName}>{m.name}</div>
-                          <div className={styles.memberId}>{m.studentId}</div>
+                          <div className="el-grp-member-name">{m.name}</div>
+                          <div className="el-grp-member-id">{m.studentId}</div>
                         </div>
                       </div>
                     ))}
 
                     {group.status === "waiting" && group.members.length === 1 && (
-                      <div className={styles.memberEmptySlot}>
-                        <div className={styles.memberEmptyAvatar}>
+                      <div className="el-grp-member-empty">
+                        <div className="el-grp-member-empty-avatar">
                           <PlusIcon />
                         </div>
-                        <span className={styles.memberEmptyLabel}>Chờ ghép đôi</span>
+                        <span className="el-grp-member-empty-label">Chờ ghép đôi</span>
                       </div>
                     )}
                   </div>
@@ -221,38 +217,38 @@ export function GroupsPage({ classId }: { classId?: string }) {
 
                 {/* Quiz info */}
                 {group.status === "active" ? (
-                  <div className={styles.quizSection}>
-                    <div className={styles.quizLeft}>
+                  <div className="el-grp-quiz-section">
+                    <div className="el-grp-quiz-left">
                       <BookCheckIcon />
                       <span>
                         {group.completedQuizzes}/{group.totalQuizzes} đã làm
                       </span>
                     </div>
-                    <div className={styles.quizRight}>
+                    <div className="el-grp-quiz-right">
                       {pct !== null && (
-                        <div className={styles.quizProgress}>
-                          <div className={styles.quizTrack}>
+                        <div className="el-grp-quiz-progress">
+                          <div className="el-grp-quiz-track">
                             <span
-                              className={styles.quizTrackFill}
+                              className="el-grp-quiz-track-fill"
                               style={{ width: `${pct}%` }}
                             />
                           </div>
-                          <span className={styles.quizPct}>{pct}%</span>
+                          <span className="el-grp-quiz-pct">{pct}%</span>
                         </div>
                       )}
                       {group.averageScore !== "—" ? (
-                        <div className={styles.score}>
+                        <div className="el-grp-score">
                           <StarIcon />
                           {group.averageScore}
                         </div>
                       ) : (
-                        <span className={styles.scoreEmpty}>—</span>
+                        <span className="el-grp-score-empty">—</span>
                       )}
                     </div>
                   </div>
                 ) : (
-                  <div className={styles.quizSection}>
-                    <div className={styles.quizLeft}>
+                  <div className="el-grp-quiz-section">
+                    <div className="el-grp-quiz-left">
                       <PlusIcon />
                       <span style={{ fontStyle: "italic" }}>Chưa có bài quiz</span>
                     </div>
@@ -263,7 +259,7 @@ export function GroupsPage({ classId }: { classId?: string }) {
           })}
         </div>
       ) : (
-        <div className={styles.empty}>
+        <div className="el-grp-empty">
           <UsersIcon />
           <p>Không tìm thấy nhóm phù hợp.</p>
         </div>
