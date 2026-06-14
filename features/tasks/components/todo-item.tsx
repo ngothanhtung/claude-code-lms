@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { BadgeStatus } from "@/components/badge-status"
+import { IconTint } from "@/components/icon-tint"
 
 type BadgeVariant = "destructive" | "warning" | "info" | "success"
 
@@ -14,14 +15,6 @@ interface TodoItemProps {
   actionVariant?: "primary" | "default"
 }
 
-const tintToIconClass: Record<TodoItemProps["iconTint"], string> = {
-  red: "bg-[oklch(0.96_0.03_27)] text-[oklch(0.55_0.22_27)]",
-  amber: "bg-[oklch(0.96_0.05_75)] text-[oklch(0.70_0.18_75)]",
-  blue: "bg-[oklch(0.96_0.04_250)] text-[oklch(0.60_0.18_250)]",
-  indigo: "bg-[oklch(0.96_0.04_277)] text-[oklch(0.41_0.17_277)]",
-  green: "bg-[oklch(0.96_0.03_152)] text-[oklch(0.63_0.19_152)]",
-}
-
 export function TodoItem({
   icon,
   iconTint,
@@ -34,11 +27,9 @@ export function TodoItem({
 }: TodoItemProps) {
   return (
     <div className="flex items-center gap-3.5 border-t border-border py-[13px] first:border-t-0 first:pt-0.5">
-      <div
-        className={`flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[11px] ${tintToIconClass[iconTint]}`}
-      >
+      <IconTint variant={iconTint} className="h-[36px] w-[36px] rounded-[11px]">
         {icon}
-      </div>
+      </IconTint>
       <div className="min-w-0 flex-1">
         <div className="text-[13.5px] font-semibold">{title}</div>
         <div className="text-[12.5px] text-muted-foreground">{subtitle}</div>

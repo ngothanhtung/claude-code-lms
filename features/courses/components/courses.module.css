@@ -64,8 +64,13 @@
 }
 
 .courseTop {
+  --course-top-bg: hsl(var(--primary-muted));
+  --course-top-fg: hsl(var(--primary));
+  --course-top-fg-soft: hsl(var(--primary) / 0.2);
+
   padding: 14px 14px 16px;
-  color: #fff;
+  color: var(--course-top-fg);
+  background: var(--course-top-bg);
   position: relative;
   min-height: 116px;
   display: flex;
@@ -73,27 +78,39 @@
 }
 
 .violet {
-  background: linear-gradient(155deg, hsl(262 83% 62%), hsl(262 83% 50%));
+  --course-top-bg: hsl(var(--primary-muted));
+  --course-top-fg: hsl(var(--primary));
+  --course-top-fg-soft: hsl(var(--primary) / 0.2);
 }
 
 .green {
-  background: linear-gradient(155deg, hsl(142 65% 48%), hsl(142 71% 38%));
+  --course-top-bg: hsl(var(--success-muted));
+  --course-top-fg: hsl(var(--success));
+  --course-top-fg-soft: hsl(var(--success) / 0.2);
 }
 
 .blue {
-  background: linear-gradient(155deg, hsl(221 83% 58%), hsl(221 83% 46%));
+  --course-top-bg: hsl(var(--info-muted));
+  --course-top-fg: hsl(var(--info));
+  --course-top-fg-soft: hsl(var(--info) / 0.2);
 }
 
 .amber {
-  background: linear-gradient(155deg, hsl(36 95% 56%), hsl(28 92% 50%));
+  --course-top-bg: hsl(var(--warning-muted));
+  --course-top-fg: hsl(var(--warning));
+  --course-top-fg-soft: hsl(var(--warning) / 0.2);
 }
 
 .teal {
-  background: linear-gradient(155deg, hsl(172 60% 44%), hsl(174 66% 34%));
+  --course-top-bg: hsl(var(--course-teal) / 0.18);
+  --course-top-fg: hsl(var(--course-teal));
+  --course-top-fg-soft: hsl(var(--course-teal) / 0.22);
 }
 
 .rust {
-  background: linear-gradient(155deg, hsl(16 60% 60%), hsl(14 52% 48%));
+  --course-top-bg: hsl(var(--course-rust) / 0.18);
+  --course-top-fg: hsl(var(--course-rust));
+  --course-top-fg-soft: hsl(var(--course-rust) / 0.22);
 }
 
 .courseName {
@@ -137,7 +154,7 @@
 .courseTrack {
   height: 6px;
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--course-top-fg-soft);
   overflow: hidden;
 }
 
@@ -145,7 +162,7 @@
   display: block;
   height: 100%;
   border-radius: 99px;
-  background: #fff;
+  background: var(--course-top-fg);
 }
 
 .courseFoot {

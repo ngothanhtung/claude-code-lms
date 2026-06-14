@@ -156,11 +156,23 @@
 
   /* Course Category Colors */
   --course-violet: 262 83% 58%;
+  --course-violet-from: 262 83% 62%;
+  --course-violet-to: 262 83% 50%;
   --course-green: 142 71% 45%;
+  --course-green-from: 142 65% 48%;
+  --course-green-to: 142 71% 38%;
   --course-blue: 221 83% 53%;
+  --course-blue-from: 221 83% 58%;
+  --course-blue-to: 221 83% 46%;
   --course-amber: 32 95% 52%;
+  --course-amber-from: 36 95% 56%;
+  --course-amber-to: 28 92% 50%;
   --course-teal: 172 66% 40%;
+  --course-teal-from: 172 60% 44%;
+  --course-teal-to: 174 66% 34%;
   --course-rust: 14 52% 48%;
+  --course-rust-from: 16 60% 60%;
+  --course-rust-to: 14 52% 48%;
 }
 
 .dark {
@@ -230,12 +242,24 @@
   --shadow-sm: 0 1px 2px 0 hsl(222 47% 2% / 0.3);
 
   /* Course Category Colors — slightly lighter for dark bg */
-  --course-violet: 262 75% 68%;
-  --course-green: 142 60% 50%;
-  --course-blue: 221 75% 63%;
-  --course-amber: 32 85% 62%;
-  --course-teal: 172 55% 50%;
-  --course-rust: 14 55% 62%;
+  --course-violet: 262 62% 56%;
+  --course-violet-from: 262 60% 54%;
+  --course-violet-to: 262 58% 42%;
+  --course-green: 142 48% 44%;
+  --course-green-from: 142 46% 42%;
+  --course-green-to: 142 50% 32%;
+  --course-blue: 221 62% 52%;
+  --course-blue-from: 221 60% 50%;
+  --course-blue-to: 221 60% 38%;
+  --course-amber: 32 72% 52%;
+  --course-amber-from: 36 68% 46%;
+  --course-amber-to: 28 64% 36%;
+  --course-teal: 172 44% 44%;
+  --course-teal-from: 172 42% 40%;
+  --course-teal-to: 174 46% 30%;
+  --course-rust: 14 44% 52%;
+  --course-rust-from: 16 42% 50%;
+  --course-rust-to: 14 38% 40%;
 }
 
 @layer base {
@@ -488,6 +512,9 @@ html {
   color: hsl(var(--primary));
   border-color: hsl(243 75% 88%);
   font-weight: 600;
+}
+.dark .nav-item.active {
+  border-color: hsl(243 40% 32%);
 }
 .nav-item.active::before {
   content: "";
