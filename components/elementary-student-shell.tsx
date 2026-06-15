@@ -21,8 +21,11 @@ const navItems = [
   { href: "/elementary-student/results", label: "Kết quả", icon: StarIcon },
 ]
 
+const fullRoutes = ["/elementary-student/quiz"]
+
 export function ElementaryStudentShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
+  const isFullWidth = fullRoutes.some((r) => pathname === r || pathname.startsWith(r + "?"))
 
   return (
     <div className="elementary-app">
@@ -67,7 +70,7 @@ export function ElementaryStudentShell({ children }: { children: ReactNode }) {
         </aside>
 
         <div className="el-main">
-          <main className="el-content">{children}</main>
+          <main className={cn("el-content", isFullWidth && "el-content--full")}>{children}</main>
         </div>
       </div>
     </div>
