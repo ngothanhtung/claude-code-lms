@@ -6,6 +6,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore"
 import { db } from "@/lib/firebase/firestore"
+import { allGroups } from "@/features/elementary/groups/mock"
 
 /* ───────────────────────────────────────────────────
    Mock question data — Elementary English Quiz
@@ -114,8 +115,6 @@ const MOCK_QUESTIONS = [
   },
 ]
 
-const MOCK_GROUPS = ["g-1-1-01", "g-1-1-02", "g-1-1-03", "g-1-1-04"]
-
 /* ───────────────────────────────────────────────────
    Seed questions into Firestore `questions` collection
    ─────────────────────────────────────────────────── */
@@ -179,7 +178,19 @@ export async function generateMockAnswers(
   let count = 0
   const now = Date.now()
 
-  const groups = MOCK_GROUPS.filter((g) => g !== excludeGroupId)
+  const currentGroup = excludeGroupId
+    ? allGroups.find((group) => group.id === excludeGroupId)
+    : undefined
+  const groups = allGroups
+    .filter((group) => {
+      if (group.id === excludeGroupId) {
+        return false
+      }
+
+      return currentGroup ? group.classId === currentGroup.classId : true
+    })
+    .map((group) => group.id)
+    .slice(0, 8)
 
   for (const [groupIdx, groupId] of groups.entries()) {
     // Each group starts slightly offset for time tiebreak
@@ -198,7 +209,8 @@ export async function generateMockAnswers(
           .map((o, i) => ({ ...o, idx: i }))
           .filter((o) => !o.isCorrect)
           .map((o) => o.idx)
-        selectedIndex = wrongIndices[Math.floor(Math.random() * wrongIndices.length)]
+        selectedIndex =
+          wrongIndices[Math.floor(Math.random() * wrongIndices.length)]
       }
 
       const ref = doc(collection(db, "answers"))

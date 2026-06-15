@@ -3,12 +3,9 @@
 import { useMemo } from "react"
 import type { QuizAnswer, LeaderboardEntry } from "../types/quiz.types"
 
-const GROUP_NAMES: Record<string, string> = {
-  "g-1-1-01": "Nhóm 1",
-  "g-1-1-02": "Nhóm 2",
-  "g-1-1-03": "Nhóm 3",
-  "g-1-1-04": "Nhóm 4",
-  "g-1-1-05": "Nhóm 5",
+function getGroupName(groupId: string) {
+  const groupNumber = groupId.split("-").pop()
+  return groupNumber ? `Nhóm ${groupNumber}` : groupId
 }
 
 interface UseLeaderboardReturn {
@@ -28,10 +25,10 @@ export function useLeaderboard(
     const latestByGroup = new Map<string, Map<string, QuizAnswer>>()
 
     const sorted = [...allAnswers]
-      .filter((a) => a.answeredAt && typeof a.answeredAt.toMillis === "function")
-      .sort(
-        (a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis()
+      .filter(
+        (a) => a.answeredAt && typeof a.answeredAt.toMillis === "function"
       )
+      .sort((a, b) => a.answeredAt.toMillis() - b.answeredAt.toMillis())
 
     for (const answer of sorted) {
       if (!latestByGroup.has(answer.groupId)) {
@@ -58,7 +55,7 @@ export function useLeaderboard(
 
       entries.push({
         groupId,
-        groupName: GROUP_NAMES[groupId] || groupId,
+        groupName: getGroupName(groupId),
         score,
         correctCount,
         totalTime,

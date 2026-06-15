@@ -9,9 +9,11 @@ interface QuizResultProps {
   score: number
   correctCount: number
   totalTime: number
+  groupId: string
   groupName: string
   leaderboard: LeaderboardEntry[]
   onBackToGroups: () => void
+  onChangeGroup: () => void
 }
 
 function formatTime(seconds: number): string {
@@ -25,9 +27,11 @@ export function QuizResult({
   score,
   correctCount,
   totalTime,
+  groupId,
   groupName,
   leaderboard,
   onBackToGroups,
+  onChangeGroup,
 }: QuizResultProps) {
   const medal = rank <= 3 ? MEDALS[rank - 1] : null
 
@@ -57,12 +61,15 @@ export function QuizResult({
         <div className="el-qr-board-title">🏆 Bảng xếp hạng cuối cùng</div>
         <div className="el-qr-board-list">
           {leaderboard.slice(0, 5).map((entry) => {
-            const m = entry.rank <= 3 ? MEDALS[entry.rank - 1] : `${entry.rank}.`
-            const isCurrent = entry.groupId === groupName
+            const m =
+              entry.rank <= 3 ? MEDALS[entry.rank - 1] : `${entry.rank}.`
+            const isCurrent = entry.groupId === groupId
             return (
               <div key={entry.groupId}>
                 {m}{" "}
-                <span className={isCurrent ? "el-qr-board-highlight" : undefined}>
+                <span
+                  className={isCurrent ? "el-qr-board-highlight" : undefined}
+                >
                   {entry.groupName}
                 </span>{" "}
                 — {entry.score} điểm
@@ -72,12 +79,11 @@ export function QuizResult({
         </div>
       </div>
 
-      <button
-        type="button"
-        className="el-qr-back"
-        onClick={onBackToGroups}
-      >
+      <button type="button" className="el-qr-back" onClick={onBackToGroups}>
         Về danh sách nhóm
+      </button>
+      <button type="button" className="el-qr-change" onClick={onChangeGroup}>
+        Chọn lại lớp / nhóm
       </button>
     </div>
   )

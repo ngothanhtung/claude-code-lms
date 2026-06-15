@@ -8,6 +8,7 @@ import {
   LinkIcon,
   PlusIcon,
   StarIcon,
+  TrophyIcon,
   UserPlusIcon,
   UsersIcon,
 } from "lucide-react"
@@ -28,11 +29,15 @@ const gradeEmoji: Record<GradeLevel, string> = {
 /* ─── Get initials from name ─── */
 function initials(name: string) {
   const parts = name.split(" ").filter(Boolean)
-  return parts.slice(-2).map((p) => p[0]).join("")
+  return parts
+    .slice(-2)
+    .map((p) => p[0])
+    .join("")
 }
 
 /* ─── Status tabs config ─── */
 type StatusFilter = "all" | GroupStatus
+type ViewMode = "list" | "lesson-ranking" | "overall-ranking"
 
 const statusTabs: { value: StatusFilter; label: string }[] = [
   { value: "all", label: "Tất cả" },
@@ -42,6 +47,7 @@ const statusTabs: { value: StatusFilter; label: string }[] = [
 
 export function GroupsPage({ classId }: { classId?: string }) {
   const [activeStatus, setActiveStatus] = useState<StatusFilter>("all")
+  const [viewMode, setViewMode] = useState<ViewMode>("list")
 
   const selectedClass = classId
     ? allClasses.find((c) => c.id === classId)
@@ -59,6 +65,43 @@ export function GroupsPage({ classId }: { classId?: string }) {
 
   const pageSummary = useMemo(() => getSummary(filtered), [filtered])
 
+  const rankedGroups = useMemo(() => {
+    const activeGroups = filtered.filter((group) => group.status === "active")
+
+    return activeGroups
+      .map((group) => {
+        const completionPct =
+          group.totalQuizzes > 0
+            ? Math.round((group.completedQuizzes / group.totalQuizzes) * 100)
+            : 0
+        const score =
+          group.averageScore === "—" ? 0 : parseFloat(group.averageScore)
+
+        return {
+          ...group,
+          completionPct,
+          score,
+        }
+      })
+      .sort((a, b) => {
+        if (viewMode === "lesson-ranking") {
+          if (b.lessonScore !== a.lessonScore) {
+            return b.lessonScore - a.lessonScore
+          }
+
+          return b.lessonCompletionPct - a.lessonCompletionPct
+        }
+
+        if (b.overallPoints !== a.overallPoints) {
+          return b.overallPoints - a.overallPoints
+        }
+
+        return b.score - a.score
+      })
+  }, [filtered, viewMode])
+
+  const isRankingMode = viewMode !== "list"
+
   return (
     <div className="el-grp-page">
       {/* ─── Header ─── */}
@@ -66,18 +109,18 @@ export function GroupsPage({ classId }: { classId?: string }) {
         <div>
           {selectedClass && (
             <div className="el-grp-breadcrumb">
-              <Link
-                href="/elementary-teacher/classes"
-              >
-                Lớp học
-              </Link>
+              <Link href="/elementary-teacher/classes">Lớp học</Link>
               <ChevronRightIcon className="el-grp-breadcrumb-sep" />
               <span className="el-grp-breadcrumb-current">
                 Lớp {selectedClass.grade}/{selectedClass.classNumber}
               </span>
             </div>
           )}
-          <h1>{selectedClass ? `Nhóm — Lớp ${selectedClass.grade}/${selectedClass.classNumber}` : "Nhóm học"}</h1>
+          <h1>
+            {selectedClass
+              ? `Nhóm — Lớp ${selectedClass.grade}/${selectedClass.classNumber}`
+              : "Nhóm học"}
+          </h1>
           <p>
             {selectedClass
               ? `GVCN: ${selectedClass.homeroomTeacher} · ${selectedClass.studentCount} học sinh`
@@ -157,10 +200,131 @@ export function GroupsPage({ classId }: { classId?: string }) {
             )
           })}
         </div>
+
+        <div className="el-grp-view-tabs" aria-label="Chế độ xem nhóm">
+          <button
+            type="button"
+            className={cn("el-grp-view-tab", viewMode === "list" && "active")}
+            onClick={() => setViewMode("list")}
+          >
+            <UsersIcon />
+            Danh sách
+          </button>
+          <button
+            type="button"
+            className={cn(
+              "el-grp-view-tab",
+              viewMode === "lesson-ranking" && "active"
+            )}
+            onClick={() => setViewMode("lesson-ranking")}
+          >
+            <BookCheckIcon />
+            Xếp hạng bài học
+          </button>
+          <button
+            type="button"
+            className={cn(
+              "el-grp-view-tab",
+              viewMode === "overall-ranking" && "active"
+            )}
+            onClick={() => setViewMode("overall-ranking")}
+          >
+            <TrophyIcon />
+            Xếp hạng tổng hợp
+          </button>
+        </div>
       </div>
 
       {/* ─── Groups grid ─── */}
-      {filtered.length > 0 ? (
+      {isRankingMode ? (
+        rankedGroups.length > 0 ? (
+          <div className="el-grp-ranking">
+            {rankedGroups.map((group, index) => (
+              <div
+                key={group.id}
+                className={cn(
+                  "el-grp-rank-card",
+                  index === 0 && "top-1",
+                  index === 1 && "top-2",
+                  index === 2 && "top-3"
+                )}
+              >
+                <div className="el-grp-rank-medal">
+                  {index < 3 ? ["1", "2", "3"][index] : index + 1}
+                </div>
+
+                <div className="el-grp-rank-main">
+                  <div className="el-grp-rank-title">
+                    <span>Nhóm {group.id.split("-").pop()}</span>
+                    <span className="el-scls-grade" data-grade={group.grade}>
+                      {gradeEmoji[group.grade]} {group.className}
+                    </span>
+                  </div>
+
+                  <div className="el-grp-rank-members">
+                    {group.members.map((member, memberIndex) => (
+                      <span
+                        key={member.studentId}
+                        className="el-grp-rank-member"
+                      >
+                        <span
+                          className="el-grp-member-avatar"
+                          data-idx={memberIndex}
+                        >
+                          {initials(member.name)}
+                        </span>
+                        {member.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="el-grp-rank-metrics">
+                  <div className="el-grp-rank-score">
+                    {viewMode === "lesson-ranking" ? (
+                      <BookCheckIcon />
+                    ) : (
+                      <StarIcon />
+                    )}
+                    {viewMode === "lesson-ranking"
+                      ? group.lessonScore.toFixed(1)
+                      : group.averageScore}
+                  </div>
+                  <div className="el-grp-rank-progress">
+                    <span>
+                      {viewMode === "lesson-ranking"
+                        ? `${group.currentLesson} · ${group.lessonCompletionPct}%`
+                        : `${group.completionPct}% hoàn thành`}
+                    </span>
+                    <div className="el-grp-quiz-track">
+                      <span
+                        className="el-grp-quiz-track-fill"
+                        style={{
+                          width: `${
+                            viewMode === "lesson-ranking"
+                              ? group.lessonCompletionPct
+                              : group.completionPct
+                          }%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="el-grp-rank-points">
+                    {viewMode === "lesson-ranking"
+                      ? `${group.lessonCompletionPct}% bài học`
+                      : `${group.overallPoints} điểm tổng hợp`}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="el-grp-empty">
+            <TrophyIcon />
+            <p>Chưa có nhóm đủ dữ liệu để xếp hạng.</p>
+          </div>
+        )
+      ) : filtered.length > 0 ? (
         <div className="el-grp-grid">
           {filtered.map((group) => {
             const pct =
@@ -189,7 +353,9 @@ export function GroupsPage({ classId }: { classId?: string }) {
 
                 {/* Members */}
                 <div className="el-grp-card-body">
-                  <div className="el-grp-class-name">Nhóm {group.id.split("-").pop()}</div>
+                  <div className="el-grp-class-name">
+                    Nhóm {group.id.split("-").pop()}
+                  </div>
 
                   <div className="el-grp-members">
                     {group.members.map((m, i) => (
@@ -204,14 +370,17 @@ export function GroupsPage({ classId }: { classId?: string }) {
                       </div>
                     ))}
 
-                    {group.status === "waiting" && group.members.length === 1 && (
-                      <div className="el-grp-member-empty">
-                        <div className="el-grp-member-empty-avatar">
-                          <PlusIcon />
+                    {group.status === "waiting" &&
+                      group.members.length === 1 && (
+                        <div className="el-grp-member-empty">
+                          <div className="el-grp-member-empty-avatar">
+                            <PlusIcon />
+                          </div>
+                          <span className="el-grp-member-empty-label">
+                            Chờ ghép đôi
+                          </span>
                         </div>
-                        <span className="el-grp-member-empty-label">Chờ ghép đôi</span>
-                      </div>
-                    )}
+                      )}
                   </div>
                 </div>
 
@@ -250,7 +419,9 @@ export function GroupsPage({ classId }: { classId?: string }) {
                   <div className="el-grp-quiz-section">
                     <div className="el-grp-quiz-left">
                       <PlusIcon />
-                      <span style={{ fontStyle: "italic" }}>Chưa có bài quiz</span>
+                      <span style={{ fontStyle: "italic" }}>
+                        Chưa có bài quiz
+                      </span>
                     </div>
                   </div>
                 )}
