@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation"
 import {
   BookOpenCheckIcon,
   ChevronLeftIcon,
-  GraduationCapIcon,
   LogOutIcon,
   SettingsIcon,
   UsersIcon,
@@ -22,56 +21,68 @@ export function StaffShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <div className="staff-app">
-      <div className="st-app">
-        <aside className="st-sidebar">
-          <div className="st-brand">
-            <div className="st-brand-mark">
-              <GraduationCapIcon className="h-6 w-6" />
-            </div>
-            <div>
-              <div className="st-brand-name">LMS Portal</div>
-              <div className="st-brand-sub">Dành cho Nhân viên</div>
-            </div>
-          </div>
+    <div className="flex min-h-screen flex-col">
+      {/* Top bar */}
+      <header className="sticky top-0 z-30 h-14 border-b bg-background px-4 sm:px-6 flex items-center gap-3">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors mr-3"
+        >
+          <ChevronLeftIcon className="h-4 w-4" />
+          Về trang chủ
+        </Link>
 
-          <nav className="st-nav">
-            {navItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname.startsWith(item.href)
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn("st-nav-item", isActive && "active")}
-                >
-                  <Icon className="st-nav-icon" />
-                  <span>{item.label}</span>
-                </Link>
-              )
-            })}
-          </nav>
+        <nav className="flex items-center gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon
+            const isActive = pathname.startsWith(item.href)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            )
+          })}
+        </nav>
 
-          <div className="st-footer">
-            <Link href="/" className="st-footer-link">
-              <ChevronLeftIcon className="h-4 w-4" />
-              <span>Về trang chủ</span>
-            </Link>
-            <button type="button" className="st-footer-btn">
-              <SettingsIcon className="h-4 w-4" />
-              <span>Cài đặt</span>
-            </button>
-            <button type="button" className="st-footer-btn">
-              <LogOutIcon className="h-4 w-4" />
-              <span>Đăng xuất</span>
-            </button>
-          </div>
-        </aside>
-
-        <div className="st-main">
-          <main className="st-content">{children}</main>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <SettingsIcon className="h-4 w-4" />
+            <span className="hidden sm:inline">Cài đặt</span>
+          </button>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <LogOutIcon className="h-4 w-4" />
+            <span className="hidden sm:inline">Đăng xuất</span>
+          </button>
         </div>
-      </div>
+      </header>
+
+      {/* Main content area */}
+      <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <div className="mx-auto max-w-7xl">
+          {children}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t py-3 px-4 sm:px-6 text-center text-xs text-muted-foreground">
+        Nhân viên · Hệ thống LMS · Phiên bản 1.0
+      </footer>
     </div>
   )
 }
