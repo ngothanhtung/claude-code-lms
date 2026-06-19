@@ -15,10 +15,8 @@ export default async function ElementaryTeacherLayout({
     redirect("/login")
   }
 
-  const roles = (session.user as Record<string, unknown>).roles as
-    | string[]
-    | undefined
-  if (!roles?.includes("role_elementary_teacher")) {
+  const roles = session.user.roles ?? []
+  if (!roles.includes("role_elementary_teacher")) {
     redirect("/login")
   }
 
