@@ -1,5 +1,15 @@
 import { Card } from "@/components/ui/card"
-import { myGroup } from "@/features/elementary/dashboard/mock/student-dashboard.mock"
+const myGroup = {
+  name: "Nhóm 2",
+  classId: "3A",
+  members: [
+    { name: "Trần Minh Tuấn", avatar: "T" },
+    { name: "Lê Thị Hương", avatar: "L" },
+  ] as { name: string; avatar: string }[],
+  completedLessons: 5,
+  totalLessons: 6,
+  averageScore: 8.7,
+}
 
 function getInitials(name: string) {
   const parts = name.split(" ")

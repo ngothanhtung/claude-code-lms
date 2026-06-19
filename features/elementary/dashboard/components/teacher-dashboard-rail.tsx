@@ -3,7 +3,7 @@ import { BadgeStatus } from "@/components/badge-status"
 import {
   CheckCircleIcon,
 } from "lucide-react"
-import { lessons } from "@/features/elementary/dashboard/mock"
+import { useLessons } from "@/features/elementary/lessons/hooks/use-lessons"
 
 const classAnnouncements = [
   {
@@ -36,6 +36,7 @@ const attendanceData = [
 ]
 
 export function TeacherDashboardRail() {
+  const { lessons } = useLessons()
   const totalPresent = attendanceData.reduce((s, d) => s + d.present, 0)
   const totalSlots = attendanceData.reduce(
     (s, d) => s + d.present + d.absent,

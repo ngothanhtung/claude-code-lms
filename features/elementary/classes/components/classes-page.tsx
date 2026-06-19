@@ -11,8 +11,7 @@ import {
   UsersIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { allClasses, grades, summary } from "@/features/elementary/classes/mock"
-import type { GradeLevel } from "@/features/elementary/classes/mock"
+import { useClasses, type GradeLevel } from "@/features/elementary/quiz/hooks/use-classes"
 
 /* ─── Grade emoji helper ─── */
 const gradeEmoji: Record<GradeLevel, string> = {
@@ -24,6 +23,28 @@ const gradeEmoji: Record<GradeLevel, string> = {
 }
 
 export function ClassesPage() {
+  const { classes: allClasses } = useClasses()
+  const grades: { level: GradeLevel; label: string }[] = [
+    { level: 1, label: "Lớp 1" },
+    { level: 2, label: "Lớp 2" },
+    { level: 3, label: "Lớp 3" },
+    { level: 4, label: "Lớp 4" },
+    { level: 5, label: "Lớp 5" },
+  ]
+  const summary = useMemo(() => {
+    const active = allClasses.filter((c) => c.status === "active")
+    const totalQuizzesAssigned = active.reduce((s, c) => s + c.totalQuizzes, 0)
+    const totalQuizzesCompleted = active.reduce((s, c) => s + c.completedQuizzes, 0)
+    return {
+      totalClasses: active.length,
+      totalStudents: active.reduce((s, c) => s + c.studentCount, 0),
+      totalQuizzesAssigned,
+      totalQuizzesCompleted,
+      avgCompletionRate: totalQuizzesAssigned > 0
+        ? Math.round((totalQuizzesCompleted / totalQuizzesAssigned) * 100)
+        : 0,
+    }
+  }, [allClasses])
   const [activeGrade, setActiveGrade] = useState<GradeLevel | "all">("all")
 
   const filtered = useMemo(

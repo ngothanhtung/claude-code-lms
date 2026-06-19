@@ -1,6 +1,12 @@
 import { Card } from "@/components/ui/card"
 import { BadgeStatus } from "@/components/badge-status"
-import { studentHighlights } from "@/features/elementary/dashboard/mock"
+const studentHighlights: { name: string; score: number; avatar: string; status: "excellent" | "good" | "needsAttention" }[] = [
+  { name: "Trần Minh Tuấn", score: 9.5, avatar: "T", status: "excellent" },
+  { name: "Lê Thị Hương", score: 9.2, avatar: "L", status: "excellent" },
+  { name: "Nguyễn Văn Đức", score: 8.8, avatar: "N", status: "good" },
+  { name: "Phạm Thị Lan", score: 6.2, avatar: "P", status: "needsAttention" },
+  { name: "Hoàng Văn Nam", score: 5.8, avatar: "H", status: "needsAttention" },
+]
 
 function getInitials(name: string) {
   const parts = name.split(" ")

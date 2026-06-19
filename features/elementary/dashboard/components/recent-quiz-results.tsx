@@ -1,7 +1,13 @@
 import { Card } from "@/components/ui/card"
 import { IconTint } from "@/components/icon-tint"
 import { BadgeStatus } from "@/components/badge-status"
-import { recentQuizzes } from "@/features/elementary/dashboard/mock/student-dashboard.mock"
+const recentQuizzes = [
+  { title: "Quiz — Lesson 5: My Family", lesson: "Lesson 5", score: 9, maxScore: 10, date: "Hôm qua", iconTint: "green" as const },
+  { title: "Quiz — Lesson 4: Colors", lesson: "Lesson 4", score: 8, maxScore: 10, date: "2 ngày trước", iconTint: "blue" as const },
+  { title: "Quiz — Lesson 3: Greetings", lesson: "Lesson 3", score: 10, maxScore: 10, date: "3 ngày trước", iconTint: "green" as const },
+  { title: "Quiz — Lesson 2: Numbers 1-20", lesson: "Lesson 2", score: 7, maxScore: 10, date: "5 ngày trước", iconTint: "amber" as const },
+  { title: "Quiz — Lesson 1: Alphabet", lesson: "Lesson 1", score: 8, maxScore: 10, date: "1 tuần trước", iconTint: "blue" as const },
+]
 import {
   LanguagesIcon,
 } from "lucide-react"

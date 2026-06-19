@@ -8,8 +8,24 @@ import {
   BookOpenIcon,
   UsersIcon,
 } from "lucide-react"
-import type { StudentGroup } from "@/features/elementary/groups/mock/student-groups.mock"
-import { classGroupsRank } from "@/features/elementary/groups/mock/student-groups.mock"
+interface StudentGroup {
+  id: string
+  className: string
+  grade: number
+  classNumber: number
+  members: { name: string; studentId: string; avatar: string }[]
+  totalQuizzes: number
+  completedQuizzes: number
+  averageScore: string
+  quizzes: { title: string; score: number; maxScore: number; date: string; completed: boolean }[]
+  recentActivity: { label: string; time: string }[]
+}
+
+const classGroupsRank = [
+  { groupName: "Nhóm 1", averageScore: "8.6", completedQuizzes: 10, totalQuizzes: 12, isMe: false },
+  { groupName: "Nhóm 2", averageScore: "8.5", completedQuizzes: 8, totalQuizzes: 12, isMe: true },
+  { groupName: "Nhóm 3", averageScore: "9.1", completedQuizzes: 11, totalQuizzes: 12, isMe: false },
+]
 
 function getInitials(name: string) {
   const parts = name.split(" ")

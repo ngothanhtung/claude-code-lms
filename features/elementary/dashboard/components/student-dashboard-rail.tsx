@@ -7,11 +7,30 @@ import {
   CheckCircleIcon,
   CircleIcon,
 } from "lucide-react"
-import {
-  leaderboard,
-  upcomingQuizzes,
-  lessonProgress,
-} from "@/features/elementary/dashboard/mock/student-dashboard.mock"
+const leaderboard = [
+  { rank: 1, name: "Lê Thị Hương", score: 9.2, avatar: "L" },
+  { rank: 2, name: "Trần Minh Tuấn", score: 8.5, avatar: "T", isMe: true },
+  { rank: 3, name: "Nguyễn Văn Đức", score: 8.3, avatar: "N" },
+  { rank: 4, name: "Phạm Thị Lan", score: 7.8, avatar: "P" },
+  { rank: 5, name: "Hoàng Văn Nam", score: 7.5, avatar: "H" },
+]
+
+const upcomingQuizzes = [
+  { title: "Quiz — Lesson 6: Colors", lesson: "Lesson 6", deadline: "15/06/2026", questionCount: 10, iconTint: "amber" as const },
+  { title: "Quiz — Lesson 7: Food & Drinks", lesson: "Lesson 7", deadline: "16/06/2026", questionCount: 10, iconTint: "green" as const },
+  { title: "Quiz — Lesson 8: Body Parts", lesson: "Lesson 8", deadline: "18/06/2026", questionCount: 10, iconTint: "blue" as const },
+]
+
+const lessonProgress = [
+  { lessonNumber: 1, title: "Alphabet & Sounds", score: 8.0, completed: true },
+  { lessonNumber: 2, title: "Numbers 1-20", score: 7.5, completed: true },
+  { lessonNumber: 3, title: "Greetings", score: 9.0, completed: true },
+  { lessonNumber: 4, title: "Colors", score: 8.0, completed: true },
+  { lessonNumber: 5, title: "My Family", score: 9.0, completed: true },
+  { lessonNumber: 6, title: "Animals", score: 0, completed: false },
+  { lessonNumber: 7, title: "Food & Drinks", score: 0, completed: false },
+  { lessonNumber: 8, title: "Body Parts", score: 0, completed: false },
+]
 
 function getInitials(name: string) {
   const parts = name.split(" ")

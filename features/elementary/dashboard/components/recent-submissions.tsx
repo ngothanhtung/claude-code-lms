@@ -6,7 +6,13 @@ import {
 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { IconTint } from "@/components/icon-tint"
-import { recentActivities } from "@/features/elementary/dashboard/mock"
+const recentActivities = [
+  { title: "Học sinh Trần Minh Tuấn", subtitle: "Hoàn thành Quiz Lesson 5 — Score: 9/10", time: "15 phút trước", iconTint: "green" as const, icon: "check-circle" },
+  { title: "Học sinh Lê Thị Hương", subtitle: "Nộp bài tập Vocabulary — Lesson 5", time: "30 phút trước", iconTint: "blue" as const, icon: "file-text" },
+  { title: "Phụ huynh Hoàng Văn Nam", subtitle: "Nhận xét về kết quả Quiz Lesson 4", time: "1 giờ trước", iconTint: "amber" as const, icon: "message-circle" },
+  { title: "Học sinh Phạm Thị Lan", subtitle: "Vắng mặt tiết Tiếng Anh — 3B", time: "2 giờ trước", iconTint: "red" as const, icon: "alert-circle" },
+  { title: "Học sinh Nguyễn Văn Đức", subtitle: "Hoàn thành Quiz Lesson 5 — Score: 8/10", time: "3 giờ trước", iconTint: "green" as const, icon: "check-circle" },
+]
 
 const activityIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "check-circle": CheckCircleIcon,
