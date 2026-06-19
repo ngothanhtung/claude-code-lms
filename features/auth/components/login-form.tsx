@@ -15,9 +15,9 @@ import {
   LoaderCircle,
   LockKeyhole,
   LogIn,
+  Mail,
   OctagonX,
   ShieldCheck,
-  UserRound,
   Volume2,
 } from "lucide-react"
 
@@ -83,24 +83,12 @@ const englishLearningItems = [
   },
 ]
 
-function getSafeCallbackUrl() {
-  const callbackUrl = new URLSearchParams(window.location.search).get(
-    "callbackUrl"
-  )
-
-  if (!callbackUrl?.startsWith("/") || callbackUrl.startsWith("//")) {
-    return "/dashboard"
-  }
-
-  return callbackUrl
-}
-
 export function LoginForm() {
   const router = useRouter()
   const form = useForm<LoginFormValues>({
     defaultValues: {
       password: "",
-      username: "",
+      email: "",
     },
     resolver: zodResolver(loginSchema),
   })
@@ -112,7 +100,7 @@ export function LoginForm() {
   async function handleLogin(values: LoginFormValues) {
     try {
       const result = await signIn("credentials", {
-        username: values.username,
+        email: values.email,
         password: values.password,
         redirect: false,
       })
@@ -131,8 +119,8 @@ export function LoginForm() {
         return
       }
 
-      router.push(getSafeCallbackUrl())
       router.refresh()
+      router.push("/elementary-student")
     } catch {
       setAuthAlert({
         title: "Không thể đăng nhập",
@@ -303,23 +291,23 @@ export function LoginForm() {
                   noValidate
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="username">Tên đăng nhập</Label>
+                    <Label htmlFor="email">Email</Label>
                     <div className="relative">
-                      <UserRound className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                      <Mail className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
-                        id="username"
-                        type="text"
-                        placeholder="Nhập mã tên đăng nhập"
+                        id="email"
+                        type="email"
+                        placeholder="Nhập email"
                         className="h-11 pl-9"
-                        aria-invalid={Boolean(form.formState.errors.username)}
+                        aria-invalid={Boolean(form.formState.errors.email)}
                         disabled={form.formState.isSubmitting}
-                        autoComplete="username"
-                        {...form.register("username")}
+                        autoComplete="email"
+                        {...form.register("email")}
                       />
                     </div>
-                    {form.formState.errors.username?.message && (
+                    {form.formState.errors.email?.message && (
                       <p className="text-xs font-medium text-destructive">
-                        {form.formState.errors.username.message}
+                        {form.formState.errors.email.message}
                       </p>
                     )}
                   </div>
@@ -388,7 +376,7 @@ export function LoginForm() {
 
                 <div className="mt-6 rounded-xl border border-dashed border-border bg-muted/40 p-4 text-sm text-muted-foreground">
                   Tài khoản demo:{" "}
-                  <span className="font-semibold text-foreground">root</span> /
+                  <span className="font-semibold text-foreground">admin@school.edu.vn</span> /
                   <span className="font-semibold text-foreground">
                     {" "}
                     147258369

@@ -11,8 +11,8 @@ import {
   GraduationCap,
   LoaderCircle,
   LockKeyhole,
+  Mail,
   OctagonX,
-  UserRound,
 } from "lucide-react"
 
 import {
@@ -50,7 +50,7 @@ export function LoginStudent() {
   const form = useForm<LoginFormValues>({
     defaultValues: {
       password: "",
-      username: "",
+      email: "",
     },
     resolver: zodResolver(loginSchema),
   })
@@ -62,7 +62,7 @@ export function LoginStudent() {
   async function handleLogin(values: LoginFormValues) {
     try {
       const result = await signIn("credentials", {
-        username: values.username,
+        email: values.email,
         password: values.password,
         redirect: false,
       })
@@ -138,23 +138,23 @@ export function LoginStudent() {
           noValidate
         >
           <div className="space-y-2">
-            <Label htmlFor="username">Tên đăng nhập</Label>
+            <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <UserRound className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Mail className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                id="username"
-                type="text"
-                placeholder="Nhập tên đăng nhập"
+                id="email"
+                type="email"
+                placeholder="Nhập email"
                 className="h-11 pl-9"
-                aria-invalid={Boolean(form.formState.errors.username)}
+                aria-invalid={Boolean(form.formState.errors.email)}
                 disabled={form.formState.isSubmitting}
-                autoComplete="username"
-                {...form.register("username")}
+                autoComplete="email"
+                {...form.register("email")}
               />
             </div>
-            {form.formState.errors.username?.message && (
+            {form.formState.errors.email?.message && (
               <p className="text-xs font-medium text-destructive">
-                {form.formState.errors.username.message}
+                {form.formState.errors.email.message}
               </p>
             )}
           </div>
@@ -209,7 +209,7 @@ export function LoginStudent() {
         </form>
 
         <div className="mt-6 rounded-md border border-dashed border-border bg-muted/40 p-3 text-center text-sm text-muted-foreground">
-          Demo: <span className="font-semibold text-foreground">root</span> /{" "}
+          Demo: <span className="font-semibold text-foreground">admin@school.edu.vn</span> /{" "}
           <span className="font-semibold text-foreground">147258369</span>
         </div>
       </section>
