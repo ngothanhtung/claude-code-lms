@@ -5,7 +5,10 @@ import {
 import { Card } from "@/components/ui/card"
 import { IconTint } from "@/components/icon-tint"
 import { BadgeStatus } from "@/components/badge-status"
-import { studentTodaySchedule } from "@/features/elementary/dashboard/mock/student-dashboard.mock"
+const studentTodaySchedule = [
+  { time: "07:30 – 08:10", title: "Tiếng Anh", lesson: "Lesson 5: My Family", room: "Phòng 201", iconTint: "blue" as const, status: "done" as const },
+  { time: "09:20 – 10:00", title: "Tiếng Anh", lesson: "Lesson 6: Colors", room: "Phòng 201", iconTint: "amber" as const, status: "upcoming" as const },
+]
 
 const slotIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "Tiếng Anh": LanguagesIcon,

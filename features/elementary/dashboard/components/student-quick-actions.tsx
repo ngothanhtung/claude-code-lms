@@ -7,7 +7,14 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { studentQuickActions } from "@/features/elementary/dashboard/mock/student-dashboard.mock"
+const studentQuickActions = [
+  { label: "Làm quiz", href: "/elementary-student/quiz", tint: "indigo" as const, icon: "pen-square" },
+  { label: "Kết quả", href: "/elementary-student/results", tint: "amber" as const, icon: "star" },
+  { label: "Nhóm học", href: "/elementary-student/groups", tint: "green" as const, icon: "users" },
+  { label: "Lớp học", href: "/elementary-student/classes", tint: "blue" as const, icon: "users" },
+  { label: "Bảng xếp hạng", tint: "red" as const, icon: "trophy" },
+  { label: "Từ vựng", tint: "amber" as const, icon: "book-open" },
+]
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "pen-square": PenSquareIcon,
