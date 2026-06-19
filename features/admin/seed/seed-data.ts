@@ -133,7 +133,6 @@ export const seedClasses: SeedClass[] = [
   { id: "class_3_3", grade: 3, classNumber: 3, homeroomTeacher: "Dương Thị Nhung", studentCount: 40, totalQuizzes: 14, completedQuizzes: 11, averageScore: "8.3", lastActive: "2026-06-10", status: "archived" },
   { id: "class_4_1", grade: 4, classNumber: 1, homeroomTeacher: "Bùi Minh Quân", studentCount: 40, totalQuizzes: 20, completedQuizzes: 18, averageScore: "8.7", lastActive: "2026-06-13", status: "active" },
   { id: "class_4_2", grade: 4, classNumber: 2, homeroomTeacher: "Trịnh Thu Huyền", studentCount: 40, totalQuizzes: 20, completedQuizzes: 16, averageScore: "8.1", lastActive: "2026-06-12", status: "active" },
-  { id: "class_4_3", grade: 4, classNumber: 3, homeroomTeacher: "Đặng Hoài Nam", studentCount: 40, totalQuizzes: 18, completedQuizzes: 14, averageScore: "7.9", lastActive: "2026-06-11", status: "active" },
   { id: "class_5_1", grade: 5, classNumber: 1, homeroomTeacher: "Lý Gia Bảo", studentCount: 40, totalQuizzes: 22, completedQuizzes: 20, averageScore: "8.9", lastActive: "2026-06-13", status: "active" },
   { id: "class_5_2", grade: 5, classNumber: 2, homeroomTeacher: "Mai Thị Kiều", studentCount: 40, totalQuizzes: 22, completedQuizzes: 17, averageScore: "8.4", lastActive: "2026-06-13", status: "active" },
   { id: "class_5_3", grade: 5, classNumber: 3, homeroomTeacher: "Hồ Minh Tuấn", studentCount: 40, totalQuizzes: 18, completedQuizzes: 14, averageScore: "7.7", lastActive: "2026-06-09", status: "archived" },
@@ -190,7 +189,7 @@ export const seedQuizzes: SeedQuiz[] = seedLessons.flatMap((lesson) => [
   },
 ])
 
-/* ─── Questions ─── */
+/* ─── Questions (vocabulary bank per lesson) ─── */
 export interface SeedQuestion {
   id: string
   content: string
@@ -270,8 +269,7 @@ function generateQuestions(
 ): SeedQuestion[] {
   const selected = shuffle(vocab).slice(0, 10)
   return selected.map((word, qi) => {
-    const lessonNum = parseInt(lessonId.split("_")[1])
-    const qId = `question_${(lessonNum - 1) * 20 + qi + 1}`
+    const qId = `question_${(parseInt(lessonId.split("_")[1]) - 1) * 20 + qi + 1}`
     const correct = word.vi
     const pool = vocab.filter((w) => w.vi !== correct)
     const wrongs = shuffle(pool).slice(0, 3).map((w) => w.vi)
@@ -296,11 +294,10 @@ export interface SeedQuizQuestion {
   order: number
 }
 
-export const seedQuizQuestions: SeedQuizQuestion[] = seedQuizzes.flatMap((quiz) => {
-  const lessonNum = parseInt(quiz.lessonId.split("_")[1])
-  const baseIndex = (lessonNum - 1) * 10
+export const seedQuizQuestions: SeedQuizQuestion[] = seedQuizzes.flatMap((quiz, qi) => {
+  const startIdx = qi * 10
   return Array.from({ length: 10 }, (_, i) => {
-    const questionId = seedQuestions[baseIndex + i].id
+    const questionId = seedQuestions[startIdx + i]?.id ?? `question_${startIdx + i + 1}`
     return {
       id: `${quiz.id}__${questionId}`,
       quizId: quiz.id,
@@ -322,7 +319,7 @@ const currentLessonMap: Record<string, number> = {
   class_1_1: 3, class_1_2: 2, class_1_3: 1,
   class_2_1: 5, class_2_2: 4, class_2_3: 3,
   class_3_1: 7, class_3_2: 6, class_3_3: 5,
-  class_4_1: 8, class_4_2: 7, class_4_3: 6,
+  class_4_1: 8, class_4_2: 7,
   class_5_1: 8, class_5_2: 7, class_5_3: 6,
 }
 
@@ -332,7 +329,7 @@ export const seedClassLessons: SeedClassLesson[] = seedClasses.flatMap((cls) => 
     id: `${cls.id}__${lesson.id}`,
     classId: cls.id,
     lessonId: lesson.id,
-    status: lesson.lessonNumber < current ? "completed" : lesson.lessonNumber === current ? "current" : "pending",
+    status: lesson.lessonNumber < current ? ("completed" as const) : lesson.lessonNumber === current ? ("current" as const) : ("pending" as const),
   }))
 })
 
@@ -459,12 +456,13 @@ export interface SeedAnswer {
   questionId: string
   groupId: string
   quizId: string
+  selectedOption: number
   isCorrect: boolean
   answeredAt: Date
 }
 
 const baseTime = new Date("2026-06-19T08:00:00Z")
-const LEADERBOARD_QUIZ_ID = "quiz_lesson_3_1"
+const LEADERBOARD_QUIZ_ID = "quiz_lesson_3_1" // Greetings quiz
 const LEADERBOARD_GROUP_IDS = ["group_class_3_1_01", "group_class_3_1_02", "group_class_3_1_03", "group_class_3_1_04"]
 
 export const seedAnswers: SeedAnswer[] = (() => {
@@ -484,10 +482,11 @@ export const seedAnswers: SeedAnswer[] = (() => {
       )?.questionId ?? `question_${qi + 1}`
       const t = new Date(baseTime.getTime() + qi * 15000 + gi * 5000)
       answers.push({
-        id: `${groupId}__${LEADERBOARD_QUIZ_ID}__${questionId}`,
+        id: `${groupId}__${LEADERBOARD_QUIZ_ID}__q${qi + 1}`,
         questionId,
         groupId,
         quizId: LEADERBOARD_QUIZ_ID,
+        selectedOption: correct ? 1 : 3,
         isCorrect: correct,
         answeredAt: t,
       })
