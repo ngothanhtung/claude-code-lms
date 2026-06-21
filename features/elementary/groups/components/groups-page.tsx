@@ -24,6 +24,7 @@ import { useClassLessons } from "@/features/elementary/lessons/hooks/use-class-l
 import { useGroupLessons } from "@/features/elementary/groups/hooks/use-group-lessons"
 import { LessonQuizDialog } from "@/features/elementary/quiz/components/lesson-quiz-dialog"
 import type { Lesson } from "@/features/elementary/lessons/hooks/use-lessons"
+import type { LessonStatus } from "@/features/elementary/lessons/hooks/use-lessons"
 
 type GroupStatus = "waiting" | "active"
 
@@ -85,7 +86,7 @@ const lessonStatusConfig = {
 export function GroupsPage({ classId }: { classId?: string }) {
   const [activeStatus, setActiveStatus] = useState<StatusFilter>("all")
   const [viewMode, setViewMode] = useState<ViewMode>("list")
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
+  const [selectedLesson, setSelectedLesson] = useState<(Lesson & { status: LessonStatus }) | null>(null)
 
   const { classes: allClasses } = useClasses()
   const { groups: allGroups } = useGroupsByClass(classId ?? null)
@@ -628,6 +629,18 @@ export function GroupsPage({ classId }: { classId?: string }) {
           <UsersIcon />
           <p>Không tìm thấy nhóm phù hợp.</p>
         </div>
+      )}
+
+      {/* ─── Lesson Quiz Dialog ─── */}
+      {selectedLesson && (
+        <LessonQuizDialog
+          lesson={selectedLesson}
+          status={selectedLesson.status}
+          open={!!selectedLesson}
+          onOpenChange={(open) => {
+            if (!open) setSelectedLesson(null)
+          }}
+        />
       )}
     </div>
   )
