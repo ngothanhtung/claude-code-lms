@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback, useRef } from "react"
+import { useEffect, useState, useCallback } from "react"
 import {
   collection,
   addDoc,
@@ -11,7 +11,6 @@ import {
 } from "firebase/firestore"
 import { db } from "@/lib/firebase/firestore"
 import type { QuizAnswer } from "../types/quiz.types"
-import { generateMockAnswers } from "../services/mock.service"
 
 interface UseQuizAnswersReturn {
   allAnswers: QuizAnswer[]
@@ -30,17 +29,13 @@ export function useQuizAnswers(
 ): UseQuizAnswersReturn {
   const [allAnswers, setAllAnswers] = useState<QuizAnswer[]>([])
   const [loading, setLoading] = useState(true)
-  const seededRef = useRef(false)
 
   useEffect(() => {
-    const q = query(
-      collection(db, "answers"),
-      where("quizId", "==", quizId)
-    )
+    const q = query(collection(db, "answers"), where("quizId", "==", quizId))
 
     const unsubscribe = onSnapshot(
       q,
-      async (snapshot) => {
+      (snapshot) => {
         const answers: QuizAnswer[] = snapshot.docs.map((d) => ({
           id: d.id,
           questionId: d.data().questionId,
@@ -52,16 +47,6 @@ export function useQuizAnswers(
         }))
         setAllAnswers(answers)
         setLoading(false)
-
-        // Auto-seed mock answers for OTHER groups on first load (dev only)
-        if (!seededRef.current && answers.length === 0) {
-          seededRef.current = true
-          try {
-            await generateMockAnswers(quizId, { excludeGroupId: groupId })
-          } catch (err) {
-            console.warn("Failed to seed mock answers:", err)
-          }
-        }
       },
       (err) => {
         console.error("Firestore subscription error:", err)
@@ -71,7 +56,7 @@ export function useQuizAnswers(
     )
 
     return () => unsubscribe()
-  }, [quizId, groupId])
+  }, [quizId])
 
   const groupAnswers = allAnswers.filter((a) => a.groupId === groupId)
 

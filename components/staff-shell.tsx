@@ -1,76 +1,100 @@
 "use client"
 
 import type { ReactNode } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import {
-  BookOpenCheckIcon,
-  ChevronLeftIcon,
-  GraduationCapIcon,
-  LogOutIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react"
+import { useEffect, useState, useSyncExternalStore } from "react"
+import { StaffSidebar } from "@/components/staff-sidebar"
+import { AppTopbar } from "@/components/app-topbar"
 import { cn } from "@/lib/utils"
 
-const navItems = [
-  { href: "/staff/classes", label: "Quản lý lớp học", icon: BookOpenCheckIcon },
-  { href: "/staff/instructors", label: "Giảng viên", icon: UsersIcon },
-]
+const MOBILE_SIDEBAR_QUERY = "(max-width: 980px)"
+
+function subscribeToMobileSidebar(callback: () => void) {
+  const mediaQuery = window.matchMedia(MOBILE_SIDEBAR_QUERY)
+
+  mediaQuery.addEventListener("change", callback)
+
+  return () => mediaQuery.removeEventListener("change", callback)
+}
+
+function getMobileSidebarSnapshot() {
+  return window.matchMedia(MOBILE_SIDEBAR_QUERY).matches
+}
+
+function getServerMobileSidebarSnapshot() {
+  return false
+}
 
 export function StaffShell({ children }: { children: ReactNode }) {
-  const pathname = usePathname()
+  const isMobileSidebar = useSyncExternalStore(
+    subscribeToMobileSidebar,
+    getMobileSidebarSnapshot,
+    getServerMobileSidebarSnapshot
+  )
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+
+  function handleMenuClick() {
+    if (isMobileSidebar) {
+      setMobileSidebarOpen((open) => !open)
+      return
+    }
+
+    setSidebarCollapsed((collapsed) => !collapsed)
+  }
+
+  function closeMobileSidebar() {
+    setMobileSidebarOpen(false)
+  }
+
+  useEffect(() => {
+    if (!mobileSidebarOpen) {
+      return
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMobileSidebarOpen(false)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [mobileSidebarOpen])
 
   return (
-    <div className="staff-app">
-      <div className="st-app">
-        <aside className="st-sidebar">
-          <div className="st-brand">
-            <div className="st-brand-mark">
-              <GraduationCapIcon className="h-6 w-6" />
-            </div>
-            <div>
-              <div className="st-brand-name">LMS Portal</div>
-              <div className="st-brand-sub">Dành cho Nhân viên</div>
-            </div>
-          </div>
-
-          <nav className="st-nav">
-            {navItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname.startsWith(item.href)
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn("st-nav-item", isActive && "active")}
-                >
-                  <Icon className="st-nav-icon" />
-                  <span>{item.label}</span>
-                </Link>
-              )
-            })}
-          </nav>
-
-          <div className="st-footer">
-            <Link href="/" className="st-footer-link">
-              <ChevronLeftIcon className="h-4 w-4" />
-              <span>Về trang chủ</span>
-            </Link>
-            <button type="button" className="st-footer-btn">
-              <SettingsIcon className="h-4 w-4" />
-              <span>Cài đặt</span>
-            </button>
-            <button type="button" className="st-footer-btn">
-              <LogOutIcon className="h-4 w-4" />
-              <span>Đăng xuất</span>
-            </button>
-          </div>
-        </aside>
-
-        <div className="st-main">
-          <main className="st-content">{children}</main>
-        </div>
+    <div
+      className={cn(
+        "app",
+        sidebarCollapsed && "sidebar-collapsed",
+        mobileSidebarOpen && "sidebar-mobile-open"
+      )}
+    >
+      <StaffSidebar
+        collapsed={sidebarCollapsed}
+        interactive={!isMobileSidebar || mobileSidebarOpen}
+        mobileOpen={mobileSidebarOpen}
+        onNavigate={closeMobileSidebar}
+      />
+      <button
+        aria-label="Đóng menu"
+        className="sidebar-backdrop"
+        onClick={closeMobileSidebar}
+        type="button"
+      />
+      <div className="main">
+        <AppTopbar
+          mobileSidebarOpen={mobileSidebarOpen}
+          onMenuClick={handleMenuClick}
+          sidebarCollapsed={sidebarCollapsed}
+        />
+        <main className="content">{children}</main>
       </div>
     </div>
   )

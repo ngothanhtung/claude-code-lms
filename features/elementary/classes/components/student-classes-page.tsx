@@ -10,7 +10,7 @@ import {
   CalendarCheck2Icon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { myClass } from "@/features/elementary/classes/mock/student-classes.mock"
+import { useStudentClass } from "@/features/elementary/classes/hooks/use-student-class"
 import { StudentClassRail } from "@/features/elementary/classes/components/student-class-rail"
 
 function getInitials(name: string) {
@@ -24,8 +24,27 @@ function getScoreVariant(score: number) {
   return "average"
 }
 
-export function StudentClassesPage() {
-  const cls = myClass
+export function StudentClassesPage({ classId }: { classId?: string }) {
+  const { studentClass, loading, error } = useStudentClass(classId ?? null)
+
+  if (loading || !studentClass) {
+    return (
+      <div className="el-loading">
+        <div className="el-spinner" />
+        <span>{loading ? "Đang tải thông tin lớp học..." : error ?? "Không có dữ liệu"}</span>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="el-loading">
+        <span>{error}</span>
+      </div>
+    )
+  }
+
+  const cls = studentClass
   const lessonPct = Math.round(
     (cls.completedLessons / cls.totalLessons) * 100
   )

@@ -3159,6 +3159,24 @@
   gap: 12px;
 }
 
+.el-grp-ranking-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--el-radius);
+  background: hsl(217 91% 60% / 0.08);
+  color: hsl(217 91% 60%);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.el-grp-ranking-current svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .el-grp-rank-card {
   display: grid;
   grid-template-columns: 54px minmax(0, 1fr) minmax(260px, 360px);
@@ -3415,6 +3433,172 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   align-items: stretch;
+}
+
+/* ─── Lesson View (Groups page — "Bài học" tab) ─── */
+
+.el-lesson-view {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.el-lesson-summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 20px;
+  background: hsl(var(--el-card));
+  border: 1px solid hsl(var(--el-border));
+  border-radius: var(--el-radius);
+}
+
+.el-lesson-summary-ring {
+  width: 56px;
+  height: 56px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.el-lesson-summary-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.el-lesson-ring-bg {
+  fill: none;
+  stroke: hsl(var(--el-muted));
+  stroke-width: 3;
+}
+
+.el-lesson-ring-fill {
+  fill: none;
+  stroke: hsl(142 65% 48%);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
+}
+
+.el-lesson-ring-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: hsl(var(--el-foreground));
+}
+
+.el-lesson-summary-right h3 {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.el-lesson-summary-right p {
+  margin: 0;
+  font-size: 13px;
+  color: hsl(var(--el-muted-foreground));
+}
+
+.el-lesson-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.el-lesson-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--el-radius);
+  background: hsl(var(--el-card));
+  border: 1px solid hsl(var(--el-border));
+  transition: background 0.15s;
+}
+
+.el-lesson-item:hover {
+  background: hsl(var(--el-muted) / 0.5);
+}
+
+.el-lesson-item.current {
+  border-color: hsl(217 91% 60% / 0.3);
+  background: hsl(217 91% 60% / 0.04);
+}
+
+.el-lesson-item.completed {
+  opacity: 0.75;
+}
+
+.el-lesson-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.el-lesson-icon.done {
+  background: hsl(var(--el-success) / 0.1);
+  color: hsl(var(--el-success));
+}
+
+.el-lesson-icon.current {
+  background: hsl(217 91% 60% / 0.1);
+  color: hsl(217 91% 60%);
+}
+
+.el-lesson-icon.pending {
+  background: hsl(var(--el-muted-foreground) / 0.08);
+  color: hsl(var(--el-muted-foreground));
+}
+
+.el-lesson-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.el-lesson-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: hsl(var(--el-foreground));
+}
+
+.el-lesson-meta {
+  font-size: 12px;
+  color: hsl(var(--el-muted-foreground));
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.el-lesson-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--el-radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.el-lesson-badge.done {
+  background: hsl(var(--el-success) / 0.1);
+  color: hsl(var(--el-success));
+}
+
+.el-lesson-badge.current {
+  background: hsl(217 91% 60% / 0.1);
+  color: hsl(217 91% 60%);
+}
+
+.el-lesson-badge.pending {
+  background: hsl(var(--el-muted-foreground) / 0.08);
+  color: hsl(var(--el-muted-foreground));
 }
 
 /* ─── Responsive ─── */

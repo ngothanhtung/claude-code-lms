@@ -22,6 +22,8 @@ import { useGroupsByClass, type Group } from "@/features/elementary/quiz/hooks/u
 import { useLessons } from "@/features/elementary/lessons/hooks/use-lessons"
 import { useClassLessons } from "@/features/elementary/lessons/hooks/use-class-lessons"
 import { useGroupLessons } from "@/features/elementary/groups/hooks/use-group-lessons"
+import { LessonQuizDialog } from "@/features/elementary/quiz/components/lesson-quiz-dialog"
+import type { Lesson } from "@/features/elementary/lessons/hooks/use-lessons"
 
 type GroupStatus = "waiting" | "active"
 
@@ -83,6 +85,7 @@ const lessonStatusConfig = {
 export function GroupsPage({ classId }: { classId?: string }) {
   const [activeStatus, setActiveStatus] = useState<StatusFilter>("all")
   const [viewMode, setViewMode] = useState<ViewMode>("list")
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
 
   const { classes: allClasses } = useClasses()
   const { groups: allGroups } = useGroupsByClass(classId ?? null)
@@ -378,9 +381,11 @@ export function GroupsPage({ classId }: { classId?: string }) {
                 const cfg = lessonStatusConfig[lesson.status]
                 const StatusIcon = cfg.icon
                 return (
-                  <div
+                  <button
                     key={lesson.id}
+                    type="button"
                     className={cn("el-lesson-item", cfg.className)}
+                    onClick={() => setSelectedLesson(lesson)}
                   >
                     <div className="el-lesson-icon">
                       <StatusIcon />
@@ -396,7 +401,7 @@ export function GroupsPage({ classId }: { classId?: string }) {
                     <span className={cn("el-lesson-badge", cfg.className)}>
                       {cfg.label}
                     </span>
-                  </div>
+                  </button>
                 )
               })}
             </div>

@@ -7,7 +7,7 @@ import {
   AwardIcon,
   BookOpenIcon,
 } from "lucide-react"
-import type { StudentClass } from "@/features/elementary/classes/mock/student-classes.mock"
+import type { StudentClass } from "@/features/elementary/classes/types/student-class.types"
 
 function getInitials(name: string) {
   const parts = name.split(" ")

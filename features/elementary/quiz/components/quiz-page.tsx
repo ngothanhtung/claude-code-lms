@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect, useMemo } from "react"
+import { useState, useCallback, useEffect, useMemo, useRef } from "react"
 import { useRouter } from "next/navigation"
 import {
   BookOpenIcon,
@@ -13,14 +13,14 @@ import { QuizTimer } from "./quiz-timer"
 import { QuizQuestion } from "./quiz-question"
 import { QuizLeaderboard } from "./quiz-leaderboard"
 import { QuizResult } from "./quiz-result"
-import { allClasses, grades } from "@/features/elementary/classes/mock"
-import { allGroups } from "@/features/elementary/groups/mock"
 import { useQuizQuestions } from "../hooks/use-quiz-questions"
 import { useQuizAnswers } from "../hooks/use-quiz-answers"
 import { useLeaderboard } from "../hooks/use-leaderboard"
 import { useQuizTimer } from "../hooks/use-quiz-timer"
-import { MOCK_QUIZ_ID, QUIZ_DURATION_SECONDS } from "../mock/quiz.mock"
-import type { GradeLevel } from "@/features/elementary/classes/mock"
+import { useClasses, grades } from "../hooks/use-classes"
+import { useGroupsByClass } from "../hooks/use-groups"
+import { QUIZ_DURATION_SECONDS, QUIZ_ID } from "../constants/quiz.constants"
+import type { GradeLevel } from "../hooks/use-classes"
 import type { QuizStatus } from "../types/quiz.types"
 
 interface QuizPageProps {
@@ -46,6 +46,7 @@ function QuizEntrySelector({
   initialGroupId?: string
 }) {
   const router = useRouter()
+  const { classes: allClasses } = useClasses()
   const initialClass = initialClassId
     ? allClasses.find((item) => item.id === initialClassId)
     : undefined
@@ -55,21 +56,19 @@ function QuizEntrySelector({
   const [selectedClassId, setSelectedClassId] = useState(initialClassId ?? "")
   const [selectedGroupId, setSelectedGroupId] = useState(initialGroupId ?? "")
 
+  const { groups: allGroups, loading: groupsLoading } = useGroupsByClass(
+    selectedClassId || null
+  )
+
   const classesForGrade = useMemo(
     () =>
       selectedGrade
         ? allClasses.filter((item) => item.grade === selectedGrade)
         : [],
-    [selectedGrade]
+    [selectedGrade, allClasses]
   )
 
-  const groupsForClass = useMemo(
-    () =>
-      selectedClassId
-        ? allGroups.filter((group) => group.classId === selectedClassId)
-        : [],
-    [selectedClassId]
-  )
+  const groupsForClass = allGroups
 
   const selectedClass = selectedClassId
     ? allClasses.find((item) => item.id === selectedClassId)
@@ -242,13 +241,18 @@ function QuizEntrySelector({
 
 function QuizRunner({ groupId, classId }: Required<QuizPageProps>) {
   const router = useRouter()
-  const [status, setStatus] = useState<QuizStatus>("loading")
+  const [status, setStatus] = useState<QuizStatus>("active")
   const [currentIdx, setCurrentIdx] = useState(0)
+  const timerStartedRef = useRef(false)
 
-  const { questions } = useQuizQuestions(MOCK_QUIZ_ID)
+  const {
+    questions,
+    loading: questionsLoading,
+    error,
+  } = useQuizQuestions(QUIZ_ID)
 
   const { allAnswers, groupAnswers, submitAnswer } = useQuizAnswers(
-    MOCK_QUIZ_ID,
+    QUIZ_ID,
     groupId
   )
 
@@ -283,8 +287,12 @@ function QuizRunner({ groupId, classId }: Required<QuizPageProps>) {
   )
 
   useEffect(() => {
-    if (questions.length > 0 && status === "loading") {
-      setStatus("active")
+    if (
+      questions.length > 0 &&
+      status === "active" &&
+      !timerStartedRef.current
+    ) {
+      timerStartedRef.current = true
       start()
     }
   }, [questions, status, start])
@@ -322,12 +330,22 @@ function QuizRunner({ groupId, classId }: Required<QuizPageProps>) {
     router.push("/elementary-student/quiz")
   }, [router, stop])
 
-  if (status === "loading" || !currentQuestion) {
+  if (questionsLoading) {
     return (
       <div className="el-quiz-page">
         <div className="el-loading">
           <div className="el-spinner" />
           <span>Đang tải câu hỏi...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !currentQuestion) {
+    return (
+      <div className="el-quiz-page">
+        <div className="el-loading">
+          <span>{error ?? "Chưa có câu hỏi trong Firestore."}</span>
         </div>
       </div>
     )
