@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import {
   BookOpenCheckIcon,
@@ -45,8 +45,45 @@ export function StaffSidebar({
   onNavigate,
 }: StaffSidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const scrollEndTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [navScrolling, setNavScrolling] = useState(false)
+  const initialOpenGroups = useMemo(() => {
+    return navItems.reduce<Record<string, boolean>>((groups, item) => {
+      if (item.sub) {
+        const hasActiveChild = item.sub.some((sub) =>
+          isRouteActive(pathname, sub.href)
+        )
+
+        groups[item.title] =
+          isRouteActive(pathname, item.href) || hasActiveChild
+      }
+
+      return groups
+    }, {})
+  }, [pathname])
+  const activeOpenGroups = useMemo(() => {
+    return navItems.reduce<Record<string, boolean>>((groups, item) => {
+      if (item.sub) {
+        const hasActiveChild = item.sub.some((sub) =>
+          isRouteActive(pathname, sub.href)
+        )
+
+        if (isRouteActive(pathname, item.href) || hasActiveChild) {
+          groups[item.title] = true
+        }
+      }
+
+      return groups
+    }, {})
+  }, [pathname])
+
+  const [openGroups, setOpenGroups] =
+    useState<Record<string, boolean>>(initialOpenGroups)
+
+  function setGroupOpen(title: string, open: boolean) {
+    setOpenGroups((current) => ({ ...current, [title]: open }))
+  }
 
   useEffect(() => {
     return () => {
@@ -110,12 +147,15 @@ export function StaffSidebar({
           const active = isRouteActive(pathname, item.href) || hasActiveChild
 
           if (item.sub) {
-            const isOpen = isRouteActive(pathname, item.href) || hasActiveChild
+            const isOpen =
+              Boolean(openGroups[item.title]) ||
+              Boolean(activeOpenGroups[item.title])
 
             return (
               <Collapsible
                 className={cn("nav-group", isOpen && "open")}
                 key={item.title}
+                onOpenChange={(open) => setGroupOpen(item.title, open)}
                 open={isOpen}
               >
                 <CollapsibleTrigger asChild>
@@ -181,7 +221,10 @@ export function StaffSidebar({
         <button
           className="assistant-btn"
           type="button"
-          onClick={onNavigate}
+          onClick={() => {
+            onNavigate?.()
+            router.push("/ai-assistant")
+          }}
         >
           <MessageCircleIcon className="icon-sm" />
           Chat ngay

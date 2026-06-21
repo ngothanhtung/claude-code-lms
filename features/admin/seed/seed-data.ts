@@ -150,17 +150,17 @@ export interface SeedLesson {
 }
 
 export const seedLessons: SeedLesson[] = [
-  { id: "lesson_1", title: "Alphabet & Sounds", unit: 1, lessonNumber: 1, description: "Chữ cái A-Z và phát âm cơ bản", totalWords: 26, quizCount: 2 },
-  { id: "lesson_2", title: "Numbers 1-20", unit: 1, lessonNumber: 2, description: "Số đếm từ 1 đến 20", totalWords: 20, quizCount: 2 },
-  { id: "lesson_3", title: "Greetings", unit: 2, lessonNumber: 3, description: "Lời chào hỏi hàng ngày", totalWords: 12, quizCount: 2 },
-  { id: "lesson_4", title: "Colors", unit: 2, lessonNumber: 4, description: "Màu sắc cơ bản", totalWords: 10, quizCount: 2 },
-  { id: "lesson_5", title: "My Family", unit: 3, lessonNumber: 5, description: "Gia đình và người thân", totalWords: 15, quizCount: 2 },
-  { id: "lesson_6", title: "Animals", unit: 3, lessonNumber: 6, description: "Động vật và âm thanh", totalWords: 18, quizCount: 2 },
-  { id: "lesson_7", title: "Food & Drinks", unit: 4, lessonNumber: 7, description: "Thức ăn và đồ uống", totalWords: 20, quizCount: 2 },
-  { id: "lesson_8", title: "Body Parts", unit: 4, lessonNumber: 8, description: "Các bộ phận cơ thể", totalWords: 16, quizCount: 2 },
+  { id: "lesson_1", title: "Alphabet & Sounds", unit: 1, lessonNumber: 1, description: "Chữ cái A-Z và phát âm cơ bản", totalWords: 26, quizCount: 1 },
+  { id: "lesson_2", title: "Numbers 1-20", unit: 1, lessonNumber: 2, description: "Số đếm từ 1 đến 20", totalWords: 20, quizCount: 1 },
+  { id: "lesson_3", title: "Greetings", unit: 2, lessonNumber: 3, description: "Lời chào hỏi hàng ngày", totalWords: 12, quizCount: 1 },
+  { id: "lesson_4", title: "Colors", unit: 2, lessonNumber: 4, description: "Màu sắc cơ bản", totalWords: 10, quizCount: 1 },
+  { id: "lesson_5", title: "My Family", unit: 3, lessonNumber: 5, description: "Gia đình và người thân", totalWords: 15, quizCount: 1 },
+  { id: "lesson_6", title: "Animals", unit: 3, lessonNumber: 6, description: "Động vật và âm thanh", totalWords: 18, quizCount: 1 },
+  { id: "lesson_7", title: "Food & Drinks", unit: 4, lessonNumber: 7, description: "Thức ăn và đồ uống", totalWords: 20, quizCount: 1 },
+  { id: "lesson_8", title: "Body Parts", unit: 4, lessonNumber: 8, description: "Các bộ phận cơ thể", totalWords: 16, quizCount: 1 },
 ]
 
-/* ─── Quizzes (2 per lesson = 16) ─── */
+/* ─── Quizzes (1 per lesson = 8) ─── */
 export interface SeedQuiz {
   id: string
   lessonId: string
@@ -170,24 +170,14 @@ export interface SeedQuiz {
   durationSeconds: number
 }
 
-export const seedQuizzes: SeedQuiz[] = seedLessons.flatMap((lesson) => [
-  {
-    id: `quiz_${lesson.id}_1`,
-    lessonId: lesson.id,
-    title: `Quiz — ${lesson.title}`,
-    description: `Kiểm tra từ vựng ${lesson.title.toLowerCase()}`,
-    questionCount: 10,
-    durationSeconds: 600,
-  },
-  {
-    id: `quiz_${lesson.id}_2`,
-    lessonId: lesson.id,
-    title: `Review — ${lesson.title}`,
-    description: `Ôn tập ${lesson.title.toLowerCase()}`,
-    questionCount: 10,
-    durationSeconds: 600,
-  },
-])
+export const seedQuizzes: SeedQuiz[] = seedLessons.map((lesson) => ({
+  id: `quiz_${lesson.id}_1`,
+  lessonId: lesson.id,
+  title: `Quiz — ${lesson.title}`,
+  description: `Kiểm tra từ vựng ${lesson.title.toLowerCase()}`,
+  questionCount: 10,
+  durationSeconds: 600,
+}))
 
 /* ─── Questions (vocabulary bank per lesson) ─── */
 export interface SeedQuestion {
@@ -269,7 +259,7 @@ function generateQuestions(
 ): SeedQuestion[] {
   const selected = shuffle(vocab).slice(0, 10)
   return selected.map((word, qi) => {
-    const qId = `question_${(parseInt(lessonId.split("_")[1]) - 1) * 20 + qi + 1}`
+    const qId = `question_${(parseInt(lessonId.split("_")[1]) - 1) * 10 + qi + 1}`
     const correct = word.vi
     const pool = vocab.filter((w) => w.vi !== correct)
     const wrongs = shuffle(pool).slice(0, 3).map((w) => w.vi)

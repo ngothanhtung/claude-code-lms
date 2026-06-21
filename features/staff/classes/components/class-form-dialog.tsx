@@ -1,8 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { PlusIcon, XIcon } from "lucide-react"
+import { format } from "date-fns"
+import { CalendarIcon, PlusIcon, XIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Dialog,
   DialogContent,
@@ -11,6 +13,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 import type { ClassSchedule, StaffClass, StaffClassStatus } from "../types"
 import { getDayLabel } from "../helpers"
 
@@ -53,8 +61,12 @@ function ClassFormInner({
     isEdit ? [...initialData.schedule] : [{ dayOfWeek: 2, startTime: "18:00", endTime: "20:00" }]
   )
   const [status, setStatus] = useState<StaffClassStatus>(isEdit ? initialData.status : "active")
-  const [startDate, setStartDate] = useState(isEdit ? initialData.startDate : "")
-  const [endDate, setEndDate] = useState(isEdit ? initialData.endDate : "")
+  const [startDate, setStartDate] = useState<Date | undefined>(
+    isEdit && initialData.startDate ? new Date(initialData.startDate) : undefined
+  )
+  const [endDate, setEndDate] = useState<Date | undefined>(
+    isEdit && initialData.endDate ? new Date(initialData.endDate) : undefined
+  )
   const [location, setLocation] = useState(isEdit ? (initialData.location ?? "") : "")
 
   function addSubject() {
@@ -101,8 +113,8 @@ function ClassFormInner({
       currentStudents,
       schedule,
       status,
-      startDate,
-      endDate,
+      startDate: startDate ? format(startDate, "yyyy-MM-dd") : "",
+      endDate: endDate ? format(endDate, "yyyy-MM-dd") : "",
       location: location || undefined,
     })
   }
@@ -289,19 +301,53 @@ function ClassFormInner({
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium">Ngày bắt đầu</label>
-          <Input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                className={cn(
+                  "h-9 w-full justify-start text-left font-normal",
+                  !startDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {startDate ? format(startDate, "dd/MM/yyyy") : "Chọn ngày"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={startDate}
+                onSelect={setStartDate}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium">Ngày kết thúc</label>
-          <Input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                className={cn(
+                  "h-9 w-full justify-start text-left font-normal",
+                  !endDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {endDate ? format(endDate, "dd/MM/yyyy") : "Chọn ngày"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={endDate}
+                onSelect={setEndDate}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 

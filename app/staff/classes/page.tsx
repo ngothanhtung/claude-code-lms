@@ -4,7 +4,7 @@ import { ClassesTable } from "@/features/staff/classes/components/classes-table"
 
 export default function StaffClassesPage() {
   return (
-    <>
+    <div className="col-main col-span-full">
       <PageHeader
         title="Quản lý lớp học"
         subtitle="Danh sách các lớp học dành cho người lớn"
@@ -20,6 +20,6 @@ export default function StaffClassesPage() {
         </span>
       </PageHeader>
       <ClassesTable classes={allClasses} summary={summary} />
-    </>
+    </div>
   )
 }
