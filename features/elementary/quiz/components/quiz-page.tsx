@@ -16,26 +16,45 @@ import { QuizResult } from "./quiz-result"
 import { useQuizQuestions } from "../hooks/use-quiz-questions"
 import { useQuizAnswers } from "../hooks/use-quiz-answers"
 import { useLeaderboard } from "../hooks/use-leaderboard"
+import { getGroupDisplayName } from "../hooks/use-leaderboard"
 import { useQuizTimer } from "../hooks/use-quiz-timer"
+import { collection, getDocs, query, where } from "firebase/firestore"
+import { db } from "@/lib/firebase/firestore"
 import { useClasses, grades } from "../hooks/use-classes"
 import { useGroupsByClass } from "../hooks/use-groups"
-import { QUIZ_DURATION_SECONDS, QUIZ_ID } from "../constants/quiz.constants"
 import type { GradeLevel } from "../hooks/use-classes"
 import type { QuizStatus } from "../types/quiz.types"
 
 interface QuizPageProps {
   groupId?: string
   classId?: string
+  quizId?: string
+  durationSeconds?: number
 }
 
-export function QuizPage({ groupId, classId }: QuizPageProps) {
-  if (!groupId || !classId) {
+export function QuizPage({
+  groupId,
+  classId,
+  quizId,
+  durationSeconds,
+}: QuizPageProps) {
+  if (!groupId || !classId || !quizId) {
     return (
-      <QuizEntrySelector initialClassId={classId} initialGroupId={groupId} />
+      <QuizEntrySelector
+        initialClassId={classId}
+        initialGroupId={groupId}
+      />
     )
   }
 
-  return <QuizRunner groupId={groupId} classId={classId} />
+  return (
+    <QuizRunner
+      groupId={groupId}
+      classId={classId}
+      quizId={quizId}
+      durationSeconds={durationSeconds ?? 600}
+    />
+  )
 }
 
 function QuizEntrySelector({
@@ -88,11 +107,60 @@ function QuizEntrySelector({
     setSelectedGroupId("")
   }, [])
 
-  const handleStart = useCallback(() => {
-    if (!selectedClassId || !selectedGroupId) {
-      return
+  const handleStart = useCallback(async () => {
+    if (!selectedClassId || !selectedGroupId) return
+
+    // Find current lesson for this class
+    const classLessonsQuery = query(
+      collection(db, "classLessons"),
+      where("classId", "==", selectedClassId),
+      where("status", "==", "current")
+    )
+    const clSnapshot = await getDocs(classLessonsQuery)
+
+    if (clSnapshot.empty) {
+      // No current lesson set — use first lesson for the class
+      const allClQuery = query(
+        collection(db, "classLessons"),
+        where("classId", "==", selectedClassId)
+      )
+      const allClSnapshot = await getDocs(allClQuery)
+      const firstLessonId = allClSnapshot.docs[0]?.data()?.lessonId
+
+      if (firstLessonId) {
+        const quizQuery = query(
+          collection(db, "quizzes"),
+          where("lessonId", "==", firstLessonId)
+        )
+        const quizSnapshot = await getDocs(quizQuery)
+        const quizDoc = quizSnapshot.docs[0]
+
+        if (quizDoc) {
+          router.push(
+            `/elementary-student/quiz?class=${selectedClassId}&group=${selectedGroupId}&quiz=${quizDoc.id}`
+          )
+          return
+        }
+      }
+    } else {
+      const currentLessonId = clSnapshot.docs[0].data().lessonId
+
+      const quizQuery = query(
+        collection(db, "quizzes"),
+        where("lessonId", "==", currentLessonId)
+      )
+      const quizSnapshot = await getDocs(quizQuery)
+      const quizDoc = quizSnapshot.docs[0]
+
+      if (quizDoc) {
+        router.push(
+          `/elementary-student/quiz?class=${selectedClassId}&group=${selectedGroupId}&quiz=${quizDoc.id}`
+        )
+        return
+      }
     }
 
+    // Fallback — go without quizId
     router.push(
       `/elementary-student/quiz?class=${selectedClassId}&group=${selectedGroupId}`
     )
@@ -202,7 +270,7 @@ function QuizEntrySelector({
               className={selectedGroupId === group.id ? "active" : ""}
               onClick={() => setSelectedGroupId(group.id)}
             >
-              <span>Nhóm {group.id.split("-").pop()}</span>
+              <span>{getGroupDisplayName(group.id)}</span>
               <small>
                 {group.members.map((member) => member.name).join(" · ")}
               </small>
@@ -216,7 +284,7 @@ function QuizEntrySelector({
         <div>
           <strong>
             {selectedGroup
-              ? `Đã chọn nhóm ${selectedGroup.id.split("-").pop()}`
+              ? `Đã chọn ${getGroupDisplayName(selectedGroup.id)}`
               : "Chưa chọn đủ thông tin"}
           </strong>
           <span>
@@ -239,7 +307,17 @@ function QuizEntrySelector({
   )
 }
 
-function QuizRunner({ groupId, classId }: Required<QuizPageProps>) {
+function QuizRunner({
+  groupId,
+  classId,
+  quizId,
+  durationSeconds,
+}: {
+  groupId: string
+  classId: string
+  quizId: string
+  durationSeconds: number
+}) {
   const router = useRouter()
   const [status, setStatus] = useState<QuizStatus>("active")
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -249,10 +327,10 @@ function QuizRunner({ groupId, classId }: Required<QuizPageProps>) {
     questions,
     loading: questionsLoading,
     error,
-  } = useQuizQuestions(QUIZ_ID)
+  } = useQuizQuestions(quizId)
 
   const { allAnswers, groupAnswers, submitAnswer } = useQuizAnswers(
-    QUIZ_ID,
+    quizId,
     groupId
   )
 
@@ -282,7 +360,7 @@ function QuizRunner({ groupId, classId }: Required<QuizPageProps>) {
   }, [])
 
   const { timeRemaining, isWarning, start, stop } = useQuizTimer(
-    QUIZ_DURATION_SECONDS,
+    durationSeconds,
     handleTimeUp
   )
 
@@ -379,7 +457,7 @@ function QuizRunner({ groupId, classId }: Required<QuizPageProps>) {
       <div className="el-quiz-area">
         <div className="el-quiz-header">
           <div className="el-quiz-session-meta">
-            <span>Nhóm {groupId.split("-").pop()}</span>
+            <span>{getGroupDisplayName(groupId)}</span>
             <button type="button" onClick={handleChangeGroup}>
               Chọn lại lớp / nhóm
             </button>
