@@ -3,7 +3,6 @@
 import {
   TrendingUpIcon,
   TargetIcon,
-  FlameIcon,
   AwardIcon,
   BookOpenIcon,
 } from "lucide-react"
@@ -25,18 +24,46 @@ export function StudentClassRail({ cls }: StudentClassRailProps) {
     .map((l) => l.score)
   const avgScore =
     completedScores.length > 0
-      ? (completedScores.reduce((a, b) => a + b, 0) / completedScores.length).toFixed(1)
+      ? (
+          completedScores.reduce((a, b) => a + b, 0) / completedScores.length
+        ).toFixed(1)
       : "0"
-
-  // Simulate streak data (days studied this week)
-  const streakDays = [true, true, false, true, true, true, false]
-  const streakLabels = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]
 
   // Quiz score trend for bar chart
   const quizScores = [...cls.recentQuizzes].reverse()
 
-  // Rank among classmates (simulated)
-  const rank = 3
+  // Rank among classmates (by averageScore from Firestore)
+  const sortedClassmates = [...cls.classmates].sort(
+    (a, b) => b.averageScore - a.averageScore
+  )
+  const myRank =
+    sortedClassmates.findIndex((m) => m.averageScore <= parseFloat(avgScore)) +
+    1 || sortedClassmates.length
+
+  // Top 5 leaderboard: top classmates + "Bạn"
+  const topClassmates = sortedClassmates.slice(0, 5)
+  const leaderboardEntries = topClassmates.map((m) => ({
+    name: m.name,
+    avatar: m.avatar,
+    score: m.averageScore.toFixed(1),
+    isMe: false,
+  }))
+  const meInTop5 = topClassmates.some(
+    (m) => m.averageScore <= parseFloat(avgScore)
+  )
+  if (!meInTop5 && completedScores.length > 0) {
+    let insertIdx = leaderboardEntries.findIndex(
+      (e) => parseFloat(e.score) < parseFloat(avgScore)
+    )
+    if (insertIdx === -1) insertIdx = leaderboardEntries.length
+    leaderboardEntries.splice(insertIdx, 0, {
+      name: "Bạn",
+      avatar: cls.classmates[0]?.avatar ?? "T",
+      score: avgScore,
+      isMe: true,
+    })
+    leaderboardEntries.length = Math.min(leaderboardEntries.length, 5)
+  }
 
   return (
     <aside className="el-rail">
@@ -55,7 +82,9 @@ export function StudentClassRail({ cls }: StudentClassRailProps) {
               <BookOpenIcon />
             </div>
             <div className="el-scls-rail-stat-info">
-              <span className="el-scls-rail-stat-value">{cls.completedLessons}/{cls.totalLessons}</span>
+              <span className="el-scls-rail-stat-value">
+                {cls.completedLessons}/{cls.totalLessons}
+              </span>
               <span className="el-scls-rail-stat-label">Bài học</span>
             </div>
             <div className="el-scls-rail-stat-ring">
@@ -90,128 +119,104 @@ export function StudentClassRail({ cls }: StudentClassRailProps) {
           </div>
 
           <div className="el-scls-rail-stat">
-            <div className="el-scls-rail-stat-icon red">
-              <FlameIcon />
-            </div>
-            <div className="el-scls-rail-stat-info">
-              <span className="el-scls-rail-stat-value">4 ngày</span>
-              <span className="el-scls-rail-stat-label">Streak hiện tại</span>
-            </div>
-          </div>
-
-          <div className="el-scls-rail-stat">
             <div className="el-scls-rail-stat-icon indigo">
               <TrendingUpIcon />
             </div>
             <div className="el-scls-rail-stat-info">
-              <span className="el-scls-rail-stat-value">#{rank}</span>
+              <span className="el-scls-rail-stat-value">
+                {myRank > 0 ? `#${myRank}` : "—"}
+              </span>
               <span className="el-scls-rail-stat-label">Trong lớp</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Study Streak Heatmap ── */}
-      <div className="el-scls-rail-card">
-        <div className="el-scls-rail-header">
-          <h2 className="el-scls-rail-title">
-            <FlameIcon className="el-scls-rail-header-icon" />
-            Tuần này
-          </h2>
-        </div>
-
-        <div className="el-scls-rail-streak">
-          {streakLabels.map((label, i) => (
-            <div key={label} className="el-scls-rail-streak-day">
-              <div
-                className={`el-scls-rail-streak-dot ${streakDays[i] ? "active" : ""}`}
-              />
-              <span className="el-scls-rail-streak-label">{label}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="el-scls-rail-streak-summary">
-          <span className="el-scls-rail-streak-count">
-            {streakDays.filter(Boolean).length}/7 ngày đã học
-          </span>
-        </div>
-      </div>
-
       {/* ── Quiz Score Trend ── */}
-      <div className="el-scls-rail-card">
-        <div className="el-scls-rail-header">
-          <h2 className="el-scls-rail-title">
-            <TrendingUpIcon className="el-scls-rail-header-icon" />
-            Xu hướng điểm quiz
-          </h2>
-        </div>
+      {quizScores.length > 0 && (
+        <div className="el-scls-rail-card">
+          <div className="el-scls-rail-header">
+            <h2 className="el-scls-rail-title">
+              <TrendingUpIcon className="el-scls-rail-header-icon" />
+              Xu hướng điểm quiz
+            </h2>
+          </div>
 
-        <div className="el-scls-rail-chart">
-          {quizScores.map((quiz, i) => {
-            const pct = (quiz.score / quiz.maxScore) * 100
-            const hue = quiz.score >= 9 ? 142 : quiz.score >= 7.5 ? 217 : 38
-            return (
-              <div key={i} className="el-scls-rail-chart-bar-group">
-                <div className="el-scls-rail-chart-bar-track">
-                  <div
-                    className="el-scls-rail-chart-bar-fill"
-                    style={{
-                      height: `${pct}%`,
-                      background: `hsl(${hue} 65% 48%)`,
-                    }}
-                  />
+          <div className="el-scls-rail-chart">
+            {quizScores.map((quiz, i) => {
+              const pct = (quiz.score / quiz.maxScore) * 100
+              const hue = quiz.score >= 9 ? 142 : quiz.score >= 7.5 ? 217 : 38
+              return (
+                <div key={i} className="el-scls-rail-chart-bar-group">
+                  <div className="el-scls-rail-chart-bar-track">
+                    <div
+                      className="el-scls-rail-chart-bar-fill"
+                      style={{
+                        height: `${pct}%`,
+                        background: `hsl(${hue} 65% 48%)`,
+                      }}
+                    />
+                  </div>
+                  <span className="el-scls-rail-chart-bar-value">
+                    {quiz.score}
+                  </span>
+                  <span className="el-scls-rail-chart-bar-label">
+                    L{cls.recentQuizzes.length - i}
+                  </span>
                 </div>
-                <span className="el-scls-rail-chart-bar-value">{quiz.score}</span>
-                <span className="el-scls-rail-chart-bar-label">
-                  L{cls.recentQuizzes.length - i}
-                </span>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
 
-        {/* Score legend */}
-        <div className="el-scls-rail-chart-legend">
-          <span className="el-scls-rail-legend-item">
-            <span className="el-scls-rail-legend-dot" style={{ background: "hsl(142 65% 48%)" }} />
-            ≥9
-          </span>
-          <span className="el-scls-rail-legend-item">
-            <span className="el-scls-rail-legend-dot" style={{ background: "hsl(217 65% 48%)" }} />
-            7.5–8.9
-          </span>
-          <span className="el-scls-rail-legend-item">
-            <span className="el-scls-rail-legend-dot" style={{ background: "hsl(38 65% 48%)" }} />
-            &lt;7.5
-          </span>
+          <div className="el-scls-rail-chart-legend">
+            <span className="el-scls-rail-legend-item">
+              <span
+                className="el-scls-rail-legend-dot"
+                style={{ background: "hsl(142 65% 48%)" }}
+              />
+              ≥9
+            </span>
+            <span className="el-scls-rail-legend-item">
+              <span
+                className="el-scls-rail-legend-dot"
+                style={{ background: "hsl(217 65% 48%)" }}
+              />
+              7.5–8.9
+            </span>
+            <span className="el-scls-rail-legend-item">
+              <span
+                className="el-scls-rail-legend-dot"
+                style={{ background: "hsl(38 65% 48%)" }}
+              />
+              &lt;7.5
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── Top Classmates ── */}
-      <div className="el-scls-rail-card">
-        <div className="el-scls-rail-header">
-          <h2 className="el-scls-rail-title">
-            <AwardIcon className="el-scls-rail-header-icon" />
-            Bảng xếp hạng
-          </h2>
-          <span className="el-scls-rail-header-link">Lớp 3A</span>
-        </div>
+      {leaderboardEntries.length > 0 && (
+        <div className="el-scls-rail-card">
+          <div className="el-scls-rail-header">
+            <h2 className="el-scls-rail-title">
+              <AwardIcon className="el-scls-rail-header-icon" />
+              Bảng xếp hạng
+            </h2>
+            <span className="el-scls-rail-header-link">
+              Lớp {cls.grade}/{cls.classNumber}
+            </span>
+          </div>
 
-        <div className="el-scls-rail-leaderboard">
-          {[
-            { ...cls.classmates[0], score: "9.6" },
-            { ...cls.classmates[1], score: "9.2" },
-            { name: "Bạn", avatar: "T", score: avgScore, isMe: true },
-            { ...cls.classmates[2], score: "8.1" },
-            { ...cls.classmates[3], score: "7.9" },
-          ].map((mate, i) => (
+          <div className="el-scls-rail-leaderboard">
+            {leaderboardEntries.map((mate, i) => (
               <div
                 key={`${mate.name}-${i}`}
                 className={`el-scls-rail-lb-row ${mate.isMe ? "is-me" : ""}`}
               >
                 <span
-                  className={`el-scls-rail-lb-rank ${i < 3 ? `top-${i + 1}` : ""}`}
+                  className={`el-scls-rail-lb-rank ${
+                    i < 3 ? `top-${i + 1}` : ""
+                  }`}
                 >
                   {i + 1}
                 </span>
@@ -220,13 +225,16 @@ export function StudentClassRail({ cls }: StudentClassRailProps) {
                 </div>
                 <span className="el-scls-rail-lb-name">
                   {mate.name}
-                  {mate.isMe && <span className="el-scls-rail-lb-me-badge">Bạn</span>}
+                  {mate.isMe && (
+                    <span className="el-scls-rail-lb-me-badge">Bạn</span>
+                  )}
                 </span>
                 <span className="el-scls-rail-lb-score">{mate.score}</span>
               </div>
             ))}
+          </div>
         </div>
-      </div>
+      )}
     </aside>
   )
 }
