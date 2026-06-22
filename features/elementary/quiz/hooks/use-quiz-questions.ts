@@ -54,7 +54,7 @@ export function useQuizQuestions(quizId: string): UseQuizQuestionsReturn {
 
         // 3. Fetch question details (Firestore `in` query max 30 items)
         const questionIds = bridgeDocs.map((b) => b.questionId)
-        const allQuestions = new Map<string, { content: string; type: string; options: { content: string; isCorrect: boolean }[] }>()
+        const allQuestions = new Map<string, { content: string; type: string; options: { content: string; isCorrect: boolean }[]; imageUrl?: string }>()
 
         for (let i = 0; i < questionIds.length; i += 30) {
           const batch = questionIds.slice(i, i + 30)
@@ -66,7 +66,7 @@ export function useQuizQuestions(quizId: string): UseQuizQuestionsReturn {
           if (cancelled) return
 
           for (const doc of snapshot.docs) {
-            allQuestions.set(doc.id, doc.data() as { content: string; type: string; options: { content: string; isCorrect: boolean }[] })
+            allQuestions.set(doc.id, doc.data() as { content: string; type: string; options: { content: string; isCorrect: boolean }[]; imageUrl?: string })
           }
         }
 
@@ -78,8 +78,9 @@ export function useQuizQuestions(quizId: string): UseQuizQuestionsReturn {
             return {
               id: b.questionId,
               content: data.content,
-              type: data.type as "quiz" | "fill_in_blank",
+              type: data.type as "quiz" | "fill_in_blank" | "image_choice",
               options: data.options,
+              imageUrl: data.imageUrl,
             }
           })
 
