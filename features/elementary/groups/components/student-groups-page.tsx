@@ -6,39 +6,14 @@ import {
   BookCheckIcon,
   CheckCircleIcon,
   CircleIcon,
-  CalendarCheck2Icon,
   ArrowRightIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-const myGroup = {
-  id: "group_class_3_1_02",
-  className: "Lớp 3/1",
-  grade: 3,
-  classNumber: 1,
-  members: [
-    { name: "Trần Minh Tuấn", studentId: "HS310", avatar: "T" },
-    { name: "Đặng Phúc Long", studentId: "HS303", avatar: "L" },
-  ],
-  totalQuizzes: 12,
-  completedQuizzes: 8,
-  averageScore: "8.5",
-  quizzes: [
-    { title: "Quiz — Lesson 5: My Family", score: 9, maxScore: 10, date: "Hôm qua", completed: true },
-    { title: "Quiz — Lesson 4: Colors", score: 8, maxScore: 10, date: "2 ngày trước", completed: true },
-    { title: "Quiz — Lesson 3: Greetings", score: 10, maxScore: 10, date: "3 ngày trước", completed: true },
-    { title: "Quiz — Lesson 2: Numbers", score: 8, maxScore: 10, date: "5 ngày trước", completed: true },
-    { title: "Quiz — Lesson 1: Alphabet", score: 8, maxScore: 10, date: "1 tuần trước", completed: true },
-    { title: "Quiz — Lesson 6: Animals", score: 0, maxScore: 10, date: "Chưa làm", completed: false },
-    { title: "Quiz — Lesson 7: Food & Drinks", score: 0, maxScore: 10, date: "Chưa làm", completed: false },
-    { title: "Quiz — Lesson 8: Body Parts", score: 0, maxScore: 10, date: "Chưa làm", completed: false },
-  ],
-  recentActivity: [
-    { label: "Hoàn thành Quiz Lesson 5", time: "Hôm qua" },
-    { label: "Làm Quiz Lesson 4", time: "2 ngày trước" },
-    { label: "Bắt đầu Quiz Lesson 3", time: "3 ngày trước" },
-  ],
-}
+import { useStudentProfile } from "@/features/elementary/profile/hooks/use-student-profile"
+import { useGroupsByClass } from "@/features/elementary/quiz/hooks/use-groups"
+import { useLessons } from "@/features/elementary/lessons/hooks/use-lessons"
+import { useGroupLessons } from "@/features/elementary/groups/hooks/use-group-lessons"
 import { StudentGroupRail } from "@/features/elementary/groups/components/student-group-rail"
 
 function getInitials(name: string) {
@@ -46,17 +21,62 @@ function getInitials(name: string) {
   return parts[parts.length - 1][0]
 }
 
-function getScoreVariant(score: number) {
-  if (score >= 9) return "excellent"
-  if (score >= 7.5) return "good"
-  return "average"
-}
-
 export function StudentGroupsPage() {
-  const group = myGroup
-  const quizPct = Math.round(
-    (group.completedQuizzes / group.totalQuizzes) * 100
-  )
+  const { profile, loading: profileLoading } = useStudentProfile()
+  const { groups, loading: groupsLoading } = useGroupsByClass(profile?.classId ?? null)
+  const { lessons, loading: lessonsLoading } = useLessons()
+  const { groupLessons, loading: glLoading } = useGroupLessons(profile?.classId ?? null)
+
+  const loading = profileLoading || groupsLoading || lessonsLoading || glLoading
+
+  // Find the student's group
+  const myGroup = profile?.groupId
+    ? groups.find((g) => g.id === profile.groupId)
+    : null
+
+  // Get group lessons for my group, sorted by lesson number
+  const myGroupLessons = myGroup
+    ? groupLessons
+        .filter((gl) => gl.groupId === myGroup.id)
+        .sort((a, b) => {
+          const aLesson = lessons.find((l) => l.id === a.lessonId)
+          const bLesson = lessons.find((l) => l.id === b.lessonId)
+          return (aLesson?.lessonNumber ?? 0) - (bLesson?.lessonNumber ?? 0)
+        })
+    : []
+
+  // Link to the quiz page with class + group params
+  const quizHref = myGroup && profile?.classId
+    ? `/elementary-student/quiz?class=${profile.classId}&group=${myGroup.id}`
+    : "/elementary-student/quiz"
+
+  if (loading) {
+    return (
+      <div className="el-col-main">
+        <div className="el-loading">
+          <div className="el-spinner" />
+          <span>Đang tải thông tin nhóm...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (!profile || !myGroup) {
+    return (
+      <div className="el-col-main">
+        <div className="el-sgrp-header">
+          <div>
+            <h1>Nhóm của mình</h1>
+            <p>Bạn chưa được phân vào nhóm nào.</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const quizPct = myGroup.totalQuizzes > 0
+    ? Math.round((myGroup.completedQuizzes / myGroup.totalQuizzes) * 100)
+    : 0
 
   return (
     <>
@@ -65,7 +85,7 @@ export function StudentGroupsPage() {
         <div className="el-sgrp-header">
           <div>
             <h1>Nhóm của mình</h1>
-            <p>Lớp {group.className} · Năm học 2025–2026</p>
+            <p>Lớp {myGroup.className} · Năm học 2025–2026</p>
           </div>
         </div>
 
@@ -74,23 +94,22 @@ export function StudentGroupsPage() {
           {/* Card header */}
           <div className="el-sgrp-card-header">
             <div className="el-sgrp-card-left">
-              <span className="el-scls-grade" data-grade={group.grade}>
-                🦊 Nhóm 2
+              <span className="el-scls-grade" data-grade={myGroup.grade}>
+                🦊 Nhóm {profile.groupIndex}
               </span>
-              <h2 className="el-sgrp-group-name">{group.className}</h2>
+              <h2 className="el-sgrp-group-name">{myGroup.className}</h2>
               <div className="el-scls-meta">
                 <span className="el-scls-meta-item">
                   <UsersIcon />
-                  {group.members.length} thành viên
+                  {myGroup.members.length} thành viên
                 </span>
                 <span className="el-scls-meta-item">
-                  <CalendarCheck2Icon />
-                  Bắt đầu từ tháng 1/2026
+                  {myGroup.status === "active" ? "Đang hoạt động" : "Chờ bắt đầu"}
                 </span>
               </div>
             </div>
             <div className="el-sgrp-score-box">
-              <div className="el-sgrp-score-value">{group.averageScore}</div>
+              <div className="el-sgrp-score-value">{myGroup.averageScore}</div>
               <div className="el-sgrp-score-label">Điểm TB nhóm</div>
             </div>
           </div>
@@ -101,7 +120,7 @@ export function StudentGroupsPage() {
               <BookCheckIcon />
               <div>
                 <div style={{ fontSize: 17, fontWeight: 800, lineHeight: 1 }}>
-                  {group.completedQuizzes}/{group.totalQuizzes}
+                  {myGroup.completedQuizzes}/{myGroup.totalQuizzes}
                 </div>
                 <div style={{ fontSize: 11, marginTop: 2 }}>Quiz đã làm</div>
               </div>
@@ -124,11 +143,11 @@ export function StudentGroupsPage() {
             <h3 className="el-scls-section-title">
               Thành viên nhóm
               <span className="el-scls-classmate-count">
-                +{group.members.length}
+                +{myGroup.members.length}
               </span>
             </h3>
             <div className="el-scls-classmates">
-              {group.members.map((mate) => (
+              {myGroup.members.map((mate) => (
                 <div key={mate.studentId} className="el-scls-classmate">
                   <div className="el-scls-classmate-avatar">
                     {getInitials(mate.name)}
@@ -143,45 +162,53 @@ export function StudentGroupsPage() {
           <div className="el-scls-section">
             <h3 className="el-scls-section-title">Tiến độ quiz</h3>
             <div className="el-scls-lesson-list">
-              {group.quizzes.map((quiz, idx) => (
-                <div key={idx} className="el-scls-lesson">
-                  <div className="el-scls-lesson-left">
-                    <div
-                      className={cn(
-                        "el-scls-lesson-icon",
-                        quiz.completed ? "done" : "pending"
-                      )}
-                    >
-                      {quiz.completed ? <CheckCircleIcon /> : <CircleIcon />}
-                    </div>
-                    <div>
-                      <div className="el-scls-lesson-title">{quiz.title}</div>
-                      {quiz.completed && (
-                        <div className="el-scls-lesson-score">
-                          Score: {quiz.score.toFixed(1)}/10
+              {lessons
+                .slice()
+                .sort((a, b) => a.lessonNumber - b.lessonNumber)
+                .map((lesson) => {
+                  const gl = myGroupLessons.find((gl) => gl.lessonId === lesson.id)
+                  const completed = gl?.status === "completed" && gl.score > 0
+                  const score = gl?.score ?? 0
+
+                  return (
+                    <div key={lesson.id} className="el-scls-lesson">
+                      <div className="el-scls-lesson-left">
+                        <div
+                          className={cn(
+                            "el-scls-lesson-icon",
+                            completed ? "done" : "pending"
+                          )}
+                        >
+                          {completed ? <CheckCircleIcon /> : <CircleIcon />}
+                        </div>
+                        <div>
+                          <div className="el-scls-lesson-title">
+                            Quiz — Lesson {lesson.lessonNumber}: {lesson.title}
+                          </div>
+                          {completed && (
+                            <div className="el-scls-lesson-score">
+                              Score: {score.toFixed(1)}/10
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {completed && (
+                        <div className="el-scls-lesson-bar">
+                          <div
+                            className="el-scls-lesson-bar-fill"
+                            style={{ width: `${(score / 10) * 100}%` }}
+                          />
                         </div>
                       )}
                     </div>
-                  </div>
-                  {quiz.completed && (
-                    <div className="el-scls-lesson-bar">
-                      <div
-                        className="el-scls-lesson-bar-fill"
-                        style={{ width: `${(quiz.score / 10) * 100}%` }}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                  )
+                })}
             </div>
           </div>
 
           {/* Quick action */}
           <div className="el-scls-section">
-            <Link
-              href="/elementary-student/quiz?group=g-3-1-02&class=3-1"
-              className="el-sgrp-start-quiz"
-            >
+            <Link href={quizHref} className="el-sgrp-start-quiz">
               <span>Bắt đầu quiz tiếp theo</span>
               <ArrowRightIcon />
             </Link>
@@ -190,7 +217,12 @@ export function StudentGroupsPage() {
       </div>
 
       {/* Right rail — stats & charts */}
-      <StudentGroupRail group={group} />
+      <StudentGroupRail
+        group={myGroup}
+        allGroups={groups}
+        myGroupId={myGroup.id}
+        groupLessons={myGroupLessons}
+      />
     </>
   )
 }
