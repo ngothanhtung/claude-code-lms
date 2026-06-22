@@ -83,15 +83,30 @@ export function useStudentClass(
     ).length
 
     // 2. Build classmates — deduplicate by name across all groups
+    //    and compute average score per member from groupLessons
     const seen = new Set<string>()
-    const classmates: { name: string; avatar: string }[] = []
+    const classmates: { name: string; avatar: string; averageScore: number }[] = []
+
     for (const group of groups) {
+      // Get groupLessons for this group that are completed
+      const groupGl = groupLessons.filter(
+        (gl) => gl.groupId === group.id && gl.status === "completed"
+      )
+
       for (const member of group.members) {
         if (!seen.has(member.name)) {
           seen.add(member.name)
+
+          // Average score of this member's group lessons
+          const scores = groupGl.map((gl) => gl.score)
+          const avgScore = scores.length > 0
+            ? Number((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1))
+            : 0
+
           classmates.push({
             name: member.name,
             avatar: member.studentId.slice(-2),
+            averageScore: avgScore,
           })
         }
       }

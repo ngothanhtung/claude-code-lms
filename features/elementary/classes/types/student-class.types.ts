@@ -23,5 +23,6 @@ export interface StudentClass {
   classmates: {
     name: string
     avatar: string
+    averageScore: number
   }[]
 }
