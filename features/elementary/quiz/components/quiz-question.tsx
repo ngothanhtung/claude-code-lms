@@ -60,6 +60,12 @@ export function QuizQuestion({
 
       <div className="el-q-content">{question.content}</div>
 
+      {question.type === "image_choice" && question.imageUrl && (
+        <div className="el-q-image">
+          <img src={question.imageUrl} alt={question.content} />
+        </div>
+      )}
+
       <div className="el-q-options">
         {question.options.map((option, idx) => {
           let optionClass = "el-q-option"

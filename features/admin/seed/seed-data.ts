@@ -58,6 +58,8 @@ export interface SeedUser {
   roles: string[]
   classId?: string
   classIds?: string[]
+  /** Student ID matching groups.members[].studentId (e.g. "HS3101") */
+  studentId?: string
 }
 
 export const seedUsers: SeedUser[] = [
@@ -80,24 +82,6 @@ export const seedUsers: SeedUser[] = [
     classIds: ["class_3_1"],
   },
   {
-    id: "user_3",
-    name: "Trần Minh Tuấn",
-    email: "tuan.tran@student.edu.vn",
-    password: "123456",
-    schoolId: "school_1",
-    roles: ["role_student"],
-    classId: "class_3_1",
-  },
-  {
-    id: "user_4",
-    name: "Lê Thị Hương",
-    email: "huong.le@student.edu.vn",
-    password: "123456",
-    schoolId: "school_1",
-    roles: ["role_student"],
-    classId: "class_3_1",
-  },
-  {
     id: "user_5",
     name: "Root Admin",
     email: "admin@school.edu.vn",
@@ -106,6 +90,51 @@ export const seedUsers: SeedUser[] = [
     roles: ["role_admin"],
   },
 ]
+
+/**
+ * Auto-generate student users from the first class (class_3_1).
+ * Each student in the first few groups gets a `studentId` matching
+ * `groups.members[].studentId` so the session can resolve their group.
+ *
+ * The id uses a stable slug derived from the studentId (e.g. "user_HS3101")
+ * so it doesn't collide with the hardcoded "user_3", "user_4" above.
+ */
+function makeStudentEmail(studentId: string, name: string): string {
+  // Normalize Vietnamese diacritics away so the email stays ASCII-safe.
+  const slug = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, ".")
+    .replace(/^\.|\.$/g, "")
+  return `${slug}.${studentId.toLowerCase()}@student.edu.vn`
+}
+
+function generateStudentUsers(): SeedUser[] {
+  // Pick the first class and first 4 groups (8 students) — enough to cover
+  // typical demo flows without seeding hundreds of accounts.
+  const targetClassId = "class_3_1"
+  const targetGroups = seedGroups.filter((g) => g.classId === targetClassId).slice(0, 4)
+
+  const users: SeedUser[] = []
+  for (const group of targetGroups) {
+    for (const member of group.members) {
+      users.push({
+        id: `user_${member.studentId}`,
+        name: member.name,
+        email: makeStudentEmail(member.studentId, member.name),
+        password: "123456",
+        schoolId: "school_1",
+        roles: ["role_student"],
+        classId: targetClassId,
+        studentId: member.studentId,
+      })
+    }
+  }
+  return users
+}
+
+export const seedStudentUsers: SeedUser[] = generateStudentUsers()
 
 /* ─── Classes ─── */
 export interface SeedClass {
@@ -183,8 +212,9 @@ export const seedQuizzes: SeedQuiz[] = seedLessons.map((lesson) => ({
 export interface SeedQuestion {
   id: string
   content: string
-  type: "quiz" | "fill_in_blank"
+  type: "quiz" | "fill_in_blank" | "image_choice"
   options: { content: string; isCorrect: boolean }[]
+  imageUrl?: string
 }
 
 const lessonVocab: Record<string, { en: string; vi: string }[]> = {
@@ -253,13 +283,45 @@ function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
+/** English word → emoji for placeholder flashcard images */
+const imageEmoji: Record<string, string> = {
+  // Alphabet
+  A: "🅰️", B: "🅱️", C: "©️", D: "🇩", E: "🅴", F: "🇫",
+  G: "🅶", H: "🅷", I: "🇮", J: "🅹",
+  // Numbers
+  One: "1️⃣", Two: "2️⃣", Three: "3️⃣", Four: "4️⃣", Five: "5️⃣",
+  Six: "6️⃣", Seven: "7️⃣", Eight: "8️⃣", Nine: "9️⃣", Ten: "🔟",
+  // Greetings
+  Hello: "👋", Goodbye: "👋", "Thank you": "🙏", Please: "🙏",
+  Sorry: "😔", Yes: "✅", No: "❌",
+  "Good morning": "🌅", "Good night": "🌙", "How are you?": "🤔",
+  // Colors
+  Red: "🔴", Blue: "🔵", Green: "🟢", Yellow: "🟡", Orange: "🟠",
+  Purple: "🟣", Pink: "🩷", Black: "⚫", White: "⚪", Brown: "🟤",
+  // Family
+  Mother: "👩", Father: "👨", Sister: "👧", Brother: "👦",
+  Grandmother: "👵", Grandfather: "👴", Family: "👨‍👩‍👧‍👦",
+  Baby: "👶", Aunt: "👩", Uncle: "👨",
+  // Animals
+  Cat: "🐱", Dog: "🐶", Bird: "🐦", Fish: "🐟", Cow: "🐄",
+  Pig: "🐷", Horse: "🐴", Duck: "🦆", Rabbit: "🐰", Elephant: "🐘",
+  // Food
+  Rice: "🍚", Bread: "🍞", Milk: "🥛", Water: "💧", Apple: "🍎",
+  Banana: "🍌", Egg: "🥚", Chicken: "🍗", Cake: "🎂",
+  // Body
+  Head: "🧠", Eye: "👁️", Nose: "👃", Mouth: "👄", Ear: "👂",
+  Hand: "✋", Foot: "🦶", Arm: "💪", Leg: "🦵", Stomach: "🤰",
+}
+
 function generateQuestions(
   lessonId: string,
   vocab: { en: string; vi: string }[]
 ): SeedQuestion[] {
   const selected = shuffle(vocab).slice(0, 10)
+  const baseIdx = (parseInt(lessonId.split("_")[1]) - 1) * 10
+
   return selected.map((word, qi) => {
-    const qId = `question_${(parseInt(lessonId.split("_")[1]) - 1) * 10 + qi + 1}`
+    const qId = `question_${baseIdx + qi + 1}`
     const correct = word.vi
     const pool = vocab.filter((w) => w.vi !== correct)
     const wrongs = shuffle(pool).slice(0, 3).map((w) => w.vi)
@@ -267,7 +329,34 @@ function generateQuestions(
       { content: correct, isCorrect: true },
       ...wrongs.map((c: string) => ({ content: c, isCorrect: false as const })),
     ])
-    return { id: qId, content: `"${word.en}" nghĩa là gì?`, type: "quiz" as const, options }
+
+    /* Mix: 4 image_choice, 3 fill_in_blank, 3 quiz (first 10 selected words) */
+    if (qi < 4) {
+      const emoji = imageEmoji[word.en] ?? "❓"
+      return {
+        id: qId,
+        content: `"${word.en}" — Chọn hình đúng?`,
+        type: "image_choice" as const,
+        imageUrl: `https://placehold.co/300x300?text=${encodeURIComponent(emoji)}`,
+        options,
+      }
+    }
+
+    if (qi < 7) {
+      return {
+        id: qId,
+        content: `"___" nghĩa là "${word.vi}"`,
+        type: "fill_in_blank" as const,
+        options,
+      }
+    }
+
+    return {
+      id: qId,
+      content: `"${word.en}" nghĩa là gì?`,
+      type: "quiz" as const,
+      options,
+    }
   })
 }
 

@@ -4,8 +4,10 @@ import type { Timestamp } from "firebase/firestore"
 export interface QuizQuestion {
   id: string
   content: string
-  type: "quiz" | "fill_in_blank"
+  type: "quiz" | "fill_in_blank" | "image_choice"
   options: QuizOption[]
+  /** Optional image URL for flashcard-style questions */
+  imageUrl?: string
 }
 
 export interface QuizOption {

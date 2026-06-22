@@ -146,7 +146,7 @@ export function ClassesPage() {
 
             return (
               <Link
-                href={`/elementary-teacher/groups?class=${cls.id}`}
+                href={`/elementary-teacher/classes/${cls.id}/groups`}
                 key={cls.id}
                 className={cn(
                   "el-cls-card",

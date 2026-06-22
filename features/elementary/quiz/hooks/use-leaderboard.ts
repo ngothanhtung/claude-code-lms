@@ -3,9 +3,14 @@
 import { useMemo } from "react"
 import type { QuizAnswer, LeaderboardEntry } from "../types/quiz.types"
 
+/** Extract the numeric suffix from a groupId and return a display name */
+export function getGroupDisplayName(groupId: string): string {
+  const num = parseInt(groupId.split("_").pop() ?? "0", 10)
+  return `Nhóm ${num}`
+}
+
 function getGroupName(groupId: string) {
-  const groupNumber = groupId.split("-").pop()
-  return groupNumber ? `Nhóm ${groupNumber}` : groupId
+  return getGroupDisplayName(groupId)
 }
 
 interface UseLeaderboardReturn {

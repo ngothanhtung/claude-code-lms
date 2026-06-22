@@ -23,6 +23,9 @@
 /* ── Actions ── */
 .seed-actions {
   margin-bottom: 28px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .seed-btn {
@@ -48,6 +51,17 @@
 
 .seed-btn-primary:hover:not(:disabled) {
   background: hsl(var(--primary) / 0.85);
+}
+
+.seed-btn-danger {
+  background: hsl(0 84% 60%);
+  color: #fff;
+  padding: 12px 28px;
+  font-size: 16px;
+}
+
+.seed-btn-danger:hover:not(:disabled) {
+  background: hsl(0 84% 50%);
 }
 
 .seed-btn-sm {

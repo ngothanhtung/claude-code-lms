@@ -10,6 +10,7 @@ import {
   CircleIcon,
   ClockIcon,
   LinkIcon,
+  PlayIcon,
   PlusIcon,
   StarIcon,
   TrophyIcon,
@@ -19,12 +20,15 @@ import {
 import { cn } from "@/lib/utils"
 import { useClasses, type GradeLevel } from "@/features/elementary/quiz/hooks/use-classes"
 import { useGroupsByClass, type Group } from "@/features/elementary/quiz/hooks/use-groups"
-import { useLessons } from "@/features/elementary/lessons/hooks/use-lessons"
+import { useLessons, type Lesson, type LessonStatus } from "@/features/elementary/lessons/hooks/use-lessons"
 import { useClassLessons } from "@/features/elementary/lessons/hooks/use-class-lessons"
 import { useGroupLessons } from "@/features/elementary/groups/hooks/use-group-lessons"
 import { LessonQuizDialog } from "@/features/elementary/quiz/components/lesson-quiz-dialog"
-import type { Lesson } from "@/features/elementary/lessons/hooks/use-lessons"
-import type { LessonStatus } from "@/features/elementary/lessons/hooks/use-lessons"
+
+function getGroupDisplayName(groupId: string) {
+  const num = parseInt(groupId.split("_").pop() ?? "0", 10)
+  return `Nhóm ${num}`
+}
 
 type GroupStatus = "waiting" | "active"
 
@@ -91,7 +95,7 @@ export function GroupsPage({ classId }: { classId?: string }) {
   const { classes: allClasses } = useClasses()
   const { groups: allGroups } = useGroupsByClass(classId ?? null)
   const { lessons, loading: lessonsLoading } = useLessons()
-  const { classLessons, loading: classLessonsLoading } = useClassLessons(
+  const { classLessons, loading: classLessonsLoading, setCurrentLesson, updating: updatingLesson } = useClassLessons(
     classId ?? null
   )
   const { groupLessons, loading: groupLessonsLoading } = useGroupLessons(
@@ -382,27 +386,42 @@ export function GroupsPage({ classId }: { classId?: string }) {
                 const cfg = lessonStatusConfig[lesson.status]
                 const StatusIcon = cfg.icon
                 return (
-                  <button
+                  <div
                     key={lesson.id}
-                    type="button"
                     className={cn("el-lesson-item", cfg.className)}
-                    onClick={() => setSelectedLesson(lesson)}
                   >
-                    <div className="el-lesson-icon">
-                      <StatusIcon />
-                    </div>
-                    <div className="el-lesson-info">
-                      <div className="el-lesson-title">
-                        Lesson {lesson.lessonNumber}: {lesson.title}
+                    <button
+                      type="button"
+                      className="el-lesson-clickable"
+                      onClick={() => setSelectedLesson(lesson)}
+                    >
+                      <div className="el-lesson-icon">
+                        <StatusIcon />
                       </div>
-                      <div className="el-lesson-meta">
-                        {lesson.description} · {lesson.totalWords} từ · {lesson.quizCount} quiz
+                      <div className="el-lesson-info">
+                        <div className="el-lesson-title">
+                          Lesson {lesson.lessonNumber}: {lesson.title}
+                        </div>
+                        <div className="el-lesson-meta">
+                          {lesson.description} · {lesson.totalWords} từ · {lesson.quizCount} quiz
+                        </div>
                       </div>
-                    </div>
-                    <span className={cn("el-lesson-badge", cfg.className)}>
-                      {cfg.label}
-                    </span>
-                  </button>
+                      <span className={cn("el-lesson-badge", cfg.className)}>
+                        {cfg.label}
+                      </span>
+                    </button>
+                    {lesson.status === "pending" && (
+                      <button
+                        type="button"
+                        className="el-lesson-set-current"
+                        disabled={updatingLesson}
+                        onClick={() => setCurrentLesson(lesson.lessonNumber)}
+                      >
+                        <PlayIcon className="h-3.5 w-3.5" />
+                        Đặt làm bài hiện tại
+                      </button>
+                    )}
+                  </div>
                 )
               })}
             </div>
@@ -444,7 +463,7 @@ export function GroupsPage({ classId }: { classId?: string }) {
 
                 <div className="el-grp-rank-main">
                   <div className="el-grp-rank-title">
-                    <span>Nhóm {group.id.split("-").pop()}</span>
+                    <span>{getGroupDisplayName(group.id)}</span>
                     <span className="el-scls-grade" data-grade={group.grade}>
                       {gradeEmoji[group.grade]} {group.className}
                     </span>
@@ -549,7 +568,7 @@ export function GroupsPage({ classId }: { classId?: string }) {
                 {/* Members */}
                 <div className="el-grp-card-body">
                   <div className="el-grp-class-name">
-                    Nhóm {group.id.split("-").pop()}
+                    {getGroupDisplayName(group.id)}
                   </div>
 
                   <div className="el-grp-members">

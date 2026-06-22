@@ -15,8 +15,8 @@ const quickActions = [
   { label: "Giao bài tập", tint: "blue" as const, icon: "clipboard-list" },
   { label: "Tạo quiz", href: "/elementary-teacher/quizzes", tint: "indigo" as const, icon: "pen-square" },
   { label: "Xem lớp học", href: "/elementary-teacher/classes", tint: "amber" as const, icon: "users" },
+  { label: "Nhóm học", tint: "indigo" as const, icon: "user-plus" },
   { label: "Tài liệu", tint: "red" as const, icon: "file-text" },
-  { label: "Nhóm học", href: "/elementary-teacher/groups", tint: "indigo" as const, icon: "user-plus" },
   { label: "Thông báo PH", tint: "green" as const, icon: "megaphone" },
   { label: "Xem báo cáo", tint: "blue" as const, icon: "bar-chart-3" },
 ]

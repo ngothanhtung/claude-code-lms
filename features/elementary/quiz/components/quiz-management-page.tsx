@@ -286,10 +286,19 @@ export function QuizManagementPage() {
                   <div key={q.id} className="el-qm-question-card">
                     <div className="el-qm-q-header">
                       <span className="el-qm-q-num">Câu {idx + 1}</span>
-                      <span className="el-qm-q-type">
-                        {q.type === "quiz" ? "Trắc nghiệm" : "Điền khuyết"}
+                      <span className="el-qm-q-type-badge" data-type={q.type}>
+                        {q.type === "image_choice"
+                          ? "Hình ảnh"
+                          : q.type === "fill_in_blank"
+                            ? "Điền khuyết"
+                            : "Trắc nghiệm"}
                       </span>
                     </div>
+                    {q.type === "image_choice" && q.imageUrl && (
+                      <div className="el-qm-q-thumb">
+                        <img src={q.imageUrl} alt={q.content} />
+                      </div>
+                    )}
                     <div className="el-qm-q-content">{q.content}</div>
                     <div className="el-qm-q-options">
                       {q.options.map((opt, optIdx) => (

@@ -5,6 +5,8 @@ import {
   doc,
   writeBatch,
   Timestamp,
+  collection,
+  getDocs,
 } from "firebase/firestore"
 import { db } from "@/lib/firebase/firestore"
 import {
@@ -20,8 +22,12 @@ import {
   seedLevels,
   seedRoles,
   seedUsers,
+  seedStudentUsers,
   seedQuizQuestions,
 } from "../seed-data"
+
+/** All users to seed — fixed staff/admin + auto-generated students from groups */
+const seedAllUsers = [...seedUsers, ...seedStudentUsers]
 
 type Status = "idle" | "running" | "done" | "error"
 
@@ -74,13 +80,48 @@ export function SeedPage() {
     [updateLog]
   )
 
-  const handleSeedAll = useCallback(async () => {
+  const clearCollection = useCallback(
+    async (collectionName: string) => {
+      const snapshot = await getDocs(collection(db, collectionName))
+      if (snapshot.empty) return 0
+      let deleted = 0
+      const batchSize = 500
+      const docs = snapshot.docs
+      for (let i = 0; i < docs.length; i += batchSize) {
+        const batch = writeBatch(db)
+        for (const d of docs.slice(i, i + batchSize)) {
+          batch.delete(d.ref)
+        }
+        await batch.commit()
+        deleted += Math.min(batchSize, docs.length - i)
+      }
+      return deleted
+    },
+    []
+  )
+
+  const handleSeedAll = useCallback(async (clearFirst: boolean) => {
     if (runningRef.current) return
     runningRef.current = true
     setLogs([])
     setOverall("running")
 
     try {
+      // List of all collections in seed order
+      const collections = [
+        "schools", "levels", "roles", "users",
+        "lessons", "quizzes", "questions", "quizQuestions",
+        "classes", "classLessons", "groups", "groupLessons", "answers",
+      ]
+
+      // Clear all collections first if requested
+      if (clearFirst) {
+        for (const name of collections) {
+          await clearCollection(name)
+          updateLog(name, { status: "idle", count: 0 })
+        }
+      }
+
       // 0. Schools
       await seedCollection("schools", seedSchools, "schools")
 
@@ -91,7 +132,7 @@ export function SeedPage() {
       await seedCollection("roles", seedRoles, "roles")
 
       // 3. Users
-      await seedCollection("users", seedUsers, "users")
+      await seedCollection("users", seedAllUsers, "users")
 
       // 4. Lessons
       await seedCollection("lessons", seedLessons, "lessons")
@@ -167,7 +208,7 @@ export function SeedPage() {
     { label: "schools", count: seedSchools.length, collection: "schools", data: seedSchools },
     { label: "levels", count: seedLevels.length, collection: "levels", data: seedLevels },
     { label: "roles", count: seedRoles.length, collection: "roles", data: seedRoles },
-    { label: "users", count: seedUsers.length, collection: "users", data: seedUsers },
+    { label: "users", count: seedAllUsers.length, collection: "users", data: seedAllUsers },
     { label: "lessons", count: seedLessons.length, collection: "lessons", data: seedLessons },
     { label: "quizzes", count: seedQuizzes.length, collection: "quizzes", data: seedQuizzes },
     { label: "questions", count: seedQuestions.length, collection: "questions", data: seedQuestions },
@@ -189,8 +230,16 @@ export function SeedPage() {
       <div className="seed-actions">
         <button
           type="button"
+          className="seed-btn seed-btn-danger"
+          onClick={() => handleSeedAll(true)}
+          disabled={overall === "running"}
+        >
+          {overall === "running" ? "⏳ Đang xử lý..." : "🗑 Xóa sạch + Seed lại"}
+        </button>
+        <button
+          type="button"
           className="seed-btn seed-btn-primary"
-          onClick={handleSeedAll}
+          onClick={() => handleSeedAll(false)}
           disabled={overall === "running"}
         >
           {overall === "running" ? "⏳ Đang seed..." : "🚀 Seed tất cả"}
@@ -237,7 +286,7 @@ export function SeedPage() {
 
       <div className="seed-info">
         <h3>Cấu trúc Firestore</h3>
-        <pre>{`schools       — ${seedSchools.length} doc  (id: "school_1")\nlevels        — ${seedLevels.length} docs  (id: "level_1" → "level_5")\nroles         — ${seedRoles.length} docs  (id: "role_student", "role_elementary_teacher", ...)\nusers         — ${seedUsers.length} docs  (id: "user_1" → "user_5")\nlessons       — ${seedLessons.length} docs  (id: "lesson_1" → "lesson_8")\nquizzes       — ${seedQuizzes.length} docs  (id: "quiz_lesson_1_1", ...)\nquestions     — ${seedQuestions.length} docs  (10 per lesson × 8 lessons)\nquizQuestions — ${seedQuizQuestions.length} docs  (bridge: quiz → question)\nclasses       — ${seedClasses.length} docs  (id: "class_1_1", "class_3_2", ...)\nclassLessons  — ${seedClassLessons.length} docs  (${seedClasses.length} classes × ${seedLessons.length} lessons)\ngroups        — ${seedGroups.length} docs   (20 per class)\ngroupLessons  — ${seedGroupLessons.length} docs  (${seedGroups.length} groups × ${seedLessons.length} lessons)\nanswers       — ${seedAnswers.length} docs   (sample leaderboard)`}</pre>
+        <pre>{`schools       — ${seedSchools.length} doc  (id: "school_1")\nlevels        — ${seedLevels.length} docs  (id: "level_1" → "level_5")\nroles         — ${seedRoles.length} docs  (id: "role_student", "role_elementary_teacher", ...)\nusers         — ${seedAllUsers.length} docs  (staff + auto-gen students)\nlessons       — ${seedLessons.length} docs  (id: "lesson_1" → "lesson_8")\nquizzes       — ${seedQuizzes.length} docs  (id: "quiz_lesson_1_1", ...)\nquestions     — ${seedQuestions.length} docs  (10 per lesson × 8 lessons)\nquizQuestions — ${seedQuizQuestions.length} docs  (bridge: quiz → question)\nclasses       — ${seedClasses.length} docs  (id: "class_1_1", "class_3_2", ...)\nclassLessons  — ${seedClassLessons.length} docs  (${seedClasses.length} classes × ${seedLessons.length} lessons)\ngroups        — ${seedGroups.length} docs   (20 per class)\ngroupLessons  — ${seedGroupLessons.length} docs  (${seedGroups.length} groups × ${seedLessons.length} lessons)\nanswers       — ${seedAnswers.length} docs   (sample leaderboard)`}</pre>
       </div>
     </div>
   )

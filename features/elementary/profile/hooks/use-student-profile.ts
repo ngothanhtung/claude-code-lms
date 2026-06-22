@@ -59,11 +59,13 @@ export function useStudentProfile(): UseStudentProfileReturn {
 
         const userData = userSnapshot.docs[0].data()
         const classId = userData.classId as string | undefined
+        const studentId = userData.studentId as string | undefined
+        const userName = (session!.user.name ?? "").trim()
 
         if (!classId) {
           setProfile({
             userId,
-            name: session!.user.name ?? "",
+            name: userName,
             classId: "",
             groupId: null,
             groupIndex: null,
@@ -72,7 +74,9 @@ export function useStudentProfile(): UseStudentProfileReturn {
           return
         }
 
-        // 2. Find the group that contains this student
+        // 2. Find the group that contains this student.
+        // Prefer matching by `studentId` (e.g. "HS3101") since it's a stable,
+        // unique identifier. Fall back to name match if studentId is absent.
         const groupsQuery = query(
           collection(db, "groups"),
           where("classId", "==", classId)
@@ -83,16 +87,14 @@ export function useStudentProfile(): UseStudentProfileReturn {
 
         let foundGroupId: string | null = null
         let foundGroupIndex: number | null = null
-        const userName = (session!.user.name ?? "").trim()
 
         groupsSnapshot.docs.forEach((groupDoc) => {
           const members = groupDoc.data().members as { name: string; studentId: string }[] ?? []
-          // Match by name (userId in `users` collection is e.g. "user_3" but
-          // `members[].studentId` is "HS3101" — they don't share a key).
-          // Name is the reliable shared identifier.
-          const isMember = members.some(
-            (m) => m.name.trim() === userName
-          )
+          const isMember = members.some((m) => {
+            if (studentId && m.studentId === studentId) return true
+            if (m.name.trim() === userName) return true
+            return false
+          })
           if (isMember) {
             foundGroupId = groupDoc.id
             const parts = groupDoc.id.split("_")

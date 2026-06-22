@@ -11,14 +11,12 @@ import {
   PenSquareIcon,
   SettingsIcon,
   UsersIcon,
-  UserPlusIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/elementary-teacher", label: "Tổng quan", icon: GraduationCapIcon },
   { href: "/elementary-teacher/classes", label: "Lớp học", icon: UsersIcon },
-  { href: "/elementary-teacher/groups", label: "Nhóm học", icon: UserPlusIcon },
   { href: "/elementary-teacher/quizzes", label: "Bài quiz", icon: PenSquareIcon },
   { href: "/elementary-teacher/documents", label: "Tài liệu", icon: BookOpenIcon },
 ]

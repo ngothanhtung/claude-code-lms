@@ -1198,6 +1198,77 @@
   color: hsl(var(--el-primary-foreground));
 }
 
+/* ─── Question image (flashcard) ─── */
+
+.el-q-image {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.el-q-image img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 16px;
+  border: 2.5px solid hsl(var(--el-border));
+  background: hsl(var(--el-card));
+  box-shadow: 0 4px 20px hsl(0 0% 0% / 0.08);
+}
+
+/* ─── Question type badge (student quiz) ─── */
+
+.el-q-type-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: hsl(var(--el-primary-muted));
+  color: hsl(var(--el-muted-foreground));
+  letter-spacing: 0.02em;
+}
+
+/* ─── Question type badge (teacher management) ─── */
+
+.el-qm-q-type-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.el-qm-q-type-badge[data-type="image_choice"] {
+  background: hsl(262 83% 94%);
+  color: hsl(262 83% 45%);
+}
+
+.el-qm-q-type-badge[data-type="fill_in_blank"] {
+  background: hsl(142 71% 92%);
+  color: hsl(142 71% 30%);
+}
+
+.el-qm-q-type-badge[data-type="quiz"] {
+  background: hsl(var(--el-primary-muted));
+  color: hsl(var(--el-muted-foreground));
+}
+
+/* ─── Thumbnail in management page ─── */
+
+.el-qm-q-thumb {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 0;
+}
+
+.el-qm-q-thumb img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1.5px solid hsl(var(--el-border));
+}
+
 .el-q-nav {
   display: flex;
   justify-content: space-between;
@@ -3510,16 +3581,30 @@
 
 .el-lesson-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
+  flex-direction: column;
+  gap: 0;
   border-radius: var(--el-radius);
   background: hsl(var(--el-card));
   border: 1px solid hsl(var(--el-border));
   transition: background 0.15s;
 }
 
-.el-lesson-item:hover {
+.el-lesson-clickable {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: var(--el-radius);
+  transition: background 0.15s;
+}
+
+.el-lesson-clickable:hover {
   background: hsl(var(--el-muted) / 0.5);
 }
 
@@ -3530,6 +3615,34 @@
 
 .el-lesson-item.completed {
   opacity: 0.75;
+}
+
+.el-lesson-set-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 14px 10px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1.5px solid hsl(142 71% 55% / 0.4);
+  background: hsl(142 71% 55% / 0.08);
+  color: hsl(142 71% 40%);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.el-lesson-set-current:hover {
+  background: hsl(142 71% 55% / 0.15);
+  border-color: hsl(142 71% 55% / 0.6);
+}
+
+.el-lesson-set-current:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .el-lesson-icon {
