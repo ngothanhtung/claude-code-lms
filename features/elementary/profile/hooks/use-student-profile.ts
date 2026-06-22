@@ -83,11 +83,15 @@ export function useStudentProfile(): UseStudentProfileReturn {
 
         let foundGroupId: string | null = null
         let foundGroupIndex: number | null = null
+        const userName = (session!.user.name ?? "").trim()
 
         groupsSnapshot.docs.forEach((groupDoc) => {
           const members = groupDoc.data().members as { name: string; studentId: string }[] ?? []
+          // Match by name (userId in `users` collection is e.g. "user_3" but
+          // `members[].studentId` is "HS3101" — they don't share a key).
+          // Name is the reliable shared identifier.
           const isMember = members.some(
-            (m) => m.studentId === userId || m.name === session!.user.name
+            (m) => m.name.trim() === userName
           )
           if (isMember) {
             foundGroupId = groupDoc.id
