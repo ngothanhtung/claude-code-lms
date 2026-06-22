@@ -11,11 +11,23 @@ import { Card } from "@/components/ui/card"
 
 interface StudentStatCardProps {
   variant: "lessons" | "score" | "streak" | "group"
+  lessons?: { completed: boolean }[]
+  totalLessons?: number
+  averageScore?: string
+  groupName?: string
+  groupCompletedQuizzes?: number
+  groupTotalQuizzes?: number
   className?: string
 }
 
 export function StudentStatCard({
   variant,
+  lessons: lessonData = [],
+  totalLessons = 8,
+  averageScore = "0",
+  groupName = "",
+  groupCompletedQuizzes = 0,
+  groupTotalQuizzes = 0,
   className,
 }: StudentStatCardProps) {
   type StatConfig = {
@@ -29,37 +41,41 @@ export function StudentStatCard({
     progress?: number
   }
 
+  const completedCount = lessonData.filter((l) => l.completed).length
+  const groupPct = groupTotalQuizzes > 0 ? Math.round((groupCompletedQuizzes / groupTotalQuizzes) * 100) : 0
+
   const configs: Record<StudentStatCardProps["variant"], StatConfig> = {
     lessons: {
       icon: BookOpenIcon,
       iconTint: "blue",
       label: "Bài học đã học",
-      value: "5/8",
-      detail: "Lesson 1 → Lesson 5",
+      value: `${completedCount}/${totalLessons}`,
+      detail: completedCount > 0
+        ? `Lesson 1 → Lesson ${completedCount}`
+        : "Chưa bắt đầu",
     },
     score: {
       icon: StarIcon,
       iconTint: "amber",
       label: "Điểm trung bình",
-      value: "8.5",
-      detail: "Top 5 lớp 3A",
-      trend: "+0.3",
+      value: averageScore,
+      detail: parseFloat(averageScore) >= 8 ? "Top lớp" : "Cần cố gắng thêm",
     },
     streak: {
       icon: FlameIcon,
       iconTint: "red",
-      label: "Chuỗi ngày học",
-      value: "12",
-      detail: "ngày liên tiếp 🔥",
+      label: "Bài đã hoàn thành",
+      value: `${completedCount}`,
+      detail: `${completedCount} bài đã học`,
       spark: true,
     },
     group: {
       icon: UsersIcon,
       iconTint: "green",
       label: "Nhóm học",
-      value: "Nhóm 2",
-      detail: "Hoàn thành 5/6 quiz",
-      progress: 83,
+      value: groupName || "Chưa có nhóm",
+      detail: `Hoàn thành ${groupCompletedQuizzes}/${groupTotalQuizzes} quiz`,
+      progress: groupPct,
     },
   }
 
