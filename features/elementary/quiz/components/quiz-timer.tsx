@@ -22,7 +22,7 @@ export function QuizTimer({ timeRemaining, isWarning }: QuizTimerProps) {
         "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold tabular-nums",
         isWarning
           ? "bg-red-50 text-red-600 animate-pulse"
-          : "bg-gray-100 text-gray-700"
+          : "bg-indigo-50 text-indigo-700"
       )}
     >
       <ClockIcon className="h-4 w-4" />

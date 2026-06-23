@@ -57,7 +57,6 @@ export interface SeedUser {
   schoolId: string
   roles: string[]
   classId?: string
-  classIds?: string[]
   /** Student ID matching groups.members[].studentId (e.g. "HS3101") */
   studentId?: string
 }
@@ -70,7 +69,7 @@ export const seedUsers: SeedUser[] = [
     password: "123456",
     schoolId: "school_1",
     roles: ["role_elementary_teacher"],
-    classIds: ["class_3_1", "class_3_2"],
+    classId: "class_3_1",
   },
   {
     id: "user_2",
@@ -79,62 +78,17 @@ export const seedUsers: SeedUser[] = [
     password: "123456",
     schoolId: "school_1",
     roles: ["role_elementary_teacher"],
-    classIds: ["class_3_1"],
+    classId: "class_3_1",
   },
   {
     id: "user_5",
     name: "Root Admin",
     email: "admin@school.edu.vn",
-    password: "147258369",
+    password: "123456",
     schoolId: "school_1",
     roles: ["role_admin"],
   },
 ]
-
-/**
- * Auto-generate student users from the first class (class_3_1).
- * Each student in the first few groups gets a `studentId` matching
- * `groups.members[].studentId` so the session can resolve their group.
- *
- * The id uses a stable slug derived from the studentId (e.g. "user_HS3101")
- * so it doesn't collide with the hardcoded "user_3", "user_4" above.
- */
-function makeStudentEmail(studentId: string, name: string): string {
-  // Normalize Vietnamese diacritics away so the email stays ASCII-safe.
-  const slug = name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, ".")
-    .replace(/^\.|\.$/g, "")
-  return `${slug}.${studentId.toLowerCase()}@student.edu.vn`
-}
-
-function generateStudentUsers(): SeedUser[] {
-  // Pick the first class and first 4 groups (8 students) — enough to cover
-  // typical demo flows without seeding hundreds of accounts.
-  const targetClassId = "class_3_1"
-  const targetGroups = seedGroups.filter((g) => g.classId === targetClassId).slice(0, 4)
-
-  const users: SeedUser[] = []
-  for (const group of targetGroups) {
-    for (const member of group.members) {
-      users.push({
-        id: `user_${member.studentId}`,
-        name: member.name,
-        email: makeStudentEmail(member.studentId, member.name),
-        password: "123456",
-        schoolId: "school_1",
-        roles: ["role_student"],
-        classId: targetClassId,
-        studentId: member.studentId,
-      })
-    }
-  }
-  return users
-}
-
-export const seedStudentUsers: SeedUser[] = generateStudentUsers()
 
 /* ─── Classes ─── */
 export interface SeedClass {
@@ -528,6 +482,42 @@ export const seedGroupLessons: SeedGroupLesson[] = seedGroups.flatMap((group) =>
     }
   })
 })
+
+/**
+ * Auto-generate student users from seed groups.
+ * Each user gets a `studentId` matching `groups.members[].studentId` so the session can resolve their group.
+ * The id is the studentId itself (e.g. "HS3101").
+ */
+function makeStudentEmail(studentId: string, name: string): string {
+  const slug = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, ".")
+    .replace(/^\.|\.$/g, "")
+  return `${slug}.${studentId.toLowerCase()}@student.edu.vn`
+}
+
+function generateStudentUsers(): SeedUser[] {
+  const users: SeedUser[] = []
+  for (const group of seedGroups) {
+    for (const member of group.members) {
+      users.push({
+        id: member.studentId,
+        name: member.name,
+        email: makeStudentEmail(member.studentId, member.name),
+        password: "123456",
+        schoolId: "school_1",
+        roles: ["role_student"],
+        classId: group.classId,
+        studentId: member.studentId,
+      })
+    }
+  }
+  return users
+}
+
+export const seedStudentUsers: SeedUser[] = generateStudentUsers()
 
 /* ─── Answers ─── */
 export interface SeedAnswer {

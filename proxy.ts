@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 
-const publicRoutes = new Set([
+// NextAuth routes that need auth middleware
+const nextAuthRoutes = new Set([
   "/login",
   "/login-student",
   "/register",
@@ -11,19 +12,26 @@ const publicRoutes = new Set([
 export default auth((request) => {
   const { nextUrl } = request
   const isAuthenticated = Boolean(request.auth)
-  const isPublicRoute = publicRoutes.has(nextUrl.pathname)
+  const isNextAuthRoute = nextAuthRoutes.has(nextUrl.pathname)
+  const isStudentRoute = nextUrl.pathname.startsWith("/elementary-student/")
 
-  if (isAuthenticated && isPublicRoute) {
+  // Elementary student routes: bypass NextAuth, handled by session context
+  if (isStudentRoute) {
+    return NextResponse.next()
+  }
+
+  // NextAuth routes: redirect authenticated users away
+  if (isAuthenticated && isNextAuthRoute) {
     return NextResponse.redirect(new URL("/dashboard", nextUrl))
   }
 
-  if (!isAuthenticated && !isPublicRoute) {
+  // Non-student, non-auth routes: require authentication
+  if (!isAuthenticated && !isNextAuthRoute) {
     const loginUrl = new URL("/login", nextUrl)
     loginUrl.searchParams.set(
       "callbackUrl",
       `${nextUrl.pathname}${nextUrl.search}`
     )
-
     return NextResponse.redirect(loginUrl)
   }
 

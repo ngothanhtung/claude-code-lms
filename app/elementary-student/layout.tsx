@@ -1,24 +1,19 @@
 import type { ReactNode } from "react"
-import { redirect } from "next/navigation"
-import { auth } from "@/auth"
 import "@/app/elementary.css"
-import { ElementaryStudentShell } from "@/components/elementary-student-shell"
+import { StudentSessionProviderClient } from "@/features/elementary/profile/components/student-session-provider-client"
 
-export default async function ElementaryStudentLayout({
+/**
+ * Server root layout for /elementary-student/* — loads elementary.css
+ * and mounts the StudentSession context.
+ */
+export default function ElementaryStudentLayout({
   children,
 }: {
   children: ReactNode
 }) {
-  const session = await auth()
-
-  if (!session?.user) {
-    redirect("/login")
-  }
-
-  const roles = session.user.roles ?? []
-  if (!roles.includes("role_student")) {
-    redirect("/login")
-  }
-
-  return <ElementaryStudentShell>{children}</ElementaryStudentShell>
+  return (
+    <StudentSessionProviderClient>
+      <div className="elementary-app">{children}</div>
+    </StudentSessionProviderClient>
+  )
 }

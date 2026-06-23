@@ -6,32 +6,32 @@
 /* ─── Custom Properties ─── */
 
 .elementary-app {
-  /* Primary Brand - cheerful elementary blue */
-  --el-primary: 215 66% 42%;
+  /* Primary Brand - cheerful elementary indigo/purple */
+  --el-primary: 243 75% 59%;
   --el-primary-foreground: 0 0% 100%;
-  --el-primary-muted: 208 92% 96%;
+  --el-primary-muted: 243 100% 97%;
 
-  /* Surfaces - paper-light with a warm tint */
-  --el-background: 42 86% 97%;
+  /* Surfaces - paper-light with a lavender tint */
+  --el-background: 250 86% 97%;
   --el-card: 0 0% 100%;
-  --el-card-foreground: 220 42% 16%;
+  --el-card-foreground: 250 42% 16%;
 
   /* Text */
-  --el-foreground: 220 42% 16%;
-  --el-muted-foreground: 218 18% 42%;
+  --el-foreground: 250 42% 16%;
+  --el-muted-foreground: 250 14% 42%;
 
-  /* Sidebar - inspired by the child-friendly blue rail in the reference */
-  --el-sidebar-start: 214 69% 40%;
-  --el-sidebar-end: 220 70% 34%;
+  /* Sidebar - inspired by the indigo/purple rail in the reference */
+  --el-sidebar-start: 243 75% 56%;
+  --el-sidebar-end: 255 70% 48%;
   --el-sidebar-text: 0 0% 100%;
-  --el-sidebar-text-muted: 214 65% 88%;
+  --el-sidebar-text-muted: 243 65% 88%;
   --el-sidebar-active-bg: 0 0% 100%;
 
   /* Semantic - bright, readable classroom colors */
   --el-success: 151 63% 42%;
   --el-warning: 42 96% 54%;
   --el-danger: 354 74% 55%;
-  --el-info: 199 88% 55%;
+  --el-info: 220 90% 60%;
 
   /* Accent pastels */
   --el-amber: 43 98% 54%;
@@ -40,12 +40,12 @@
 
   /* Extra accent colors */
   --el-coral: 16 84% 60%;
-  --el-sky: 202 90% 58%;
+  --el-sky: 230 90% 64%;
   --el-lime: 91 60% 49%;
-  --el-violet: 259 74% 62%;
+  --el-violet: 271 81% 65%;
 
   /* Borders - visible pastel outlines like learning cards */
-  --el-border: 33 70% 88%;
+  --el-border: 250 70% 90%;
 
   /* Layout — more rounded */
   --el-sidebar-w: 252px;
@@ -54,74 +54,74 @@
   --el-radius-sm: 12px;
   --el-radius-pill: 99px;
 
-  /* Shadows - soft and warm, keeping surfaces light */
+  /* Shadows - soft and purple-tinted, keeping surfaces light */
   --el-shadow-card:
-    0 10px 28px -18px hsl(214 55% 35% / 0.28),
-    0 2px 8px -4px hsl(35 80% 58% / 0.18);
-  --el-shadow-pop: 0 18px 42px -18px hsl(214 65% 35% / 0.34);
-  --el-shadow-sm: 0 2px 8px -5px hsl(214 40% 30% / 0.18);
+    0 10px 28px -18px hsl(243 55% 35% / 0.28),
+    0 2px 8px -4px hsl(280 80% 58% / 0.18);
+  --el-shadow-pop: 0 18px 42px -18px hsl(243 65% 35% / 0.34);
+  --el-shadow-sm: 0 2px 8px -5px hsl(243 40% 30% / 0.18);
 
   /* Decorative gradients */
   --el-gradient-hero: linear-gradient(
     135deg,
-    hsl(168 62% 92%),
-    hsl(199 90% 93%) 48%,
-    hsl(43 95% 92%)
+    hsl(243 95% 96%),
+    hsl(255 92% 96%) 48%,
+    hsl(280 95% 96%)
   );
   --el-gradient-card-1: linear-gradient(
     135deg,
-    hsl(210 92% 96%),
-    hsl(246 90% 97%)
+    hsl(243 92% 97%),
+    hsl(280 90% 97%)
   );
   --el-gradient-card-2: linear-gradient(
     135deg,
-    hsl(159 72% 94%),
-    hsl(191 78% 94%)
+    hsl(255 92% 96%),
+    hsl(260 90% 96%)
   );
   --el-gradient-card-3: linear-gradient(
     135deg,
-    hsl(43 96% 92%),
-    hsl(18 86% 94%)
+    hsl(280 96% 96%),
+    hsl(310 86% 96%)
   );
   --el-gradient-card-4: linear-gradient(
     135deg,
-    hsl(336 82% 95%),
-    hsl(265 78% 96%)
+    hsl(243 92% 97%),
+    hsl(260 92% 97%)
   );
 
   /* Button shadows */
-  --el-shadow-btn-primary: 0 8px 18px hsl(215 66% 42% / 0.28);
+  --el-shadow-btn-primary: 0 8px 18px hsl(243 75% 59% / 0.32);
   --el-shadow-btn-success: 0 8px 18px hsl(151 63% 42% / 0.28);
   --el-shadow-btn-warning: 0 8px 18px hsl(42 96% 54% / 0.3);
 
   /* ── Force light mode for shadcn / Tailwind utility classes ── */
   /* Components using bg-card, text-foreground, bg-muted, etc. must
      always resolve to light values regardless of the global .dark class. */
-  --background: 42 86% 97%;
-  --foreground: 220 42% 16%;
+  --background: 250 86% 97%;
+  --foreground: 250 42% 16%;
   --card: 0 0% 100%;
-  --card-foreground: 220 42% 16%;
+  --card-foreground: 250 42% 16%;
   --popover: 0 0% 100%;
-  --popover-foreground: 220 42% 16%;
+  --popover-foreground: 250 42% 16%;
 
-  --primary: 215 66% 42%;
+  --primary: 243 75% 59%;
   --primary-foreground: 0 0% 100%;
-  --primary-muted: 208 92% 96%;
+  --primary-muted: 243 100% 97%;
 
-  --secondary: 45 95% 95%;
-  --secondary-foreground: 220 42% 16%;
-  --muted: 42 80% 95%;
-  --muted-foreground: 218 18% 42%;
-  --accent: 199 90% 95%;
-  --accent-foreground: 215 66% 34%;
+  --secondary: 250 95% 96%;
+  --secondary-foreground: 250 42% 16%;
+  --muted: 250 80% 96%;
+  --muted-foreground: 250 14% 42%;
+  --accent: 243 92% 96%;
+  --accent-foreground: 243 75% 48%;
 
   /* Semantic colors — light mode values */
   --success: 151 63% 42%;
   --success-foreground: 0 0% 100%;
   --success-muted: 151 66% 94%;
-  --info: 199 88% 55%;
+  --info: 220 90% 60%;
   --info-foreground: 0 0% 100%;
-  --info-muted: 199 93% 94%;
+  --info-muted: 220 93% 95%;
   --warning: 42 96% 54%;
   --warning-foreground: 31 35% 16%;
   --warning-muted: 45 96% 91%;
@@ -133,24 +133,24 @@
   --destructive-muted: var(--danger-muted);
 
   /* Borders & ring */
-  --border: 33 70% 88%;
-  --input: 33 70% 88%;
-  --ring: 215 66% 42%;
+  --border: 250 70% 90%;
+  --input: 250 70% 90%;
+  --ring: 243 75% 59%;
   --radius: 18px;
 
   /* Shadows — light mode */
   --shadow-card:
-    0 10px 28px -18px hsl(214 55% 35% / 0.28),
-    0 2px 8px -4px hsl(35 80% 58% / 0.18);
-  --shadow-pop: 0 18px 42px -18px hsl(214 65% 35% / 0.34);
-  --shadow-sm: 0 2px 8px -5px hsl(214 40% 30% / 0.18);
+    0 10px 28px -18px hsl(243 55% 35% / 0.28),
+    0 2px 8px -4px hsl(280 80% 58% / 0.18);
+  --shadow-pop: 0 18px 42px -18px hsl(243 65% 35% / 0.34);
+  --shadow-sm: 0 2px 8px -5px hsl(243 40% 30% / 0.18);
 
   /* Chart colors — light mode */
-  --chart-1: 151 63% 42%;
-  --chart-2: 199 88% 55%;
+  --chart-1: 243 75% 59%;
+  --chart-2: 271 81% 65%;
   --chart-3: 42 96% 54%;
   --chart-4: 354 74% 55%;
-  --chart-5: 259 74% 62%;
+  --chart-5: 220 90% 60%;
 }
 
 /* ─── Typography ─── */
@@ -161,8 +161,8 @@
   color: hsl(var(--el-foreground));
   min-height: 100vh;
   background:
-    linear-gradient(90deg, hsl(215 70% 90% / 0.24) 1px, transparent 1px),
-    linear-gradient(0deg, hsl(43 90% 86% / 0.24) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(243 70% 90% / 0.22) 1px, transparent 1px),
+    linear-gradient(0deg, hsl(280 80% 92% / 0.22) 1px, transparent 1px),
     hsl(var(--el-background));
   background-size:
     34px 34px,
@@ -196,7 +196,7 @@
   background: linear-gradient(
     180deg,
     hsl(0 0% 100% / 0.82),
-    hsl(45 92% 97% / 0.86)
+    hsl(250 92% 97% / 0.86)
   );
 }
 
@@ -252,7 +252,7 @@
   border-right: 1px solid hsl(0 0% 100% / 0.18);
   border-radius: 0 22px 22px 0;
   box-shadow:
-    12px 0 30px -22px hsl(215 65% 24% / 0.75),
+    12px 0 30px -22px hsl(243 65% 24% / 0.75),
     inset -1px 0 hsl(0 0% 100% / 0.1);
   overflow: hidden;
 }
@@ -395,8 +395,8 @@
 
 .el-card--greeting {
   background: var(--el-gradient-hero);
-  border: 2px solid hsl(170 48% 72%);
-  box-shadow: 0 16px 36px -26px hsl(170 55% 32% / 0.36);
+  border: 2px solid hsl(243 70% 80%);
+  box-shadow: 0 16px 36px -26px hsl(243 55% 32% / 0.36);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -427,7 +427,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: hsl(var(--el-teal) / 0.16);
+  background: hsl(var(--el-violet) / 0.18);
   pointer-events: none;
 }
 
@@ -579,7 +579,7 @@
   background: linear-gradient(
     135deg,
     hsl(var(--el-primary)),
-    hsl(var(--el-sky))
+    hsl(255 81% 65%)
   );
   color: hsl(var(--el-primary-foreground));
   box-shadow: var(--el-shadow-btn-primary);
@@ -587,7 +587,7 @@
 
 .el-btn--primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px hsl(215 66% 42% / 0.32);
+  box-shadow: 0 10px 24px hsl(243 75% 59% / 0.32);
 }
 
 .el-btn--secondary {
@@ -792,14 +792,14 @@
   justify-content: space-between;
   gap: 18px;
   padding: 24px 26px;
-  border: 2px solid hsl(170 48% 72%);
+  border: 2px solid hsl(243 70% 82%);
   border-radius: 22px;
   background:
     linear-gradient(
       135deg,
-      hsl(170 58% 94% / 0.9),
-      hsl(199 86% 95% / 0.9) 52%,
-      hsl(43 96% 93% / 0.86)
+      hsl(243 92% 96% / 0.9),
+      hsl(255 86% 96% / 0.9) 52%,
+      hsl(280 92% 95% / 0.86)
     ),
     hsl(var(--el-card));
   box-shadow: var(--el-shadow-card);
@@ -1622,8 +1622,8 @@
 }
 
 .el-cls-stat:has(.el-cls-stat-icon[data-variant="sky"]) {
-  background: linear-gradient(135deg, hsl(200 85% 94%), hsl(210 80% 93%));
-  border-color: hsl(200 80% 85%);
+  background: linear-gradient(135deg, hsl(243 92% 95%), hsl(255 88% 95%));
+  border-color: hsl(243 75% 84%);
 }
 
 .el-cls-stat-icon {
@@ -1656,8 +1656,8 @@
 }
 
 .el-cls-stat-icon[data-variant="sky"] {
-  background: hsl(202 78% 88%);
-  color: hsl(202 68% 36%);
+  background: hsl(243 78% 90%);
+  color: hsl(243 68% 48%);
 }
 
 .el-cls-stat-num {
@@ -1784,8 +1784,8 @@
 }
 
 .el-cls-badge[data-grade="4"] {
-  background: hsl(202 78% 88%);
-  color: hsl(202 68% 36%);
+  background: hsl(243 78% 90%);
+  color: hsl(243 68% 48%);
 }
 
 .el-cls-badge[data-grade="5"] {
@@ -1995,8 +1995,8 @@
 }
 
 .el-scls-grade[data-grade="4"] {
-  background: hsl(202 74% 90%);
-  color: hsl(202 64% 38%);
+  background: hsl(243 74% 92%);
+  color: hsl(243 64% 48%);
 }
 
 .el-scls-grade[data-grade="5"] {
@@ -2573,8 +2573,8 @@
 }
 
 .el-scls-rail-lb-rank.top-2 {
-  background: hsl(215 60% 90%);
-  color: hsl(217 60% 42%);
+  background: hsl(243 60% 90%);
+  color: hsl(243 60% 45%);
 }
 
 .el-scls-rail-lb-rank.top-3 {
@@ -2721,7 +2721,7 @@
 
 .el-sgrp-start-quiz:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px hsl(215 66% 42% / 0.32);
+  box-shadow: 0 10px 24px hsl(243 75% 59% / 0.32);
 }
 
 .el-sgrp-start-quiz svg {
@@ -3400,15 +3400,15 @@
 
 .elementary-app [data-slot="card"] {
   border-radius: var(--el-radius);
-  background: linear-gradient(180deg, hsl(0 0% 100%), hsl(45 90% 98%));
+  background: linear-gradient(180deg, hsl(0 0% 100%), hsl(250 90% 97%));
 }
 
 .elementary-app .greeting-card {
   position: relative;
-  border: 2px solid hsl(170 48% 72%);
+  border: 2px solid hsl(243 70% 82%);
   border-radius: 22px;
-  background-color: hsl(170 58% 94%);
-  box-shadow: 0 16px 36px -26px hsl(170 55% 32% / 0.36);
+  background-color: hsl(243 92% 95%);
+  box-shadow: 0 16px 36px -26px hsl(243 55% 32% / 0.36);
   overflow: hidden;
 }
 
@@ -3419,11 +3419,11 @@
   background:
     linear-gradient(
       135deg,
-      hsl(170 58% 94% / 0.82),
-      hsl(199 86% 95% / 0.88) 52%,
-      hsl(43 96% 93% / 0.82)
+      hsl(243 92% 95% / 0.82),
+      hsl(255 86% 95% / 0.88) 52%,
+      hsl(280 92% 94% / 0.82)
     ),
-    linear-gradient(90deg, transparent 0 82%, hsl(215 66% 42% / 0.08) 82% 100%);
+    linear-gradient(90deg, transparent 0 82%, hsl(243 75% 59% / 0.08) 82% 100%);
   pointer-events: none;
 }
 
@@ -3433,12 +3433,12 @@
 }
 
 .elementary-app .greeting-card h1 {
-  color: hsl(220 48% 18%);
+  color: hsl(250 42% 18%);
 }
 
 .elementary-app .greeting-card > div:last-child {
   border-width: 2px;
-  border-color: hsl(199 70% 78%);
+  border-color: hsl(243 75% 78%);
   background: hsl(0 0% 100% / 0.84);
   box-shadow: var(--el-shadow-sm);
 }
@@ -3457,7 +3457,7 @@
 .elementary-app [data-slot="card"]:has(.text-info),
 .el-cls-card:has(.el-cls-badge[data-grade="4"]),
 .el-scls-card:has(.el-scls-grade[data-grade="4"]) {
-  border-color: hsl(199 68% 78%);
+  border-color: hsl(243 68% 80%);
 }
 
 .elementary-app [data-slot="card"]:hover,
