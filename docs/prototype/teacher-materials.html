@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Bài giảng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="materials" data-open="tailieu">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Tài liệu giảng dạy</h1>
+            <p>Bài giảng, slide và tài nguyên cho các lớp học phần</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="folder-plus" class="icon-sm"></i> Thư mục mới</button>
+            <button class="btn primary lg"><i data-lucide="upload" class="icon-sm"></i> Tải lên tài liệu</button>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="card card-pad">
+            <div class="filter-row">
+              <div class="select-mini">
+                <select>
+                  <option>OOP · CNTT-K22B</option>
+                  <option>CSDL · CNTT-K21A</option>
+                  <option>Java · CNTT-K22C</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="filter-search">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Tìm tài liệu..." id="matSearch" />
+              </div>
+            </div>
+
+            <div class="tbl-wrap">
+              <table class="tbl" id="matTable">
+                <thead>
+                  <tr><th>Tài liệu</th><th>Loại</th><th>Tuần</th><th class="num">Lượt xem</th><th>Cập nhật</th><th style="text-align:right"></th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><div class="cell-user"><div class="task-ico ico-tint-red" style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none"><i data-lucide="file-text" class="icon-sm"></i></div><div class="nm">Lecture 10 — Kế thừa & Đa hình.pdf</div></div></td><td class="muted">PDF · 4.2 MB</td><td class="muted">Tuần 10</td><td class="num">142</td><td class="muted">Hôm qua</td><td style="text-align:right"><button class="icon-act"><i data-lucide="download" class="icon-sm"></i></button></td></tr>
+                  <tr><td><div class="cell-user"><div class="task-ico ico-tint-amber" style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none"><i data-lucide="presentation" class="icon-sm"></i></div><div class="nm">Slide chương 3 — Interface.pptx</div></div></td><td class="muted">PPTX · 8.1 MB</td><td class="muted">Tuần 9</td><td class="num">98</td><td class="muted">3 ngày trước</td><td style="text-align:right"><button class="icon-act"><i data-lucide="download" class="icon-sm"></i></button></td></tr>
+                  <tr><td><div class="cell-user"><div class="task-ico ico-tint-indigo" style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none"><i data-lucide="file-code-2" class="icon-sm"></i></div><div class="nm">Source code demo — Library.zip</div></div></td><td class="muted">ZIP · 1.3 MB</td><td class="muted">Tuần 9</td><td class="num">76</td><td class="muted">3 ngày trước</td><td style="text-align:right"><button class="icon-act"><i data-lucide="download" class="icon-sm"></i></button></td></tr>
+                  <tr><td><div class="cell-user"><div class="task-ico ico-tint-blue" style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none"><i data-lucide="video" class="icon-sm"></i></div><div class="nm">Video bài giảng — Abstract class.mp4</div></div></td><td class="muted">MP4 · 220 MB</td><td class="muted">Tuần 8</td><td class="num">211</td><td class="muted">1 tuần trước</td><td style="text-align:right"><button class="icon-act"><i data-lucide="download" class="icon-sm"></i></button></td></tr>
+                  <tr><td><div class="cell-user"><div class="task-ico ico-tint-green" style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none"><i data-lucide="file-text" class="icon-sm"></i></div><div class="nm">Đề cương môn học OOP.pdf</div></div></td><td class="muted">PDF · 0.6 MB</td><td class="muted">Tuần 1</td><td class="num">312</td><td class="muted">12/02/2026</td><td style="text-align:right"><button class="icon-act"><i data-lucide="download" class="icon-sm"></i></button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <div class="card card-pad">
+              <div class="section-head"><h2>Dung lượng</h2></div>
+              <div class="col-bar" style="margin-bottom:6px"><div class="track"><span style="width:42%"></span></div></div>
+              <p class="muted" style="font-size:12.5px;margin:0">2.1 GB / 5 GB đã dùng</p>
+            </div>
+            <div class="card card-pad" style="margin-top:16px">
+              <div class="section-head"><h2>Thư mục</h2></div>
+              <a class="qa" href="#" style="margin-bottom:8px"><div class="qa-ico ico-tint-violet" style="background:hsl(262 83% 95%);color:hsl(262 70% 52%)"><i data-lucide="folder" class="icon-lg"></i></div><div class="qa-label" style="text-align:left">Bài giảng (24)</div></a>
+              <a class="qa" href="#" style="margin-bottom:8px"><div class="qa-ico ico-tint-amber"><i data-lucide="folder" class="icon-lg"></i></div><div class="qa-label" style="text-align:left">Slide (18)</div></a>
+              <a class="qa" href="#" style="margin-bottom:8px"><div class="qa-ico ico-tint-green"><i data-lucide="folder" class="icon-lg"></i></div><div class="qa-label" style="text-align:left">Source code (12)</div></a>
+              <a class="qa" href="#"><div class="qa-ico ico-tint-blue"><i data-lucide="folder" class="icon-lg"></i></div><div class="qa-label" style="text-align:left">Video (9)</div></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  var s = document.getElementById('matSearch');
+  if (s) s.addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#matTable tbody tr').forEach(function (tr) {
+      tr.style.display = tr.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

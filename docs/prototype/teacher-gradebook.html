@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Sổ điểm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="gradebook">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Sổ điểm</h1>
+            <p>Lập trình hướng đối tượng · CNTT-K22B · 56 sinh viên</p>
+          </div>
+          <div class="ph-actions">
+            <div class="select-mini">
+              <select id="gbClass">
+                <option>OOP · CNTT-K22B</option>
+                <option>CSDL · CNTT-K21A</option>
+                <option>CTDL&GT · CNTT-K22A</option>
+                <option>Java · CNTT-K22C</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <button class="btn lg"><i data-lucide="download" class="icon-sm"></i> Xuất điểm</button>
+            <button class="btn primary lg"><i data-lucide="send" class="icon-sm"></i> Công bố điểm</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="ms-ico ico-tint-indigo"><i data-lucide="users" class="icon-lg"></i></div><div class="ms-val">56</div><div class="ms-lbl">Sĩ số</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-green"><i data-lucide="trending-up" class="icon-lg"></i></div><div class="ms-val">7.8</div><div class="ms-lbl">Điểm TB lớp</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-blue"><i data-lucide="check-circle-2" class="icon-lg"></i></div><div class="ms-val">94.6%</div><div class="ms-lbl">Tỷ lệ qua môn</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-amber"><i data-lucide="award" class="icon-lg"></i></div><div class="ms-val">9.4</div><div class="ms-lbl">Điểm cao nhất</div></div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="filter-row">
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" placeholder="Tìm sinh viên..." id="gbSearch" />
+            </div>
+            <span class="muted" style="font-size:12.5px">Trọng số: Chuyên cần 10% · Quá trình 30% · Giữa kỳ 20% · Cuối kỳ 40%</span>
+          </div>
+
+          <div class="tbl-wrap">
+            <table class="tbl" id="gbTable">
+              <thead>
+                <tr>
+                  <th>Sinh viên</th>
+                  <th class="num">Chuyên cần</th>
+                  <th class="num">Quá trình</th>
+                  <th class="num">Giữa kỳ</th>
+                  <th class="num">Cuối kỳ</th>
+                  <th class="num">Tổng kết</th>
+                  <th class="num">Điểm chữ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(243 75% 60%),hsl(262 83% 58%))">TA</div><div><div class="nm">Trần Văn An</div><div class="sub">21123401</div></div></div></td>
+                  <td class="num">9.5</td><td class="num">8.5</td><td class="num">8.0</td><td class="num">9.0</td>
+                  <td class="num"><strong>8.7</strong></td><td class="num"><span class="grade-pill a">A</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(142 64% 42%),hsl(168 70% 38%))">BH</div><div><div class="nm">Bùi Thị Hoa</div><div class="sub">21123407</div></div></div></td>
+                  <td class="num">10</td><td class="num">9.0</td><td class="num">8.5</td><td class="num">9.0</td>
+                  <td class="num"><strong>8.9</strong></td><td class="num"><span class="grade-pill a">A</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(221 83% 55%),hsl(199 80% 48%))">NĐ</div><div><div class="nm">Nguyễn Văn Đức</div><div class="sub">21123404</div></div></div></td>
+                  <td class="num">7.0</td><td class="num">6.5</td><td class="num">5.5</td><td class="num">6.0</td>
+                  <td class="num"><strong>6.2</strong></td><td class="num"><span class="grade-pill c">C</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(262 70% 56%),hsl(288 70% 52%))">LM</div><div><div class="nm">Lê Văn Mạnh</div><div class="sub">21123411</div></div></div></td>
+                  <td class="num">8.5</td><td class="num">7.5</td><td class="num">7.0</td><td class="num">8.0</td>
+                  <td class="num"><strong>7.6</strong></td><td class="num"><span class="grade-pill b">B</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(28 85% 52%),hsl(14 80% 52%))">TN</div><div><div class="nm">Trương Thị Nga</div><div class="sub">21123412</div></div></div></td>
+                  <td class="num">9.0</td><td class="num">8.0</td><td class="num">9.0</td><td class="num">8.5</td>
+                  <td class="num"><strong>8.5</strong></td><td class="num"><span class="grade-pill a">A</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(174 62% 38%),hsl(192 70% 42%))">ĐP</div><div><div class="nm">Đặng Văn Phúc</div><div class="sub">21123413</div></div></div></td>
+                  <td class="num">6.0</td><td class="num">5.0</td><td class="num">4.0</td><td class="num">4.5</td>
+                  <td class="num"><strong>4.6</strong></td><td class="num"><span class="grade-pill f">F</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(338 75% 56%),hsl(14 80% 56%))">VQ</div><div><div class="nm">Võ Thị Quỳnh</div><div class="sub">21123414</div></div></div></td>
+                  <td class="num">9.5</td><td class="num">8.5</td><td class="num">8.0</td><td class="num">8.0</td>
+                  <td class="num"><strong>8.2</strong></td><td class="num"><span class="grade-pill a">A</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(243 75% 60%),hsl(221 83% 55%))">HS</div><div><div class="nm">Huỳnh Văn Sơn</div><div class="sub">21123415</div></div></div></td>
+                  <td class="num">8.0</td><td class="num">7.0</td><td class="num">6.5</td><td class="num">7.5</td>
+                  <td class="num"><strong>7.2</strong></td><td class="num"><span class="grade-pill b">B</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(142 64% 42%),hsl(110 60% 42%))">NT</div><div><div class="nm">Ngô Thị Thu</div><div class="sub">21123416</div></div></div></td>
+                  <td class="num">9.0</td><td class="num">9.5</td><td class="num">9.0</td><td class="num">9.5</td>
+                  <td class="num"><strong>9.4</strong></td><td class="num"><span class="grade-pill a">A</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  var s = document.getElementById('gbSearch');
+  if (s) s.addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#gbTable tbody tr').forEach(function (tr) {
+      tr.style.display = tr.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

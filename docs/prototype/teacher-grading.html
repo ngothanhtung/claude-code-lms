@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Chấm bài</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="grading" data-open="baitap">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Hàng đợi chấm bài</h1>
+            <p>32 bài đang chờ chấm · 8 bài quá hạn phản hồi</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="download" class="icon-sm"></i> Tải bài nộp</button>
+            <button class="btn primary lg"><i data-lucide="check-check" class="icon-sm"></i> Chấm hàng loạt</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="ms-ico ico-tint-amber"><i data-lucide="file-pen-line" class="icon-lg"></i></div><div class="ms-val">32</div><div class="ms-lbl">Chờ chấm</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-red"><i data-lucide="clock-alert" class="icon-lg"></i></div><div class="ms-val" style="color:hsl(var(--danger))">8</div><div class="ms-lbl">Quá hạn phản hồi</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-green"><i data-lucide="check-check" class="icon-lg"></i></div><div class="ms-val">186</div><div class="ms-lbl">Đã chấm tuần này</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-indigo"><i data-lucide="timer" class="icon-lg"></i></div><div class="ms-val">1.4 ngày</div><div class="ms-lbl">Thời gian phản hồi TB</div></div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="filter-row">
+            <div class="tabs" id="gradeTabs">
+              <button class="tab active" data-f="pending">Cần chấm <span class="tab-count">32</span></button>
+              <button class="tab" data-f="late">Quá hạn <span class="tab-count">8</span></button>
+              <button class="tab" data-f="done">Đã chấm <span class="tab-count">186</span></button>
+            </div>
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" placeholder="Tìm sinh viên hoặc bài tập..." id="gradeSearch" />
+            </div>
+            <div class="select-mini">
+              <select id="gradeClass">
+                <option>Tất cả lớp</option>
+                <option>OOP · CNTT-K22B</option>
+                <option>CSDL · CNTT-K21A</option>
+                <option>Java · CNTT-K22C</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="tbl-wrap">
+            <table class="tbl" id="gradeTable">
+              <thead>
+                <tr>
+                  <th>Sinh viên</th>
+                  <th>Bài tập</th>
+                  <th>Lớp</th>
+                  <th>Nộp lúc</th>
+                  <th>Trạng thái</th>
+                  <th style="text-align:right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(243 75% 60%),hsl(262 83% 58%))">TA</div><div><div class="nm">Trần Văn An</div><div class="sub">21123401</div></div></div></td>
+                  <td>BTL chương 3 — Quản lý thư viện</td>
+                  <td class="muted">OOP · K22B</td>
+                  <td class="muted">29/05, 14:22</td>
+                  <td><span class="badge red">Quá hạn 2 ngày</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(142 64% 42%),hsl(168 70% 38%))">LB</div><div><div class="nm">Lê Thị Bình</div><div class="sub">21123402</div></div></div></td>
+                  <td>Bài tập số 4 — Generics & Collections</td>
+                  <td class="muted">Java · K22C</td>
+                  <td class="muted">29/05, 13:48</td>
+                  <td><span class="badge amber">Chờ chấm</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(221 83% 55%),hsl(199 80% 48%))">PC</div><div><div class="nm">Phạm Hoàng Cường</div><div class="sub">21123403</div></div></div></td>
+                  <td>Lab 5 — Truy vấn nâng cao SQL</td>
+                  <td class="muted">CSDL · K21A</td>
+                  <td class="muted">29/05, 11:05</td>
+                  <td><span class="badge amber">Chờ chấm</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(28 85% 52%),hsl(14 80% 52%))">NĐ</div><div><div class="nm">Nguyễn Văn Đức</div><div class="sub">21123404</div></div></div></td>
+                  <td>BTL chương 3 — Quản lý thư viện</td>
+                  <td class="muted">OOP · K22B</td>
+                  <td class="muted">28/05, 23:51</td>
+                  <td><span class="badge red">Quá hạn 1 ngày</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(262 70% 56%),hsl(288 70% 52%))">VE</div><div><div class="nm">Vũ Thị Em</div><div class="sub">21123405</div></div></div></td>
+                  <td>Bài tập số 4 — Generics & Collections</td>
+                  <td class="muted">Java · K22C</td>
+                  <td class="muted">28/05, 20:14</td>
+                  <td><span class="badge amber">Chờ chấm</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(174 62% 38%),hsl(192 70% 42%))">ĐG</div><div><div class="nm">Đỗ Văn Giang</div><div class="sub">21123406</div></div></div></td>
+                  <td>Lab 5 — Truy vấn nâng cao SQL</td>
+                  <td class="muted">CSDL · K21A</td>
+                  <td class="muted">28/05, 18:30</td>
+                  <td><span class="badge amber">Chờ chấm</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(338 75% 56%),hsl(14 80% 56%))">BH</div><div><div class="nm">Bùi Thị Hoa</div><div class="sub">21123407</div></div></div></td>
+                  <td>BTL chương 3 — Quản lý thư viện</td>
+                  <td class="muted">OOP · K22B</td>
+                  <td class="muted">28/05, 16:02</td>
+                  <td><span class="badge amber">Chờ chấm</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(243 75% 60%),hsl(221 83% 55%))">PK</div><div><div class="nm">Phan Văn Khôi</div><div class="sub">21123408</div></div></div></td>
+                  <td>Lab 5 — Truy vấn nâng cao SQL</td>
+                  <td class="muted">CSDL · K21A</td>
+                  <td class="muted">27/05, 22:40</td>
+                  <td><span class="badge amber">Chờ chấm</span></td>
+                  <td style="text-align:right"><button class="btn primary">Chấm</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  document.querySelectorAll('#gradeTabs .tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('#gradeTabs .tab').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+    });
+  });
+  // simple client-side search filter
+  var search = document.getElementById('gradeSearch');
+  if (search) search.addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#gradeTable tbody tr').forEach(function (tr) {
+      tr.style.display = tr.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

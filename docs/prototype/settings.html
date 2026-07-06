@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Cài đặt — LMS Portal</title>
@@ -12,7 +14,7 @@
 <style>
   /* ---- Settings page ---------------------------------------------------- */
   .settings-page { grid-template-columns: 210px 1fr; align-items: start; gap: 26px; }
-  .page-head { margin-bottom: 22px; }
+  .page-head { margin-bottom: 16px; }
   .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
   .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
 
@@ -50,7 +52,7 @@
   .switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; cursor: pointer; }
   .switch input { opacity: 0; width: 0; height: 0; }
   .switch .track { position: absolute; inset: 0; background: hsl(var(--muted-foreground) / 0.35); border-radius: 99px; transition: background .18s; }
-  .switch .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .18s; }
+  .switch .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: hsl(var(--card)); box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .18s; }
   .switch input:checked + .track { background: hsl(var(--primary)); }
   .switch input:checked + .track::after { transform: translateX(18px); }
 
@@ -61,7 +63,7 @@
   .theme-opt.sel .theme-swatch { border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15); }
   .theme-opt .theme-name { font-size: 11.5px; font-weight: 600; margin-top: 6px; color: hsl(var(--muted-foreground)); }
   .theme-opt.sel .theme-name { color: hsl(var(--primary)); }
-  .sw-light { background: #fff; } .sw-light .sw-bar { background: #eef1f6; }
+  .sw-light { background: hsl(var(--card)); } .sw-light .sw-bar { background: #eef1f6; }
   .sw-dark { background: #1d2330; } .sw-dark .sw-bar { background: #333b4d; }
   .sw-auto { background: linear-gradient(120deg, #fff 50%, #1d2330 50%); }
   .theme-swatch .sw-bar { position: absolute; top: 9px; left: 9px; right: 30px; height: 7px; border-radius: 3px; }
@@ -93,7 +95,7 @@
 <div class="app">
 
   <!-- ============================== SIDEBAR ============================== -->
-  <aside class="sidebar">
+    <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
       <div>
@@ -129,8 +131,8 @@
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+            <a class="nav-subitem" href="tai-lieu-tham-khao.html"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
           </div>
         </div>
       </div>
@@ -138,7 +140,7 @@
       <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
       <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
       <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
-      <a class="nav-item active" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+      <a class="nav-item active" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
     </nav>
 
     <div class="assistant">
@@ -149,7 +151,7 @@
           <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
         </div>
       </div>
-      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
     </div>
   </aside>
 
@@ -157,7 +159,7 @@
   <div class="main">
 
     <!-- Topbar -->
-    <header class="topbar">
+        <header class="topbar">
       <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
       <div class="search">
         <i data-lucide="search" class="icon"></i>
@@ -167,6 +169,7 @@
         <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
         <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
         <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
         <div class="profile-menu" id="profileMenu">
           <div class="profile" id="profileTrigger">
             <div class="profile-meta">
@@ -178,7 +181,7 @@
           </div>
           <div class="dropdown" role="menu">
             <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
-            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
             <div class="dropdown-sep"></div>
             <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
           </div>
@@ -289,7 +292,7 @@
             <div class="field-control"><label class="switch"><input type="checkbox" /><span class="track"></span></label></div>
           </div>
           <div class="field-row">
-            <div class="field-info"><div class="field-label">Kênh nhận thông báo</div></div>
+            <div class="field-info"><div class="field-label">Kênh nhận thông báo (Notification Channel)</div></div>
             <div class="field-control">
               <select class="ipt">
                 <option>Trong ứng dụng + Email</option>
@@ -413,6 +416,7 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
 <script>
   lucide.createIcons();
 

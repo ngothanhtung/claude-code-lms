@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Lịch thi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="exams">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Lịch thi & coi thi</h1>
+            <p>Học kỳ II, 2025 - 2026 · 5 ca thi được phân công</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="download" class="icon-sm"></i> Xuất lịch</button>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="section-head"><h2>Ca thi được phân công</h2></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead>
+                <tr><th>Học phần</th><th>Hình thức</th><th>Ngày thi</th><th>Ca</th><th>Phòng</th><th>Vai trò</th><th class="num">Sĩ số</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="cell-user"><div class="course-emblem" style="width:34px;height:34px;border-radius:9px;background:hsl(262 83% 58%);color:#fff;display:grid;place-items:center"><i data-lucide="code-xml" class="icon-sm"></i></div><div class="nm">Lập trình HĐT</div></div></td>
+                  <td>Tự luận</td><td>10/06/2026</td><td>Ca 1 · 07:30</td><td class="muted">A1-201</td><td><span class="badge blue">Coi thi</span></td><td class="num">56</td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="course-emblem" style="width:34px;height:34px;border-radius:9px;background:hsl(142 64% 38%);color:#fff;display:grid;place-items:center"><i data-lucide="database" class="icon-sm"></i></div><div class="nm">Cơ sở dữ liệu</div></div></td>
+                  <td>Vấn đáp</td><td>12/06/2026</td><td>Ca 2 · 09:30</td><td class="muted">A2-105</td><td><span class="badge green">Chấm thi</span></td><td class="num">42</td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="course-emblem" style="width:34px;height:34px;border-radius:9px;background:hsl(221 83% 53%);color:#fff;display:grid;place-items:center"><i data-lucide="network" class="icon-sm"></i></div><div class="nm">CTDL & Giải thuật</div></div></td>
+                  <td>Trắc nghiệm</td><td>14/06/2026</td><td>Ca 1 · 07:30</td><td class="muted">Máy CNTT-A</td><td><span class="badge blue">Coi thi</span></td><td class="num">48</td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="course-emblem" style="width:34px;height:34px;border-radius:9px;background:hsl(30 90% 50%);color:#fff;display:grid;place-items:center"><i data-lucide="coffee" class="icon-sm"></i></div><div class="nm">Lập trình Java</div></div></td>
+                  <td>Thực hành</td><td>16/06/2026</td><td>Ca 3 · 13:00</td><td class="muted">Lab CNTT-301</td><td><span class="badge green">Chấm thi</span></td><td class="num">38</td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="course-emblem" style="width:34px;height:34px;border-radius:9px;background:hsl(14 58% 52%);color:#fff;display:grid;place-items:center"><i data-lucide="terminal" class="icon-sm"></i></div><div class="nm">Claude Code BackEnd</div></div></td>
+                  <td>Đồ án</td><td>18/06/2026</td><td>Ca 2 · 09:30</td><td class="muted">Lab CNTT-302</td><td><span class="badge green">Chấm thi</span></td><td class="num">40</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card card-pad" style="margin-top:20px">
+          <div class="banner" style="margin:0">
+            <div class="banner-ico"><i data-lucide="info" class="icon"></i></div>
+            <div>
+              <h3>Lưu ý về coi thi</h3>
+              <p>Giám thị có mặt tại phòng thi trước 15 phút. Mang theo thẻ giảng viên và danh sách dự thi đã in. Liên hệ Phòng Khảo thí nếu có thay đổi.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tài liệu tham khảo — LMS Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<style>
+  /* ---- Library page ----------------------------------------------------- */
+  .lib-toolbar { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+  .lib-search { position: relative; width: 100%; }
+  .lib-search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: hsl(var(--muted-foreground)); }
+  .lib-search input { width: 100%; font: inherit; font-size: 13.5px; padding: 11px 14px 11px 38px; border: 1px solid hsl(var(--input)); border-radius: 11px; background: hsl(var(--background)); outline: none; transition: border-color .15s, box-shadow .15s, background .15s; }
+  .lib-search input:focus { border-color: hsl(var(--ring)); background: hsl(var(--card)); box-shadow: 0 0 0 3px hsl(var(--ring) / 0.12); }
+  .type-seg { display: none; }
+
+  .subj-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .subj-tab { border: 1px solid hsl(var(--border)); background: hsl(var(--card)); font: inherit; font-size: 12.5px; font-weight: 600; color: hsl(var(--muted-foreground)); padding: 8px 15px; border-radius: 99px; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 7px; }
+  .subj-tab:hover { background: hsl(var(--muted)); }
+  .subj-tab.active { background: hsl(var(--primary) / 0.1); border-color: hsl(243 75% 82%); color: hsl(var(--primary)); }
+  .subj-tab .st-count { font-size: 11px; font-weight: 700; background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-radius: 99px; padding: 1px 7px; }
+  .subj-tab.active .st-count { background: hsl(var(--primary) / 0.14); color: hsl(var(--primary)); }
+
+  .doc-grid { display: grid; grid-template-columns: 1fr; gap: 0; }
+
+  /* Documents as plain rows inside one panel (like the "Mới cập nhật" card) */
+  .doc-panel .doc-card { box-shadow: none; border: none; border-radius: 0; border-bottom: 1px solid hsl(var(--border)); padding: 14px 4px; background: transparent; }
+  .doc-panel .doc-card:first-child { padding-top: 0; }
+  .doc-panel .doc-card:last-child { border-bottom: none; padding-bottom: 0; }
+  .doc-panel .doc-card:hover { transform: none; box-shadow: none; background: transparent; }
+  .doc-panel .doc-card:hover .doc-title { color: hsl(var(--primary)); }
+
+  /* 3-column content layout */
+  .content.lib-content { display: flex; flex-direction: column; align-items: stretch; gap: 20px; }
+  .lib-head, .lib-cols { width: 100%; }
+  .lib-head { display: flex; flex-direction: column; gap: 20px; }
+  .lib-cols { display: grid; grid-template-columns: 260px minmax(0, 1fr) 290px; gap: 20px; align-items: start; }
+  .lib-side { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 20px; }
+  .lib-files { grid-column: 2; grid-row: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  .lib-fav { grid-column: 3; grid-row: 1; display: flex; flex-direction: column; gap: 20px; }
+  .lib-info { display: flex; flex-direction: column; gap: 20px; }
+  @media (max-width: 1280px) {
+    .lib-cols { grid-template-columns: 260px minmax(0, 1fr); }
+    .lib-fav { grid-column: 1 / -1; grid-row: 2; }
+  }
+  @media (max-width: 1100px) {
+    .lib-cols { grid-template-columns: 1fr; }
+    .lib-files { grid-column: 1; grid-row: auto; order: 1; }
+    .lib-side { grid-column: 1; grid-row: auto; order: 2; }
+    .lib-fav { grid-column: 1; grid-row: auto; order: 3; }
+  }
+  .doc-card { display: flex; gap: 14px; align-items: flex-start; padding: 16px; border: 1px solid hsl(var(--border)); border-radius: 13px; background: hsl(var(--card)); box-shadow: var(--shadow-card); transition: transform .12s, border-color .15s, box-shadow .15s; }
+  .doc-card:hover { transform: translateY(-2px); border-color: hsl(243 60% 84%); box-shadow: var(--shadow-pop); }
+  .doc-ico { width: 46px; height: 46px; border-radius: 12px; flex: none; display: grid; place-items: center; position: relative; }
+  .doc-ico svg { width: 22px; height: 22px; }
+  .doc-ext { position: absolute; bottom: -5px; right: -5px; font-size: 8.5px; font-weight: 800; letter-spacing: .02em; color: #fff; padding: 2px 5px; border-radius: 5px; border: 2px solid #fff; }
+  .doc-ext.pdf { background: hsl(var(--danger)); } .doc-ext.ppt { background: hsl(32 90% 50%); } .doc-ext.doc { background: hsl(217 91% 52%); } .doc-ext.zip { background: hsl(var(--primary)); } .doc-ext.xls { background: hsl(142 64% 38%); } .doc-ext.vid { background: hsl(262 70% 55%); }
+  .doc-body { flex: 1; min-width: 0; }
+  .doc-title { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.35; }
+  .doc-meta { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 6px; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .doc-meta .dm { display: inline-flex; align-items: center; gap: 5px; }
+  .doc-meta .dm svg { width: 13px; height: 13px; }
+  .doc-subj { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px; margin-top: 10px; background: hsl(var(--primary) / 0.08); color: hsl(var(--primary)); }
+  .doc-actions { display: flex; flex-direction: column; gap: 7px; flex: none; }
+  .doc-btn { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); color: hsl(var(--muted-foreground)); cursor: pointer; transition: background .15s, color .15s, border-color .15s; }
+  .doc-btn:hover { background: hsl(var(--primary) / 0.08); color: hsl(var(--primary)); border-color: hsl(243 60% 84%); }
+  .doc-btn.saved { background: hsl(var(--primary) / 0.1); color: hsl(var(--primary)); border-color: hsl(243 60% 84%); }
+  .doc-btn svg { width: 17px; height: 17px; }
+  .lib-empty { display: none; text-align: center; padding: 44px 12px; color: hsl(var(--muted-foreground)); font-size: 13.5px; }
+  .lib-empty.show { display: block; }
+  .lib-empty svg { width: 38px; height: 38px; opacity: .5; display: block; margin: 0 auto 12px; }
+
+  /* Result location bar */
+  .lib-resulthead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .lib-resulthead .lr-loc { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .lib-resulthead .lr-loc svg { width: 17px; height: 17px; color: hsl(var(--primary)); flex: none; }
+  .lib-resulthead .lr-loc span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lib-resulthead .lr-count { font-size: 12.5px; font-weight: 600; color: hsl(var(--muted-foreground)); flex: none; }
+  .section-head .lr-count { font-size: 12.5px; font-weight: 600; color: hsl(var(--muted-foreground)); }
+
+  /* Folder tree panel */
+  .ftree { display: flex; flex-direction: column; gap: 2px; }
+  .fnode { display: flex; flex-direction: column; }
+  .frow { display: flex; align-items: center; gap: 8px; padding: 8px 9px; border-radius: 9px; cursor: pointer; transition: background .12s, color .12s; font-size: 13px; font-weight: 500; color: hsl(var(--foreground)); }
+  .frow:hover { background: hsl(var(--muted)); }
+  .frow.active { background: hsl(var(--primary) / 0.1); color: hsl(var(--primary)); font-weight: 600; }
+  .frow .fcaret { width: 15px; height: 15px; flex: none; color: hsl(var(--muted-foreground)); transition: transform .18s; }
+  .fnode.open > .frow .fcaret { transform: rotate(90deg); }
+  .frow.active .fcaret { color: hsl(var(--primary)); }
+  .frow .fcaret-sp { width: 15px; flex: none; }
+  .frow .ficon { width: 17px; height: 17px; flex: none; color: hsl(243 70% 62%); }
+  .frow.active .ficon { color: hsl(var(--primary)); }
+  .frow.fchild .ficon { color: hsl(var(--muted-foreground)); }
+  .frow .fname { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .frow .fcount { font-size: 11px; font-weight: 700; color: hsl(var(--muted-foreground)); background: hsl(var(--muted)); border-radius: 99px; padding: 1px 8px; flex: none; }
+  .frow.active .fcount { background: hsl(var(--primary) / 0.14); color: hsl(var(--primary)); }
+  .fchildren { display: none; flex-direction: column; gap: 2px; margin: 2px 0 2px 15px; padding-left: 9px; border-left: 1.5px solid hsl(var(--border)); }
+  .fnode.open > .fchildren { display: flex; }
+
+  /* Rail */
+  .cat-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid hsl(var(--border)); cursor: pointer; }
+  .cat-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .cat-row:first-child { padding-top: 0; }
+  .cat-row .cr-ico { width: 36px; height: 36px; border-radius: 10px; flex: none; display: grid; place-items: center; }
+  .cat-row .cr-ico svg { width: 17px; height: 17px; }
+  .cat-row .cr-name { flex: 1; font-size: 13.5px; font-weight: 600; }
+  .cat-row .cr-count { font-size: 12px; font-weight: 700; color: hsl(var(--muted-foreground)); background: hsl(var(--muted)); border-radius: 99px; padding: 2px 10px; }
+  .recent-item { display: flex; gap: 11px; align-items: flex-start; padding: 11px 0; border-bottom: 1px solid hsl(var(--border)); }
+  .recent-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .recent-item:first-child { padding-top: 0; }
+  .recent-ico { width: 34px; height: 34px; border-radius: 9px; flex: none; display: grid; place-items: center; }
+  .recent-ico svg { width: 16px; height: 16px; }
+  .recent-title { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .recent-sub { font-size: 11.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+  .tip-card { background: linear-gradient(160deg, hsl(262 60% 97%), hsl(243 70% 98%)); border-color: hsl(243 60% 90%); }
+  .tip-card .tip-ico { width: 42px; height: 42px; border-radius: 12px; background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); display: grid; place-items: center; margin-bottom: 12px; }
+  .tip-card .tip-ico svg { width: 20px; height: 20px; }
+  .tip-card h3 { font-size: 14.5px; font-weight: 700; }
+  .tip-card p { font-size: 12.5px; color: hsl(var(--muted-foreground)); line-height: 1.55; margin-top: 6px; }
+
+  @media (max-width: 1100px) { .doc-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+      <div>
+        <div class="brand-name">LMS Portal</div>
+        <div class="brand-sub">Dành cho Sinh viên</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
+      <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <div class="nav-group" id="navBaiTap">
+        <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
+          <i data-lucide="file-text" class="icon"></i> Bài tập
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
+      <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
+      <div class="nav-group open" id="navTaiLieu">
+        <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
+          <i data-lucide="folder-open" class="icon"></i> Tài liệu
+          <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
+        </button>
+        <div class="nav-sub">
+          <div class="nav-sub-inner">
+            <a class="nav-subitem active" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+    </nav>
+
+    <div class="assistant">
+      <div class="assistant-top">
+        <div class="assistant-avatar"><i data-lucide="sparkles" class="icon"></i></div>
+        <div>
+          <div class="assistant-title">AI Assistant</div>
+          <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
+        </div>
+      </div>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+    </div>
+  </aside>
+
+  <!-- =============================== MAIN =============================== -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
+      <div class="search">
+        <i data-lucide="search" class="icon"></i>
+        <input type="text" placeholder="Tìm kiếm khóa học, tài liệu, bài tập..." />
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
+        <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
+        <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile" id="profileTrigger">
+            <div class="profile-meta">
+              <div class="profile-name">Ngô Thanh Tùng</div>
+              <div class="profile-sub">MSSV: 21123456</div>
+            </div>
+            <div class="avatar">NT</div>
+            <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
+          </div>
+          <div class="dropdown" role="menu">
+            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <div class="dropdown-sep"></div>
+            <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content lib-content" data-screen-label="Tài liệu tham khảo">
+
+      <!-- Top: header + toolbar (full width) -->
+      <div class="lib-head">
+
+        <!-- Page header -->
+        <div>
+          <h1 class="greeting-title" style="font-size:26px;font-weight:800;letter-spacing:-0.02em">Tài liệu tham khảo</h1>
+          <p style="font-size:13.5px;color:hsl(var(--muted-foreground));margin-top:4px">Giáo trình, slide bài giảng và tài liệu bổ trợ cho các môn học của bạn.</p>
+        </div>
+
+        <!-- Filter panel (full width) -->
+        <div class="card card-pad">
+          <div class="lib-toolbar">
+            <div class="lib-search">
+              <i data-lucide="search"></i>
+              <input type="text" id="libSearch" placeholder="Tìm theo tên tài liệu..." />
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /lib-head -->
+
+      <div class="lib-cols">
+
+        <!-- Column 1: file list -->
+        <div class="lib-files">
+
+        <!-- Document grid -->
+        <div class="card card-pad doc-panel">
+          <div class="section-head"><h2>Tài liệu</h2><span class="lr-count" id="libCount">12 tài liệu</span></div>
+          <div class="doc-grid" id="docGrid"></div>
+          <div class="lib-empty" id="libEmpty"><i data-lucide="folder-search"></i>Không tìm thấy tài liệu phù hợp. Thử từ khóa hoặc bộ lọc khác.</div>
+        </div>
+
+        </div>
+        <!-- /lib-files -->
+
+        <!-- Left column: folder browser + info -->
+        <div class="lib-side">
+
+        <!-- Folder browser -->
+        <aside class="lib-folders">
+
+        <div class="card card-pad">
+          <div class="section-head"><h2>Thư mục</h2></div>
+          <div class="ftree" id="ftree">
+            <div class="fnode">
+              <div class="frow active" data-folder=""><span class="fcaret-sp"></span><i data-lucide="folder" class="ficon"></i><span class="fname">Tất cả tài liệu</span><span class="fcount">12</span></div>
+            </div>
+            <div class="fnode">
+              <div class="frow fparent" data-folder="oop"><i data-lucide="chevron-right" class="fcaret"></i><i data-lucide="folder" class="ficon"></i><span class="fname">Lập trình HĐT</span><span class="fcount">3</span></div>
+              <div class="fchildren">
+                <div class="frow fchild" data-folder="oop/giaotrinh"><i data-lucide="folder" class="ficon"></i><span class="fname">Giáo trình</span><span class="fcount">1</span></div>
+                <div class="frow fchild" data-folder="oop/slide"><i data-lucide="folder" class="ficon"></i><span class="fname">Slide bài giảng</span><span class="fcount">1</span></div>
+                <div class="frow fchild" data-folder="oop/manguon"><i data-lucide="folder" class="ficon"></i><span class="fname">Mã nguồn</span><span class="fcount">1</span></div>
+              </div>
+            </div>
+            <div class="fnode">
+              <div class="frow fparent" data-folder="csdl"><i data-lucide="chevron-right" class="fcaret"></i><i data-lucide="folder" class="ficon"></i><span class="fname">Cơ sở dữ liệu</span><span class="fcount">3</span></div>
+              <div class="fchildren">
+                <div class="frow fchild" data-folder="csdl/giaotrinh"><i data-lucide="folder" class="ficon"></i><span class="fname">Giáo trình</span><span class="fcount">2</span></div>
+                <div class="frow fchild" data-folder="csdl/de"><i data-lucide="folder" class="ficon"></i><span class="fname">Đề &amp; lời giải</span><span class="fcount">1</span></div>
+              </div>
+            </div>
+            <div class="fnode">
+              <div class="frow fparent" data-folder="ctdl"><i data-lucide="chevron-right" class="fcaret"></i><i data-lucide="folder" class="ficon"></i><span class="fname">CTDL &amp; GT</span><span class="fcount">2</span></div>
+              <div class="fchildren">
+                <div class="frow fchild" data-folder="ctdl/giaotrinh"><i data-lucide="folder" class="ficon"></i><span class="fname">Giáo trình</span><span class="fcount">1</span></div>
+                <div class="frow fchild" data-folder="ctdl/slide"><i data-lucide="folder" class="ficon"></i><span class="fname">Slide bài giảng</span><span class="fcount">1</span></div>
+              </div>
+            </div>
+            <div class="fnode">
+              <div class="frow fparent" data-folder="net"><i data-lucide="chevron-right" class="fcaret"></i><i data-lucide="folder" class="ficon"></i><span class="fname">Mạng máy tính</span><span class="fcount">2</span></div>
+              <div class="fchildren">
+                <div class="frow fchild" data-folder="net/giaotrinh"><i data-lucide="folder" class="ficon"></i><span class="fname">Giáo trình &amp; Lab</span><span class="fcount">2</span></div>
+              </div>
+            </div>
+            <div class="fnode">
+              <div class="frow fparent" data-folder="eng"><i data-lucide="chevron-right" class="fcaret"></i><i data-lucide="folder" class="ficon"></i><span class="fname">Tiếng Anh</span><span class="fcount">2</span></div>
+              <div class="fchildren">
+                <div class="frow fchild" data-folder="eng/luyenky"><i data-lucide="folder" class="ficon"></i><span class="fname">Luyện kỹ năng</span><span class="fcount">2</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </aside>
+        <!-- /lib-folders -->
+
+        <!-- Column 2 (middle): info cards -->
+        <aside class="lib-info">
+
+        <div class="card card-pad">
+          <div class="section-head"><h2>Mới cập nhật</h2></div>
+          <div class="recent-item"><div class="recent-ico ico-tint-red"><i data-lucide="file-text"></i></div><div><div class="recent-title">Lecture 7 - Inheritance &amp; Polymorphism</div><div class="recent-sub">Lập trình HĐT · 2 giờ trước</div></div></div>
+          <div class="recent-item"><div class="recent-ico ico-tint-amber"><i data-lucide="presentation"></i></div><div><div class="recent-title">Slide thuật toán sắp xếp</div><div class="recent-sub">CTDL &amp; GT · Hôm qua</div></div></div>
+          <div class="recent-item"><div class="recent-ico ico-tint-indigo"><i data-lucide="file-code-2"></i></div><div><div class="recent-title">Demo_Inheritance.zip</div><div class="recent-sub">Lập trình HĐT · 3 ngày trước</div></div></div>
+        </div>
+
+        </aside>
+        <!-- /lib-info -->
+
+        </div>
+        <!-- /lib-side -->
+
+        <!-- Column 3 (right): favorites -->
+        <aside class="lib-fav">
+          <div class="card card-pad">
+            <div class="section-head"><h2>Tài liệu yêu thích</h2></div>
+            <div class="recent-item"><div class="recent-ico ico-tint-red"><i data-lucide="file-text"></i></div><div><div class="recent-title">Giáo trình Lập trình hướng đối tượng</div><div class="recent-sub">Lập trình HĐT · PDF</div></div></div>
+            <div class="recent-item"><div class="recent-ico ico-tint-green"><i data-lucide="file-text"></i></div><div><div class="recent-title">Bộ đề SQL có lời giải</div><div class="recent-sub">Cơ sở dữ liệu · Word</div></div></div>
+            <div class="recent-item"><div class="recent-ico ico-tint-amber"><i data-lucide="presentation"></i></div><div><div class="recent-title">Slide thuật toán sắp xếp &amp; tìm kiếm</div><div class="recent-sub">CTDL &amp; GT · Slide</div></div></div>
+            <div class="recent-item"><div class="recent-ico ico-tint-indigo"><i data-lucide="file-code-2"></i></div><div><div class="recent-title">Demo_Inheritance.zip</div><div class="recent-sub">Lập trình HĐT · ZIP</div></div></div>
+          </div>
+
+          <div class="card card-pad tip-card">
+            <div class="tip-ico"><i data-lucide="lightbulb"></i></div>
+            <h3>Mẹo học hiệu quả</h3>
+            <p>Lưu tài liệu quan trọng bằng nút <i data-lucide="bookmark" style="width:13px;height:13px;vertical-align:-1px"></i> để truy cập nhanh trong mục "Đã lưu" trước kỳ thi.</p>
+          </div>
+        </aside>
+        <!-- /lib-fav -->
+
+      </div>
+      <!-- /lib-cols -->
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script>
+  const DOCS = [
+    { title: 'Giáo trình Lập trình hướng đối tượng (Java)', subj: 'oop', subjLabel: 'Lập trình HĐT', type: 'pdf', size: '18 MB', dl: 1240, date: 'Đầu kỳ', folder: 'oop/giaotrinh' },
+    { title: 'Slide bài giảng chương 1–7 (OOP)', subj: 'oop', subjLabel: 'Lập trình HĐT', type: 'ppt', size: '12 MB', dl: 980, date: '1 tuần trước', folder: 'oop/slide' },
+    { title: 'Demo_Inheritance — mã nguồn ví dụ', subj: 'oop', subjLabel: 'Lập trình HĐT', type: 'zip', size: '240 KB', dl: 612, date: '3 ngày trước', folder: 'oop/manguon' },
+    { title: 'Giáo trình Cơ sở dữ liệu', subj: 'csdl', subjLabel: 'Cơ sở dữ liệu', type: 'pdf', size: '22 MB', dl: 1105, date: 'Đầu kỳ', folder: 'csdl/giaotrinh' },
+    { title: 'Bài giảng SQL nâng cao', subj: 'csdl', subjLabel: 'Cơ sở dữ liệu', type: 'pdf', size: '6.4 MB', dl: 740, date: '5 ngày trước', folder: 'csdl/giaotrinh' },
+    { title: 'Bộ đề SQL có lời giải', subj: 'csdl', subjLabel: 'Cơ sở dữ liệu', type: 'doc', size: '1.2 MB', dl: 856, date: '2 tuần trước', folder: 'csdl/de' },
+    { title: 'Giáo trình Cấu trúc dữ liệu & Giải thuật', subj: 'ctdl', subjLabel: 'CTDL & GT', type: 'pdf', size: '16 MB', dl: 990, date: 'Đầu kỳ', folder: 'ctdl/giaotrinh' },
+    { title: 'Slide thuật toán sắp xếp & tìm kiếm', subj: 'ctdl', subjLabel: 'CTDL & GT', type: 'ppt', size: '8 MB', dl: 533, date: 'Hôm qua', folder: 'ctdl/slide' },
+    { title: 'Computer Networking — A Top-Down Approach', subj: 'net', subjLabel: 'Mạng máy tính', type: 'pdf', size: '28 MB', dl: 421, date: 'Đầu kỳ', folder: 'net/giaotrinh' },
+    { title: 'Hướng dẫn thực hành Wireshark', subj: 'net', subjLabel: 'Mạng máy tính', type: 'pdf', size: '3 MB', dl: 318, date: '1 tuần trước', folder: 'net/giaotrinh' },
+    { title: 'Academic Vocabulary — danh sách từ vựng', subj: 'eng', subjLabel: 'Tiếng Anh', type: 'pdf', size: '900 KB', dl: 690, date: '2 tuần trước', folder: 'eng/luyenky' },
+    { title: 'IELTS Speaking — bộ chủ đề luyện tập', subj: 'eng', subjLabel: 'Tiếng Anh', type: 'doc', size: '600 KB', dl: 745, date: '3 tuần trước', folder: 'eng/luyenky' }
+  ];
+
+  const TYPE_META = {
+    pdf: { ico: 'file-text', tint: 'ico-tint-red', ext: 'PDF', extc: 'pdf' },
+    ppt: { ico: 'presentation', tint: 'ico-tint-amber', ext: 'PPT', extc: 'ppt' },
+    doc: { ico: 'file-text', tint: 'ico-tint-blue', ext: 'DOC', extc: 'doc' },
+    zip: { ico: 'file-code-2', tint: 'ico-tint-indigo', ext: 'ZIP', extc: 'zip' }
+  };
+
+  const grid = document.getElementById('docGrid');
+  const emptyEl = document.getElementById('libEmpty');
+  const libSearch = document.getElementById('libSearch');
+  let fType = 'all', fSubj = 'all', fQuery = '', fFolder = '';
+
+  const FOLDER_LABELS = {
+    '': 'Tất cả tài liệu',
+    'oop': 'Lập trình HĐT', 'oop/giaotrinh': 'Giáo trình', 'oop/slide': 'Slide bài giảng', 'oop/manguon': 'Mã nguồn',
+    'csdl': 'Cơ sở dữ liệu', 'csdl/giaotrinh': 'Giáo trình', 'csdl/de': 'Đề & lời giải',
+    'ctdl': 'CTDL & GT', 'ctdl/giaotrinh': 'Giáo trình', 'ctdl/slide': 'Slide bài giảng',
+    'net': 'Mạng máy tính', 'net/giaotrinh': 'Giáo trình & Lab',
+    'eng': 'Tiếng Anh', 'eng/luyenky': 'Luyện kỹ năng'
+  };
+  const SUBJ_LABELS = {};
+  const libLoc = document.getElementById('libLoc');
+  const libCount = document.getElementById('libCount');
+  const ftree = document.getElementById('ftree');
+  function inFolder(d) { if (!fFolder) return true; return d.folder === fFolder || d.folder.indexOf(fFolder + '/') === 0; }
+  function locLabel() {
+    if (fFolder) { if (fFolder.indexOf('/') > -1) { return FOLDER_LABELS[fFolder.split('/')[0]] + ' / ' + FOLDER_LABELS[fFolder]; } return FOLDER_LABELS[fFolder]; }
+    if (fSubj !== 'all') return SUBJ_LABELS[fSubj] || 'Tài liệu';
+    return 'Tất cả tài liệu';
+  }
+  function updateLoc(n) { if (libLoc) libLoc.textContent = locLabel(); if (libCount) libCount.textContent = n + ' tài liệu'; }
+
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  DOCS.forEach(d => { SUBJ_LABELS[d.subj] = d.subjLabel; });
+
+  function render() {
+    const items = DOCS.filter(d =>
+      inFolder(d) &&
+      (fType === 'all' || d.type === fType) &&
+      (fSubj === 'all' || d.subj === fSubj) &&
+      (!fQuery || d.title.toLowerCase().includes(fQuery))
+    );
+    grid.innerHTML = '';
+    items.forEach(d => {
+      const t = TYPE_META[d.type];
+      const card = document.createElement('div');
+      card.className = 'doc-card';
+      card.innerHTML =
+        '<div class="doc-ico ' + t.tint + '"><i data-lucide="' + t.ico + '"></i><span class="doc-ext ' + t.extc + '">' + t.ext + '</span></div>' +
+        '<div class="doc-body">' +
+          '<div class="doc-title">' + esc(d.title) + '</div>' +
+          '<div class="doc-meta"><span class="dm"><i data-lucide="hard-drive"></i>' + d.size + '</span>' +
+            '<span class="dm"><i data-lucide="download"></i>' + d.dl.toLocaleString('vi-VN') + ' lượt tải</span>' +
+            '<span class="dm"><i data-lucide="clock"></i>' + d.date + '</span></div>' +
+          '<span class="doc-subj">' + esc(d.subjLabel) + '</span>' +
+        '</div>' +
+        '<div class="doc-actions">' +
+          '<button class="doc-btn dl" title="Tải xuống"><i data-lucide="download"></i></button>' +
+          '<button class="doc-btn bm" title="Lưu"><i data-lucide="bookmark"></i></button>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+    emptyEl.classList.toggle('show', items.length === 0);
+    updateLoc(items.length);
+    lucide.createIcons();
+    bindCardActions();
+  }
+
+  function bindCardActions() {
+    grid.querySelectorAll('.doc-btn.bm').forEach(b => {
+      b.addEventListener('click', () => {
+        const on = b.classList.toggle('saved');
+        b.title = on ? 'Đã lưu' : 'Lưu';
+      });
+    });
+    grid.querySelectorAll('.doc-btn.dl').forEach(b => {
+      b.addEventListener('click', () => {
+        const orig = b.innerHTML;
+        b.innerHTML = '<i data-lucide="check"></i>'; b.classList.add('saved'); lucide.createIcons();
+        setTimeout(() => { b.innerHTML = orig; b.classList.remove('saved'); lucide.createIcons(); }, 1300);
+      });
+    });
+  }
+
+  libSearch.addEventListener('input', e => { fQuery = e.target.value.trim().toLowerCase(); render(); });
+
+  // Folder tree → browse folder, show matching files
+  ftree.addEventListener('click', e => {
+    const row = e.target.closest('.frow'); if (!row) return;
+    if (row.classList.contains('fparent')) row.closest('.fnode').classList.toggle('open');
+    ftree.querySelectorAll('.frow').forEach(r => r.classList.remove('active'));
+    row.classList.add('active');
+    fFolder = row.dataset.folder;
+    fSubj = 'all';
+    render();
+  });
+
+  render();
+
+  // ---- Shared chrome ----
+  const menuToggle = document.getElementById('menuToggle');
+  const appEl = document.querySelector('.app');
+  if (menuToggle && appEl) {
+    if (localStorage.getItem('sidebarCollapsed') === '1') appEl.classList.add('collapsed');
+    menuToggle.addEventListener('click', () => { appEl.classList.toggle('collapsed'); localStorage.setItem('sidebarCollapsed', appEl.classList.contains('collapsed') ? '1' : '0'); });
+  }
+  const profileMenu = document.getElementById('profileMenu');
+  const profileTrigger = document.getElementById('profileTrigger');
+  if (profileMenu && profileTrigger) {
+    profileTrigger.addEventListener('click', e => { e.stopPropagation(); profileMenu.classList.toggle('open'); });
+    document.addEventListener('click', e => { if (!profileMenu.contains(e.target)) profileMenu.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') profileMenu.classList.remove('open'); });
+  }
+  document.querySelectorAll('.nav-group .nav-parent').forEach(p => p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open')));
+</script>
+</body>
+</html>

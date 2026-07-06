@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Lập trình hướng đối tượng — Lớp học</title>
@@ -50,9 +52,9 @@
   .ch-prog-wrap { width: 200px; text-align: right; }
   .ch-prog-row { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 600; margin-bottom: 7px; opacity: .95; }
   .ch-prog-track { height: 8px; border-radius: 99px; background: hsl(0 0% 100% / 0.22); overflow: hidden; }
-  .ch-prog-track span { display: block; height: 100%; border-radius: 99px; background: #fff; }
+  .ch-prog-track span { display: block; height: 100%; border-radius: 99px; background: hsl(var(--card)); }
   .ch-actions { display: flex; gap: 10px; }
-  .btn-live { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: hsl(262 83% 48%); border: none; font: inherit; font-weight: 700; font-size: 13.5px; padding: 11px 18px; border-radius: 11px; cursor: pointer; box-shadow: 0 4px 14px hsl(252 80% 30% / 0.28); transition: transform .12s, box-shadow .12s; }
+  .btn-live { display: inline-flex; align-items: center; gap: 8px; background: hsl(var(--card)); color: hsl(262 83% 48%); border: none; font: inherit; font-weight: 700; font-size: 13.5px; padding: 11px 18px; border-radius: 11px; cursor: pointer; box-shadow: 0 4px 14px hsl(252 80% 30% / 0.28); transition: transform .12s, box-shadow .12s; }
   .btn-live:hover { transform: translateY(-1px); box-shadow: 0 6px 18px hsl(252 80% 30% / 0.34); }
   .btn-live .live-dot { width: 8px; height: 8px; border-radius: 50%; background: hsl(0 72% 51%); box-shadow: 0 0 0 0 hsl(0 72% 51% / 0.5); animation: livePulse 1.8s infinite; }
   @keyframes livePulse { 0% { box-shadow: 0 0 0 0 hsl(0 72% 51% / 0.5); } 70% { box-shadow: 0 0 0 7px hsl(0 72% 51% / 0); } 100% { box-shadow: 0 0 0 0 hsl(0 72% 51% / 0); } }
@@ -100,7 +102,7 @@
   .composer { display: flex; gap: 12px; align-items: center; }
   .composer .avatar { width: 40px; height: 40px; flex: none; background: linear-gradient(135deg, hsl(262 83% 60%), hsl(252 83% 50%)); color: #fff; font-weight: 700; font-size: 14px; }
   .composer input { flex: 1; font: inherit; font-size: 13.5px; padding: 11px 15px; border: 1px solid hsl(var(--input)); border-radius: 99px; background: hsl(var(--background)); outline: none; transition: border-color .15s, box-shadow .15s; }
-  .composer input:focus { border-color: hsl(var(--ring)); background: #fff; box-shadow: 0 0 0 3px hsl(var(--ring) / 0.12); }
+  .composer input:focus { border-color: hsl(var(--ring)); background: hsl(var(--card)); box-shadow: 0 0 0 3px hsl(var(--ring) / 0.12); }
 
   /* Rail cards */
   .live-card { background: linear-gradient(160deg, hsl(262 60% 97%), hsl(252 70% 98%)); border-color: hsl(243 60% 90%); }
@@ -134,7 +136,7 @@
   .gv-card .btn { width: 100%; justify-content: center; }
 
   /* Lessons (Nội dung) */
-  .week { border: 1px solid hsl(var(--border)); border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #fff; }
+  .week { border: 1px solid hsl(var(--border)); border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: hsl(var(--card)); }
   .week-head { display: flex; align-items: center; gap: 13px; padding: 15px 16px; cursor: pointer; user-select: none; }
   .week-head:hover { background: hsl(var(--background)); }
   .week-num { width: 38px; height: 38px; border-radius: 10px; flex: none; display: grid; place-items: center; font-size: 12.5px; font-weight: 800; background: hsl(var(--primary) / 0.1); color: hsl(var(--primary)); }
@@ -157,7 +159,7 @@
   .lesson-dur { font-size: 11.5px; color: hsl(var(--muted-foreground)); flex: none; }
 
   /* Assignment rows */
-  .arow { display: flex; align-items: center; gap: 14px; padding: 15px 16px; border: 1px solid hsl(var(--border)); border-radius: 12px; background: #fff; transition: border-color .15s, transform .1s; }
+  .arow { display: flex; align-items: center; gap: 14px; padding: 15px 16px; border: 1px solid hsl(var(--border)); border-radius: 12px; background: hsl(var(--card)); transition: border-color .15s, transform .1s; }
   .arow:hover { border-color: hsl(243 60% 84%); transform: translateY(-1px); }
   .arow-ico { width: 42px; height: 42px; border-radius: 11px; flex: none; display: grid; place-items: center; }
   .arow-ico svg { width: 19px; height: 19px; }
@@ -169,14 +171,14 @@
   .arow-score { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
 
   /* Files */
-  .frow { display: flex; align-items: center; gap: 13px; padding: 13px 14px; border: 1px solid hsl(var(--border)); border-radius: 11px; background: #fff; transition: border-color .15s, background .15s; }
+  .frow { display: flex; align-items: center; gap: 13px; padding: 13px 14px; border: 1px solid hsl(var(--border)); border-radius: 11px; background: hsl(var(--card)); transition: border-color .15s, background .15s; }
   .frow:hover { border-color: hsl(243 60% 84%); background: hsl(var(--primary) / 0.02); }
   .frow-ico { width: 40px; height: 40px; border-radius: 10px; flex: none; display: grid; place-items: center; }
   .frow-ico svg { width: 18px; height: 18px; }
   .frow-body { flex: 1; min-width: 0; }
   .frow-name { font-size: 13.5px; font-weight: 600; }
   .frow-meta { font-size: 11.5px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
-  .frow-dl { width: 36px; height: 36px; border-radius: 9px; flex: none; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: #fff; color: hsl(var(--muted-foreground)); cursor: pointer; transition: background .15s, color .15s; }
+  .frow-dl { width: 36px; height: 36px; border-radius: 9px; flex: none; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); color: hsl(var(--muted-foreground)); cursor: pointer; transition: background .15s, color .15s; }
   .frow-dl:hover { background: hsl(var(--primary) / 0.08); color: hsl(var(--primary)); }
   .frow-dl svg { width: 16px; height: 16px; }
 
@@ -205,7 +207,7 @@
 <div class="app">
 
   <!-- ============================== SIDEBAR ============================== -->
-  <aside class="sidebar">
+    <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
       <div>
@@ -216,7 +218,7 @@
 
     <nav class="nav">
       <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
-      <a class="nav-item active" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
+      <a class="nav-item active" href="#" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
       <a class="nav-item" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
       <div class="nav-group" id="navBaiTap">
         <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
@@ -232,24 +234,25 @@
         </div>
       </div>
       <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
       <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
-      <div class="nav-group open" id="navTaiLieu">
+      <div class="nav-group" id="navTaiLieu">
         <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
           <i data-lucide="folder-open" class="icon"></i> Tài liệu
           <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+            <a class="nav-subitem" href="tai-lieu-tham-khao.html"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
           </div>
         </div>
       </div>
-      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
-      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
-      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
       <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
-      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
     </nav>
 
     <div class="assistant">
@@ -268,7 +271,7 @@
   <div class="main">
 
     <!-- Topbar -->
-    <header class="topbar">
+        <header class="topbar">
       <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
       <div class="search">
         <i data-lucide="search" class="icon"></i>
@@ -278,6 +281,7 @@
         <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
         <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
         <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
         <div class="profile-menu" id="profileMenu">
           <div class="profile" id="profileTrigger">
             <div class="profile-meta">
@@ -289,7 +293,7 @@
           </div>
           <div class="dropdown" role="menu">
             <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
-            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
             <div class="dropdown-sep"></div>
             <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
           </div>
@@ -638,7 +642,7 @@
               <div class="gv-name">TS. Nguyễn Minh Tuấn</div>
               <div class="gv-title">Bộ môn Công nghệ phần mềm</div>
               <div class="gv-info">
-                <div class="gi"><i data-lucide="mail"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="572322363979393a1722393e213225243e232e79323322792139">[email&#160;protected]</a></div>
+                <div class="gi"><i data-lucide="mail"></i> tuan.nm@university.edu.vn</div>
                 <div class="gi"><i data-lucide="clock"></i> Lịch tiếp SV: Thứ 4, 14:00–16:00</div>
                 <div class="gi"><i data-lucide="map-pin"></i> Văn phòng B1-305</div>
               </div>
@@ -653,7 +657,8 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
 <script>
   lucide.createIcons();
 

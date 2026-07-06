@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Lịch học — LMS Portal</title>
@@ -12,16 +14,20 @@
 <style>
   /* ---- Calendar page-specific ------------------------------------------- */
   .cal-page { grid-template-columns: 1fr; }
-  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 20px; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 16px; }
   .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
   .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
 
-  .week-nav { display: flex; align-items: center; gap: 12px; }
-  .week-nav .wk-label { font-size: 14px; font-weight: 700; min-width: 168px; text-align: center; }
-  .week-nav .sched-nav { display: inline-flex; gap: 4px; }
-  .week-nav .sched-nav button { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); border-radius: 9px; cursor: pointer; color: hsl(var(--foreground)); transition: background .15s; }
+  .week-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .week-nav .view-btn { font: inherit; font-size: 14px; font-weight: 700; padding: 10px 20px; border-radius: 12px; cursor: pointer; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); color: hsl(var(--foreground)); transition: background .15s, color .15s, border-color .15s, box-shadow .15s; }
+  .week-nav .view-btn:hover { background: hsl(var(--muted)); }
+  .week-nav .view-btn.active { background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: #fff; box-shadow: var(--shadow-card); }
+  .week-nav .view-btn.active:hover { background: hsl(var(--primary)); }
+  .week-nav .wk-label { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 700; color: hsl(var(--primary)); background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 12px; padding: 10px 16px; }
+  .week-nav .wk-label svg { width: 17px; height: 17px; color: hsl(var(--primary)); }
+  .week-nav .sched-nav { display: inline-flex; gap: 6px; }
+  .week-nav .sched-nav button { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid hsl(var(--border)); background: hsl(var(--card)); border-radius: 12px; cursor: pointer; color: hsl(var(--foreground)); transition: background .15s; }
   .week-nav .sched-nav button:hover { background: hsl(var(--muted)); }
-  .week-nav .btn.today-btn { padding: 8px 15px; }
 
   /* Timetable grid */
   .cal-wrap { padding: 0; overflow: hidden; }
@@ -53,6 +59,30 @@
   .ev.teal   { background: linear-gradient(155deg, hsl(172 60% 44%), hsl(174 66% 34%)); }
   .ev.rust   { background: linear-gradient(155deg, hsl(16 60% 60%), hsl(14 52% 48%)); }
 
+  /* View-mode toggle buttons styled inline in .week-nav above */
+
+  /* Month grid */
+  .month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); min-width: 760px; border-top: 1px solid hsl(var(--border)); border-left: 1px solid hsl(var(--border)); }
+  .m-dayhead { padding: 12px 10px; text-align: center; font-size: 12.5px; font-weight: 700; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); }
+  .m-dayhead.wknd { color: hsl(var(--muted-foreground)); }
+  .m-cell { min-height: 118px; padding: 8px; border-bottom: 1px solid hsl(var(--border)); border-right: 1px solid hsl(var(--border)); display: flex; flex-direction: column; }
+  .m-cell.other { background: hsl(var(--muted) / 0.45); }
+  .m-date { font-size: 12.5px; font-weight: 700; color: hsl(var(--foreground)); width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; }
+  .m-cell.other .m-date { color: hsl(var(--muted-foreground)); font-weight: 600; }
+  .m-cell.is-today .m-date { background: hsl(var(--primary)); color: #fff; }
+  .m-evs { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+  .m-ev { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; line-height: 1.25; padding: 4px 7px; border-radius: 7px; cursor: pointer; transition: filter .12s; }
+  .m-ev:hover { filter: brightness(0.96); }
+  .m-ev .mdot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .m-ev .met { font-weight: 700; }
+  .m-ev.violet { background: hsl(262 83% 96%); color: hsl(262 55% 44%); } .m-ev.violet .mdot { background: hsl(262 83% 56%); }
+  .m-ev.green  { background: hsl(142 58% 93%); color: hsl(142 55% 30%); } .m-ev.green .mdot { background: hsl(142 68% 43%); }
+  .m-ev.blue   { background: hsl(221 90% 95%); color: hsl(221 65% 46%); } .m-ev.blue .mdot { background: hsl(221 83% 52%); }
+  .m-ev.amber  { background: hsl(36 95% 92%); color: hsl(28 75% 42%); } .m-ev.amber .mdot { background: hsl(32 93% 53%); }
+  .m-ev.teal   { background: hsl(173 58% 92%); color: hsl(174 58% 30%); } .m-ev.teal .mdot { background: hsl(173 63% 39%); }
+  .m-ev.rust   { background: hsl(15 68% 94%); color: hsl(14 50% 45%); } .m-ev.rust .mdot { background: hsl(15 56% 54%); }
+  .m-ev.deadline { background: hsl(0 80% 95%); color: hsl(0 65% 45%); } .m-ev.deadline .mdot { background: hsl(0 72% 51%); }
+
   /* Legend */
   .cal-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
   .lg { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: hsl(var(--foreground)); }
@@ -75,7 +105,7 @@
 <div class="app">
 
   <!-- ============================== SIDEBAR ============================== -->
-  <aside class="sidebar">
+    <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
       <div>
@@ -87,7 +117,7 @@
     <nav class="nav">
       <a class="nav-item" href="LMS Portal.html" data-tip="Trang chủ"><i data-lucide="home" class="icon"></i> Trang chủ</a>
       <a class="nav-item" href="my-courses.html" data-tip="Khóa học của tôi"><i data-lucide="book-open-check" class="icon"></i> Khóa học của tôi</a>
-      <a class="nav-item active" href="calendar.html" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
+      <a class="nav-item active" href="#" data-tip="Lịch học"><i data-lucide="calendar-days" class="icon"></i> Lịch học</a>
       <div class="nav-group" id="navBaiTap">
         <button class="nav-item nav-parent" type="button" data-tip="Bài tập">
           <i data-lucide="file-text" class="icon"></i> Bài tập
@@ -102,24 +132,25 @@
         </div>
       </div>
       <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
       <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
-      <div class="nav-group open" id="navTaiLieu">
+      <div class="nav-group" id="navTaiLieu">
         <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
           <i data-lucide="folder-open" class="icon"></i> Tài liệu
           <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+            <a class="nav-subitem" href="tai-lieu-tham-khao.html"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
           </div>
         </div>
       </div>
-      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
-      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
-      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
-      <a class="nav-item" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
-      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
     </nav>
 
     <div class="assistant">
@@ -130,7 +161,7 @@
           <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
         </div>
       </div>
-      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
     </div>
   </aside>
 
@@ -138,7 +169,7 @@
   <div class="main">
 
     <!-- Topbar -->
-    <header class="topbar">
+        <header class="topbar">
       <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
       <div class="search">
         <i data-lucide="search" class="icon"></i>
@@ -148,18 +179,19 @@
         <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
         <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
         <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
         <div class="profile-menu" id="profileMenu">
           <div class="profile" id="profileTrigger">
             <div class="profile-meta">
               <div class="profile-name">Ngô Thanh Tùng</div>
               <div class="profile-sub">MSSV: 21123456</div>
             </div>
-            <div class="avatar">A</div>
+            <div class="avatar">NT</div>
             <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
           </div>
           <div class="dropdown" role="menu">
             <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
-            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
             <div class="dropdown-sep"></div>
             <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
           </div>
@@ -175,31 +207,32 @@
         <div class="page-head">
           <div>
             <h1>Lịch học</h1>
-            <p>Học kỳ II, năm học 2025 - 2026 · Thời khóa biểu tuần</p>
+            <p id="calSubtitle">Học kỳ II, năm học 2025 - 2026 · Thời khóa biểu tuần</p>
           </div>
           <div class="week-nav">
-            <button class="btn today-btn">Tuần này</button>
-            <div class="wk-label">25/05 – 30/05/2026</div>
+            <button class="view-btn active" data-view="week">Tuần này</button>
+            <button class="view-btn" data-view="month">Tháng này</button>
+            <div class="wk-label" id="calRange"><i data-lucide="calendar"></i> <span id="calRangeText">01/06 – 06/06/2026</span></div>
             <div class="sched-nav">
-              <button aria-label="Tuần trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
-              <button aria-label="Tuần sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+              <button id="calPrev" aria-label="Trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+              <button id="calNext" aria-label="Sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
             </div>
           </div>
         </div>
 
-        <!-- Timetable -->
-        <div class="card cal-wrap">
+        <!-- Timetable (week view) -->
+        <div class="card cal-wrap" id="weekView">
           <div class="cal-scroll">
             <div class="cal">
 
               <!-- Header row -->
               <div class="cal-corner"></div>
-              <div class="cal-dayhead" style="grid-column:2"><div class="dh-day">Thứ 2</div><div class="dh-date">25/05</div></div>
-              <div class="cal-dayhead" style="grid-column:3"><div class="dh-day">Thứ 3</div><div class="dh-date">26/05</div></div>
-              <div class="cal-dayhead" style="grid-column:4"><div class="dh-day">Thứ 4</div><div class="dh-date">27/05</div></div>
-              <div class="cal-dayhead" style="grid-column:5"><div class="dh-day">Thứ 5</div><div class="dh-date">28/05</div></div>
-              <div class="cal-dayhead is-today" style="grid-column:6"><div class="dh-day">Thứ 6</div><div class="dh-date">29/05</div></div>
-              <div class="cal-dayhead" style="grid-column:7"><div class="dh-day">Thứ 7</div><div class="dh-date">30/05</div></div>
+              <div class="cal-dayhead is-today" style="grid-column:2"><div class="dh-day">Thứ 2</div><div class="dh-date">01/06</div></div>
+              <div class="cal-dayhead" style="grid-column:3"><div class="dh-day">Thứ 3</div><div class="dh-date">02/06</div></div>
+              <div class="cal-dayhead" style="grid-column:4"><div class="dh-day">Thứ 4</div><div class="dh-date">03/06</div></div>
+              <div class="cal-dayhead" style="grid-column:5"><div class="dh-day">Thứ 5</div><div class="dh-date">04/06</div></div>
+              <div class="cal-dayhead" style="grid-column:6"><div class="dh-day">Thứ 6</div><div class="dh-date">05/06</div></div>
+              <div class="cal-dayhead" style="grid-column:7"><div class="dh-day">Thứ 7</div><div class="dh-date">06/06</div></div>
 
               <!-- Time labels (col 1) -->
               <div class="cal-time" style="grid-row:2">07:00</div>
@@ -214,11 +247,11 @@
               <div class="cal-time" style="grid-row:11">16:00</div>
 
               <!-- Day background columns -->
-              <div class="cal-col" style="grid-column:2"></div>
+              <div class="cal-col is-today" style="grid-column:2"></div>
               <div class="cal-col" style="grid-column:3"></div>
               <div class="cal-col" style="grid-column:4"></div>
               <div class="cal-col" style="grid-column:5"></div>
-              <div class="cal-col is-today" style="grid-column:6"></div>
+              <div class="cal-col" style="grid-column:6"></div>
               <div class="cal-col" style="grid-column:7"></div>
 
               <!-- Events -->
@@ -268,6 +301,67 @@
           </div>
         </div>
 
+        <!-- Month view -->
+        <div class="card cal-wrap" id="monthView" style="display:none">
+          <div class="cal-scroll">
+            <div class="month-grid">
+              <!-- Day headers -->
+              <div class="m-dayhead">Thứ 2</div>
+              <div class="m-dayhead">Thứ 3</div>
+              <div class="m-dayhead">Thứ 4</div>
+              <div class="m-dayhead">Thứ 5</div>
+              <div class="m-dayhead">Thứ 6</div>
+              <div class="m-dayhead wknd">Thứ 7</div>
+              <div class="m-dayhead wknd">Chủ nhật</div>
+
+              <!-- Week 1 -->
+              <div class="m-cell is-today"><div class="m-date">1</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">2</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell"><div class="m-date">3</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">4</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">5</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">6</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">7</div></div>
+
+              <!-- Week 2 -->
+              <div class="m-cell"><div class="m-date">8</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">9</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div><div class="m-ev deadline"><span class="mdot"></span>Hạn: BTL2</div></div></div>
+              <div class="m-cell"><div class="m-date">10</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">11</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">12</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">13</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">14</div></div>
+
+              <!-- Week 3 -->
+              <div class="m-cell"><div class="m-date">15</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">16</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell"><div class="m-date">17</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">18</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">19</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">20</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">21</div></div>
+
+              <!-- Week 4 -->
+              <div class="m-cell"><div class="m-date">22</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">23</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell"><div class="m-date">24</div><div class="m-evs"><div class="m-ev blue"><span class="mdot"></span><span class="met">13:00</span> CTDL &amp; GT</div></div></div>
+              <div class="m-cell"><div class="m-date">25</div><div class="m-evs"><div class="m-ev amber"><span class="mdot"></span><span class="met">07:00</span> Java</div></div></div>
+              <div class="m-cell"><div class="m-date">26</div><div class="m-evs"><div class="m-ev teal"><span class="mdot"></span><span class="met">09:00</span> Tiếng Anh</div></div></div>
+              <div class="m-cell"><div class="m-date">27</div><div class="m-evs"><div class="m-ev rust"><span class="mdot"></span><span class="met">13:00</span> Claude Code</div></div></div>
+              <div class="m-cell"><div class="m-date">28</div></div>
+
+              <!-- Week 5 -->
+              <div class="m-cell"><div class="m-date">29</div><div class="m-evs"><div class="m-ev violet"><span class="mdot"></span><span class="met">07:00</span> OOP</div></div></div>
+              <div class="m-cell"><div class="m-date">30</div><div class="m-evs"><div class="m-ev green"><span class="mdot"></span><span class="met">09:00</span> CSDL</div></div></div>
+              <div class="m-cell other"><div class="m-date">1</div></div>
+              <div class="m-cell other"><div class="m-date">2</div></div>
+              <div class="m-cell other"><div class="m-date">3</div></div>
+              <div class="m-cell other"><div class="m-date">4</div></div>
+              <div class="m-cell other"><div class="m-date">5</div></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Legend -->
         <div class="cal-legend">
           <div class="lg"><span class="sw violet"></span> Lập trình hướng đối tượng</div>
@@ -285,6 +379,7 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
 <script>
   lucide.createIcons();
 
@@ -312,6 +407,35 @@
   document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
     p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
   });
+
+  // View mode toggle: week / month
+  const viewBtns = document.querySelectorAll('.view-btn');
+  const weekView = document.getElementById('weekView');
+  const monthView = document.getElementById('monthView');
+  const calSubtitle = document.getElementById('calSubtitle');
+  const calRangeText = document.getElementById('calRangeText');
+
+  const VIEW = {
+    week:  { sub: 'Học kỳ II, năm học 2025 - 2026 · Thời khóa biểu tuần',  range: '01/06 – 06/06/2026' },
+    month: { sub: 'Học kỳ II, năm học 2025 - 2026 · Thời khóa biểu tháng', range: 'Tháng 6, 2026' }
+  };
+
+  function setView(view) {
+    const isWeek = view === 'week';
+    weekView.style.display = isWeek ? '' : 'none';
+    monthView.style.display = isWeek ? 'none' : '';
+    viewBtns.forEach(b => b.classList.toggle('active', b.dataset.view === view));
+    calSubtitle.textContent = VIEW[view].sub;
+    calRangeText.textContent = VIEW[view].range;
+    try { localStorage.setItem('calView', view); } catch (e) {}
+  }
+
+  viewBtns.forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+
+  // Restore last-used view
+  let savedView = 'week';
+  try { savedView = localStorage.getItem('calView') || 'week'; } catch (e) {}
+  setView(savedView);
 </script>
 </body>
 </html>

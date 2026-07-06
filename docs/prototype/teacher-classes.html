@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Lớp học của tôi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="classes">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Lớp học của tôi</h1>
+            <p>5 lớp học phần · 248 sinh viên · Học kỳ II, 2025 - 2026</p>
+          </div>
+          <div class="ph-actions">
+            <div class="tabs" id="classTabs">
+              <button class="tab active" data-f="all">Đang dạy <span class="tab-count">6</span></button>
+              <button class="tab" data-f="done">Đã kết thúc <span class="tab-count">3</span></button>
+            </div>
+            <button class="btn primary lg"><i data-lucide="plus" class="icon-sm"></i> Tạo lớp mới</button>
+          </div>
+        </div>
+
+        <div class="courses" id="classGrid">
+          <a class="course" href="teacher-gradebook.html">
+            <div class="course-top violet">
+              <div class="course-emblem"><i data-lucide="code-xml"></i></div>
+              <div class="course-name">Lập trình hướng đối tượng</div>
+              <div class="course-gv">CNTT-K22B · Thứ 2, 4, 6 · B1-302</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ chương trình</span><span>66%</span></div>
+                <div class="course-track"><span style="width:66%"></span></div>
+              </div>
+            </div>
+            <div class="course-foot">
+              <div class="course-stat"><div class="k"><i data-lucide="users" class="icon-sm"></i> Sĩ số</div><div class="v">56</div></div>
+              <div class="course-stat"><div class="k"><i data-lucide="file-pen-line" class="icon-sm"></i> Cần chấm</div><div class="v">18</div></div>
+            </div>
+          </a>
+
+          <a class="course" href="teacher-gradebook.html">
+            <div class="course-top green">
+              <div class="course-emblem"><i data-lucide="database"></i></div>
+              <div class="course-name">Cơ sở dữ liệu</div>
+              <div class="course-gv">CNTT-K21A · Thứ 3, 6 · A1-201</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ chương trình</span><span>48%</span></div>
+                <div class="course-track"><span style="width:48%"></span></div>
+              </div>
+            </div>
+            <div class="course-foot">
+              <div class="course-stat"><div class="k"><i data-lucide="users" class="icon-sm"></i> Sĩ số</div><div class="v">42</div></div>
+              <div class="course-stat"><div class="k"><i data-lucide="file-pen-line" class="icon-sm"></i> Cần chấm</div><div class="v">6</div></div>
+            </div>
+          </a>
+
+          <a class="course" href="teacher-gradebook.html">
+            <div class="course-top blue">
+              <div class="course-emblem"><i data-lucide="network"></i></div>
+              <div class="course-name">Cấu trúc dữ liệu và giải thuật</div>
+              <div class="course-gv">CNTT-K22A · Thứ 2, 5 · A2-105</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ chương trình</span><span>72%</span></div>
+                <div class="course-track"><span style="width:72%"></span></div>
+              </div>
+            </div>
+            <div class="course-foot">
+              <div class="course-stat"><div class="k"><i data-lucide="users" class="icon-sm"></i> Sĩ số</div><div class="v">48</div></div>
+              <div class="course-stat"><div class="k"><i data-lucide="file-pen-line" class="icon-sm"></i> Cần chấm</div><div class="v">0</div></div>
+            </div>
+          </a>
+
+          <a class="course" href="teacher-gradebook.html">
+            <div class="course-top amber">
+              <div class="course-emblem"><i data-lucide="coffee"></i></div>
+              <div class="course-name">Lập trình Java</div>
+              <div class="course-gv">CNTT-K22C · Thứ 4, 7 · B1-204</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ chương trình</span><span>30%</span></div>
+                <div class="course-track"><span style="width:30%"></span></div>
+              </div>
+            </div>
+            <div class="course-foot">
+              <div class="course-stat"><div class="k"><i data-lucide="users" class="icon-sm"></i> Sĩ số</div><div class="v">38</div></div>
+              <div class="course-stat"><div class="k"><i data-lucide="file-pen-line" class="icon-sm"></i> Cần chấm</div><div class="v">8</div></div>
+            </div>
+          </a>
+
+          <a class="course" href="teacher-gradebook.html">
+            <div class="course-top teal">
+              <div class="course-emblem"><i data-lucide="folder-git-2"></i></div>
+              <div class="course-name">Đồ án môn học</div>
+              <div class="course-gv">CNTT-K21 · Thứ 6 · Lab CNTT-301</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ chương trình</span><span>60%</span></div>
+                <div class="course-track"><span style="width:60%"></span></div>
+              </div>
+            </div>
+            <div class="course-foot">
+              <div class="course-stat"><div class="k"><i data-lucide="users" class="icon-sm"></i> Sĩ số</div><div class="v">24</div></div>
+              <div class="course-stat"><div class="k"><i data-lucide="file-pen-line" class="icon-sm"></i> Cần chấm</div><div class="v">0</div></div>
+            </div>
+          </a>
+
+          <a class="course" href="teacher-gradebook.html">
+            <div class="course-top rust">
+              <div class="course-emblem"><i data-lucide="terminal"></i></div>
+              <div class="course-name">Claude Code for BackEnd</div>
+              <div class="course-gv">CNTT-K21B · Thứ 5 · Lab CNTT-302</div>
+              <div class="course-prog">
+                <div class="course-prog-row"><span>Tiến độ chương trình</span><span>15%</span></div>
+                <div class="course-track"><span style="width:15%"></span></div>
+              </div>
+            </div>
+            <div class="course-foot">
+              <div class="course-stat"><div class="k"><i data-lucide="users" class="icon-sm"></i> Sĩ số</div><div class="v">40</div></div>
+              <div class="course-stat"><div class="k"><i data-lucide="file-pen-line" class="icon-sm"></i> Cần chấm</div><div class="v">0</div></div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  document.querySelectorAll('#classTabs .tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('#classTabs .tab').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

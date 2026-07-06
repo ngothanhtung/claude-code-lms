@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Điểm danh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="attendance">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Điểm danh</h1>
+            <p>Cơ sở dữ liệu · CNTT-K21A · Buổi 18 · Thứ 6, 29/05/2026</p>
+          </div>
+          <div class="ph-actions">
+            <div class="select-mini">
+              <select>
+                <option>CSDL · K21A · Buổi 18 (Hôm nay)</option>
+                <option>OOP · K22B · Buổi 17</option>
+                <option>Java · K22C · Buổi 15</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <button class="btn lg" id="markAll"><i data-lucide="check-check" class="icon-sm"></i> Có mặt tất cả</button>
+            <button class="btn primary lg"><i data-lucide="save" class="icon-sm"></i> Lưu điểm danh</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="ms-ico ico-tint-green"><i data-lucide="user-check" class="icon-lg"></i></div><div class="ms-val" id="cPresent">38</div><div class="ms-lbl">Có mặt</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-amber"><i data-lucide="clock" class="icon-lg"></i></div><div class="ms-val" id="cLate">2</div><div class="ms-lbl">Đi muộn</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-red"><i data-lucide="user-x" class="icon-lg"></i></div><div class="ms-val" id="cAbsent">2</div><div class="ms-lbl">Vắng mặt</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-indigo"><i data-lucide="percent" class="icon-lg"></i></div><div class="ms-val" id="cRate">90%</div><div class="ms-lbl">Tỷ lệ có mặt</div></div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="filter-row">
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" placeholder="Tìm sinh viên..." id="attSearch" />
+            </div>
+            <span class="muted" style="font-size:12.5px">Bấm chọn trạng thái cho từng sinh viên</span>
+          </div>
+          <div id="attList"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  var STUDENTS = [
+    { id: '21123401', name: 'Trần Văn An', av: 'TA', c: 'hsl(243 75% 60%),hsl(262 83% 58%)', s: 'present' },
+    { id: '21123402', name: 'Lê Thị Bình', av: 'LB', c: 'hsl(142 64% 42%),hsl(168 70% 38%)', s: 'present' },
+    { id: '21123403', name: 'Phạm Hoàng Cường', av: 'PC', c: 'hsl(221 83% 55%),hsl(199 80% 48%)', s: 'late' },
+    { id: '21123404', name: 'Nguyễn Văn Đức', av: 'NĐ', c: 'hsl(28 85% 52%),hsl(14 80% 52%)', s: 'absent' },
+    { id: '21123405', name: 'Vũ Thị Em', av: 'VE', c: 'hsl(262 70% 56%),hsl(288 70% 52%)', s: 'present' },
+    { id: '21123406', name: 'Đỗ Văn Giang', av: 'ĐG', c: 'hsl(174 62% 38%),hsl(192 70% 42%)', s: 'present' },
+    { id: '21123407', name: 'Bùi Thị Hoa', av: 'BH', c: 'hsl(338 75% 56%),hsl(14 80% 56%)', s: 'present' },
+    { id: '21123408', name: 'Phan Văn Khôi', av: 'PK', c: 'hsl(243 75% 60%),hsl(221 83% 55%)', s: 'late' },
+    { id: '21123409', name: 'Lý Thị Lan', av: 'LL', c: 'hsl(142 64% 42%),hsl(110 60% 42%)', s: 'present' },
+    { id: '21123410', name: 'Hồ Văn Minh', av: 'HM', c: 'hsl(199 80% 48%),hsl(174 62% 40%)', s: 'absent' }
+  ];
+  var list = document.getElementById('attList');
+  function render() {
+    list.innerHTML = STUDENTS.map(function (st, i) {
+      return '<div class="att-row" data-i="' + i + '">' +
+        '<div class="cell-user" style="flex:1"><div class="av" style="background:linear-gradient(150deg,' + st.c + ')">' + st.av + '</div>' +
+        '<div><div class="nm">' + st.name + '</div><div class="sub">' + st.id + '</div></div></div>' +
+        '<div class="att-seg">' +
+          '<button data-s="present" class="' + (st.s === 'present' ? 'on-present' : '') + '">Có mặt</button>' +
+          '<button data-s="late" class="' + (st.s === 'late' ? 'on-late' : '') + '">Muộn</button>' +
+          '<button data-s="absent" class="' + (st.s === 'absent' ? 'on-absent' : '') + '">Vắng</button>' +
+        '</div></div>';
+    }).join('');
+    if (window.lucide) lucide.createIcons();
+    updateStats();
+  }
+  function updateStats() {
+    var p = 0, l = 0, a = 0;
+    STUDENTS.forEach(function (s) { if (s.s === 'present') p++; else if (s.s === 'late') l++; else a++; });
+    document.getElementById('cPresent').textContent = p;
+    document.getElementById('cLate').textContent = l;
+    document.getElementById('cAbsent').textContent = a;
+    document.getElementById('cRate').textContent = Math.round((p + l) / STUDENTS.length * 100) + '%';
+  }
+  list.addEventListener('click', function (e) {
+    var btn = e.target.closest('.att-seg button');
+    if (!btn) return;
+    var i = +btn.closest('.att-row').dataset.i;
+    STUDENTS[i].s = btn.dataset.s;
+    render();
+  });
+  document.getElementById('markAll').addEventListener('click', function () {
+    STUDENTS.forEach(function (s) { s.s = 'present'; });
+    render();
+  });
+  document.getElementById('attSearch').addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#attList .att-row').forEach(function (r) {
+      r.style.display = r.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+  lucide.createIcons();
+  render();
+</script>
+</body>
+</html>

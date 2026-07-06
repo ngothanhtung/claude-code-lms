@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Giáo vụ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+</head>
+<body data-active="home">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content">
+
+      <!-- ---------------------- MAIN COLUMN ---------------------- -->
+      <div class="col-main" data-screen-label="Dashboard Giáo vụ">
+
+        <div class="greeting card">
+          <div class="greeting-text">
+            <h1>Xin chào, ThS. Trần Thu Hà!</h1>
+            <p>Học kỳ II, năm học 2025 - 2026 · Phòng Đào tạo · Tuần 13</p>
+          </div>
+          <div class="greeting-date">
+            <i data-lucide="calendar-check-2" class="icon"></i>
+            <div>
+              <div class="gd-label">Hôm nay</div>
+              <div class="gd-value" id="gdValue">Thứ 5, 11/06/2026</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico indigo"><i data-lucide="layout-grid" class="icon-lg"></i></div>
+              <i data-lucide="book-open-check" class="icon-lg" style="color:hsl(var(--muted-foreground));opacity:.6"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Lớp học phần đang mở</div>
+            <div class="stat-value">86</div>
+            <div class="stat-foot">42 giảng viên phụ trách</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico amber"><i data-lucide="inbox" class="icon-lg"></i></div>
+              <i data-lucide="alarm-clock" class="icon-lg" style="color:hsl(var(--warning));opacity:.7"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Tác vụ chờ xử lý</div>
+            <div class="stat-value" style="color:hsl(var(--danger))">9</div>
+            <div class="stat-foot">2 tác vụ quá hạn</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico green"><i data-lucide="wallet" class="icon-lg"></i></div>
+              <svg class="spark" viewBox="0 0 64 34" fill="none">
+                <polyline points="0,28 12,25 22,22 34,20 44,14 56,10 64,6" stroke="hsl(var(--success))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Học phí đã thu</div>
+            <div class="stat-value">78%</div>
+            <div class="progress"><span style="width:78%"></span></div>
+            <div class="stat-foot">29,9 / 38,4 tỷ ₫ · hạn chốt 20/06</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico blue"><i data-lucide="user-check" class="icon-lg"></i></div>
+              <i data-lucide="shield-alert" class="icon-lg" style="color:hsl(var(--danger));opacity:.7"></i>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Chuyên cần toàn trường</div>
+            <div class="stat-value">91%</div>
+            <div class="stat-foot danger">17 SV vượt ngưỡng vắng 20%</div>
+          </div>
+        </div>
+
+        <!-- Announcement banner -->
+        <div class="banner" id="banner">
+          <div class="banner-ico"><i data-lucide="megaphone" class="icon"></i></div>
+          <div>
+            <h3>Sắp đến hạn chốt công nợ học phí</h3>
+            <p>Hạn cuối thu học phí học kỳ II là 20/06/2026. Còn 412 sinh viên chưa hoàn tất — gửi nhắc nợ đợt 3 trước ngày 13/06. Mở danh sách công nợ</p>
+          </div>
+          <button class="banner-x" id="bannerClose" aria-label="Đóng"><i data-lucide="x" class="icon"></i></button>
+        </div>
+
+        <!-- Todos + Today's sessions -->
+        <div class="two-col">
+          <!-- Tác vụ cần xử lý -->
+          <div class="card card-pad">
+            <div class="section-head">
+              <h2>Tác vụ cần xử lý hôm nay</h2>
+              <a class="link" href="staff-tasks.html">Xem tất cả</a>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-red"><i data-lucide="calendar-x" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Xếp lịch dạy bù — GV báo nghỉ ốm</div>
+                <div class="task-sub">Lập trình Java · CNTT-K22C · TS. Lê Văn Hùng</div>
+              </div>
+              <div class="task-due"><span class="badge red">Quá hạn</span><div class="when">Từ 10/06</div></div>
+              <button class="btn primary" onclick="window.location.href='staff-scheduling.html'">Xếp lịch</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-amber"><i data-lucide="repeat" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Duyệt 3 yêu cầu đổi lịch dạy</div>
+                <div class="task-sub">Tuần 14 · 2 yêu cầu trùng phòng học</div>
+              </div>
+              <div class="task-due"><span class="badge amber">Chờ duyệt</span><div class="when">3 yêu cầu</div></div>
+              <button class="btn" onclick="window.location.href='staff-scheduling.html'">Xem xét</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-green"><i data-lucide="banknote" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Đối soát 28 giao dịch học phí chuyển khoản</div>
+                <div class="task-sub">Đợt thu 09–10/06 · chưa khớp biên lai</div>
+              </div>
+              <div class="task-due"><span class="badge amber">Hôm nay</span><div class="when">17:00</div></div>
+              <button class="btn" onclick="window.location.href='staff-tuition.html'">Đối soát</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-blue"><i data-lucide="file-text" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Duyệt 4 đơn hoãn thi cuối kỳ</div>
+                <div class="task-sub">Sinh viên K21, K22 · kèm minh chứng</div>
+              </div>
+              <div class="task-due"><span class="badge blue">Chờ duyệt</span><div class="when">4 đơn</div></div>
+              <button class="btn" onclick="window.location.href='staff-tasks.html'">Xem đơn</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-indigo"><i data-lucide="user-x" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Gửi cảnh báo học vụ đợt 2</div>
+                <div class="task-sub">17 SV vắng vượt 20% số buổi</div>
+              </div>
+              <div class="task-due"><span class="badge amber">Còn 2 ngày</span><div class="when">13/06</div></div>
+              <button class="btn" onclick="window.location.href='staff-attendance.html'">Lập danh sách</button>
+            </div>
+
+            <div class="task">
+              <div class="task-ico ico-tint-green"><i data-lucide="clipboard-check" class="icon"></i></div>
+              <div class="task-body">
+                <div class="task-title">Kiểm tra nhập điểm quá trình</div>
+                <div class="task-sub">Hạn 10/06 · còn 6 lớp chưa hoàn tất</div>
+              </div>
+              <div class="task-due"><span class="badge red">Trễ hạn</span><div class="when">6 lớp</div></div>
+              <button class="btn">Nhắc GV</button>
+            </div>
+          </div>
+
+          <!-- Giám sát buổi học hôm nay -->
+          <div class="card card-pad">
+            <div class="sched-head">
+              <div>
+                <h2 style="margin:0;font-size:16.5px;font-weight:700">Buổi học hôm nay toàn trường</h2>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="day">64 buổi · Thứ 5, 11/06</span>
+                <div class="sched-nav">
+                  <button aria-label="Trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+                  <button aria-label="Sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot live">
+              <div class="slot-time">07:30 - 09:20</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+                <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Ca 1 · 21 lớp đang học</div>
+                    <div class="slot-room"><i data-lucide="user-check" class="icon-sm"></i> 19/21 lớp đã điểm danh</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(142 71% 36%)">Đang diễn ra</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot">
+              <div class="slot-time">10:00 - 11:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+                <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Ca 2 · 18 lớp</div>
+                    <div class="slot-room"><i data-lucide="circle-alert" class="icon-sm"></i> 1 lớp trống GV — Lập trình Java K22C</div>
+                  </div>
+                  <button class="btn btn-outline-primary" onclick="window.location.href='staff-scheduling.html'">Xếp dạy thay</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot">
+              <div class="slot-time">13:00 - 14:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+                <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Ca 3 · 15 lớp</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> Phòng B1-204 bảo trì — đã chuyển B1-206</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot upcoming">
+              <div class="slot-time">15:00 - 16:50</div>
+              <div class="slot-bar"></div>
+              <div class="slot-body">
+                <div class="slot-row">
+                  <div class="slot-info">
+                    <div class="slot-title">Ca 4 · 10 lớp</div>
+                    <div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> Không có cảnh báo</div>
+                  </div>
+                  <span class="slot-tag" style="color:hsl(var(--muted-foreground))">Sắp tới</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-foot">
+              <a class="link" href="staff-scheduling.html">Mở thời khóa biểu toàn trường <i data-lucide="arrow-right" class="icon-sm"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tiến độ thu học phí theo khóa -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Tiến độ thu học phí theo khóa</h2>
+            <a class="link" href="staff-tuition.html">Mở danh sách thu</a>
+          </div>
+          <div class="kbar">
+            <div class="kb-lbl">Khóa K21</div>
+            <div class="kb-track"><span style="width:92%;background:hsl(var(--success))"></span></div>
+            <div class="kb-val">92% · 8,1 / 8,8 tỷ ₫</div>
+          </div>
+          <div class="kbar">
+            <div class="kb-lbl">Khóa K22</div>
+            <div class="kb-track"><span style="width:84%;background:hsl(var(--success))"></span></div>
+            <div class="kb-val">84% · 9,4 / 11,2 tỷ ₫</div>
+          </div>
+          <div class="kbar">
+            <div class="kb-lbl">Khóa K23</div>
+            <div class="kb-track"><span style="width:71%;background:hsl(var(--warning))"></span></div>
+            <div class="kb-val">71% · 7,2 / 10,1 tỷ ₫</div>
+          </div>
+          <div class="kbar">
+            <div class="kb-lbl">Khóa K24</div>
+            <div class="kb-track"><span style="width:62%;background:hsl(var(--danger))"></span></div>
+            <div class="kb-val">62% · 5,2 / 8,3 tỷ ₫</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ---------------------- RIGHT RAIL ---------------------- -->
+      <aside class="rail">
+
+        <!-- Cảnh báo điểm danh -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Cảnh báo điểm danh</h2>
+            <a class="link" href="staff-attendance.html">Xem tất cả</a>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-red"><i data-lucide="user-x" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Nguyễn Quốc Bảo vắng buổi thứ 6</div>
+              <div class="notif-sub">CSDL · CNTT-K21A · vắng 32%</div>
+              <div class="notif-time">15 phút trước</div>
+            </div>
+            <span class="notif-unread"></span>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-amber"><i data-lucide="clock-alert" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">2 lớp ca 1 chưa điểm danh</div>
+              <div class="notif-sub">Mạng máy tính K22A · Anh văn 3 K23B</div>
+              <div class="notif-time">30 phút trước</div>
+            </div>
+            <span class="notif-unread"></span>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-red"><i data-lucide="shield-alert" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">3 SV chạm ngưỡng cấm thi</div>
+              <div class="notif-sub">Vắng ≥ 30% · cần gửi cảnh báo học vụ</div>
+              <div class="notif-time">Hôm nay</div>
+            </div>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-green"><i data-lucide="check-check" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Ca 1 hoàn tất 19/21 lớp</div>
+              <div class="notif-sub">Tỷ lệ có mặt trung bình 93%</div>
+              <div class="notif-time">1 giờ trước</div>
+            </div>
+          </div>
+
+          <div class="rail-foot"><a class="link" href="staff-attendance.html">Mở bảng giám sát điểm danh <i data-lucide="arrow-right" class="icon-sm"></i></a></div>
+        </div>
+
+        <!-- Đơn từ chờ duyệt -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Đơn từ chờ duyệt</h2>
+            <a class="link" href="staff-tasks.html">Xem tất cả</a>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-indigo"><i data-lucide="file-text" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Đơn hoãn thi cuối kỳ — CSDL</div>
+              <div class="notif-sub">Trần Văn An · CNTT-K21A · lý do sức khỏe</div>
+              <div class="notif-time">25 phút trước</div>
+            </div>
+            <span class="notif-unread"></span>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-blue"><i data-lucide="repeat" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Yêu cầu đổi lịch — Lập trình HĐT</div>
+              <div class="notif-sub">TS. Nguyễn Minh Tuấn · chuyển Thứ 4 → Thứ 5</div>
+              <div class="notif-time">2 giờ trước</div>
+            </div>
+            <span class="notif-unread"></span>
+          </div>
+
+          <div class="notif">
+            <div class="notif-ico ico-tint-amber"><i data-lucide="banknote" class="icon-sm"></i></div>
+            <div>
+              <div class="notif-title">Đơn xin gia hạn học phí</div>
+              <div class="notif-sub">Lê Thị Bình · K23 · xin gia hạn đến 30/06</div>
+              <div class="notif-time">Hôm qua</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thao tác nhanh -->
+        <div class="card card-pad">
+          <div class="section-head"><h2>Thao tác nhanh</h2></div>
+          <div class="qa-grid">
+            <a class="qa" href="staff-scheduling.html"><div class="qa-ico ico-tint-indigo"><i data-lucide="calendar-plus" class="icon-lg"></i></div><div class="qa-label">Xếp lịch dạy</div></a>
+            <a class="qa" href="staff-scheduling.html"><div class="qa-ico ico-tint-blue"><i data-lucide="users" class="icon-lg"></i></div><div class="qa-label">Phân công GV</div></a>
+            <a class="qa" href="staff-tuition.html"><div class="qa-ico ico-tint-green"><i data-lucide="receipt" class="icon-lg"></i></div><div class="qa-label">Ghi nhận học phí</div></a>
+            <a class="qa" href="staff-tuition.html"><div class="qa-ico ico-tint-amber"><i data-lucide="send" class="icon-lg"></i></div><div class="qa-label">Gửi nhắc nợ</div></a>
+            <a class="qa" href="staff-attendance.html"><div class="qa-ico ico-tint-red"><i data-lucide="user-x" class="icon-lg"></i></div><div class="qa-label">Cảnh báo học vụ</div></a>
+            <a class="qa" href="staff-tasks.html"><div class="qa-ico ico-tint-indigo"><i data-lucide="file-check-2" class="icon-lg"></i></div><div class="qa-label">Duyệt đơn từ</div></a>
+            <a class="qa" href="staff-attendance.html"><div class="qa-ico ico-tint-blue"><i data-lucide="bar-chart-3" class="icon-lg"></i></div><div class="qa-label">Báo cáo chuyên cần</div></a>
+            <a class="qa" href="#"><div class="qa-ico ico-tint-amber"><i data-lucide="megaphone" class="icon-lg"></i></div><div class="qa-label">Gửi thông báo</div></a>
+          </div>
+        </div>
+
+        <!-- Hoạt động gần đây -->
+        <div class="card card-pad">
+          <div class="section-head"><h2>Hoạt động gần đây</h2></div>
+          <div class="activity activity-rail">
+            <div class="act">
+              <div class="act-ico ico-tint-green"><i data-lucide="receipt" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã ghi nhận 36 khoản học phí</div>
+                <div class="act-sub">Đợt thu 10/06 · 412,5 triệu ₫</div>
+                <div class="act-time">1 giờ trước</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-indigo"><i data-lucide="calendar-plus" class="icon"></i></div>
+              <div>
+                <div class="act-title">Bạn đã xếp 2 buổi dạy bù</div>
+                <div class="act-sub">Mạng máy tính K22A · tuần 14</div>
+                <div class="act-time">Hôm nay, 08:40</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-amber"><i data-lucide="send" class="icon"></i></div>
+              <div>
+                <div class="act-title">Đã gửi nhắc nợ đợt 2</div>
+                <div class="act-sub">486 sinh viên · email + SMS</div>
+                <div class="act-time">Hôm qua</div>
+              </div>
+            </div>
+            <div class="act">
+              <div class="act-ico ico-tint-blue"><i data-lucide="check-check" class="icon"></i></div>
+              <div>
+                <div class="act-title">Đã duyệt 5 đơn hoãn thi</div>
+                <div class="act-sub">Kỳ thi cuối kỳ HK II</div>
+                <div class="act-time">Hôm qua</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script>
+  lucide.createIcons();
+  // Hôm nay: hiển thị ngày hiện tại
+  (function(){
+    const el = document.getElementById('gdValue');
+    if (!el) return;
+    const d = new Date();
+    const thu = d.getDay() === 0 ? 'Chủ nhật' : 'Thứ ' + (d.getDay() + 1);
+    const p = n => String(n).padStart(2, '0');
+    el.textContent = thu + ', ' + p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
+  })();
+  // Dismiss announcement banner
+  const bc = document.getElementById('bannerClose');
+  if (bc) bc.addEventListener('click', () => {
+    const b = document.getElementById('banner');
+    b.style.transition = 'opacity .2s, transform .2s';
+    b.style.opacity = '0'; b.style.transform = 'translateY(-6px)';
+    setTimeout(() => b.remove(), 200);
+  });
+</script>
+</body>
+</html>

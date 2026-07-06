@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Ngân hàng đề</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="qbank" data-open="baitap">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Ngân hàng đề & câu hỏi</h1>
+            <p>486 câu hỏi · 12 bộ đề · 4 môn học</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="sparkles" class="icon-sm"></i> Soạn đề bằng AI</button>
+            <button class="btn primary lg"><i data-lucide="plus" class="icon-sm"></i> Thêm câu hỏi</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="ms-ico ico-tint-indigo"><i data-lucide="list-checks" class="icon-lg"></i></div><div class="ms-val">312</div><div class="ms-lbl">Trắc nghiệm</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-green"><i data-lucide="pen-line" class="icon-lg"></i></div><div class="ms-val">98</div><div class="ms-lbl">Tự luận</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-amber"><i data-lucide="code" class="icon-lg"></i></div><div class="ms-val">76</div><div class="ms-lbl">Lập trình</div></div>
+          <div class="mini-stat"><div class="ms-ico ico-tint-blue"><i data-lucide="layers" class="icon-lg"></i></div><div class="ms-val">12</div><div class="ms-lbl">Bộ đề đã đóng gói</div></div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="filter-row">
+            <div class="select-mini"><select><option>Tất cả môn</option><option>OOP</option><option>CSDL</option><option>Java</option></select><i data-lucide="chevron-down"></i></div>
+            <div class="select-mini"><select><option>Mọi độ khó</option><option>Dễ</option><option>Trung bình</option><option>Khó</option></select><i data-lucide="chevron-down"></i></div>
+            <div class="filter-search"><i data-lucide="search"></i><input type="text" placeholder="Tìm câu hỏi..." id="qbSearch" /></div>
+          </div>
+
+          <div class="tbl-wrap">
+            <table class="tbl" id="qbTable">
+              <thead><tr><th>Câu hỏi</th><th>Môn</th><th>Loại</th><th>Độ khó</th><th class="num">Đã dùng</th><th style="text-align:right"></th></tr></thead>
+              <tbody>
+                <tr><td>Sự khác nhau giữa abstract class và interface trong Java?</td><td class="muted">OOP</td><td><span class="badge blue">Tự luận</span></td><td><span class="grade-pill c">TB</span></td><td class="num">14</td><td style="text-align:right"><button class="icon-act"><i data-lucide="pencil" class="icon-sm"></i></button></td></tr>
+                <tr><td>Cho biết kết quả của đoạn code kế thừa sau...</td><td class="muted">OOP</td><td><span class="badge green">Trắc nghiệm</span></td><td><span class="grade-pill a">Dễ</span></td><td class="num">28</td><td style="text-align:right"><button class="icon-act"><i data-lucide="pencil" class="icon-sm"></i></button></td></tr>
+                <tr><td>Viết câu lệnh SQL JOIN 3 bảng và lọc theo điều kiện...</td><td class="muted">CSDL</td><td><span class="badge amber">Lập trình</span></td><td><span class="grade-pill f">Khó</span></td><td class="num">9</td><td style="text-align:right"><button class="icon-act"><i data-lucide="pencil" class="icon-sm"></i></button></td></tr>
+                <tr><td>Chuẩn hóa CSDL đến dạng chuẩn 3NF nghĩa là gì?</td><td class="muted">CSDL</td><td><span class="badge blue">Tự luận</span></td><td><span class="grade-pill c">TB</span></td><td class="num">17</td><td style="text-align:right"><button class="icon-act"><i data-lucide="pencil" class="icon-sm"></i></button></td></tr>
+                <tr><td>Độ phức tạp thời gian của thuật toán QuickSort?</td><td class="muted">CTDL&GT</td><td><span class="badge green">Trắc nghiệm</span></td><td><span class="grade-pill c">TB</span></td><td class="num">22</td><td style="text-align:right"><button class="icon-act"><i data-lucide="pencil" class="icon-sm"></i></button></td></tr>
+                <tr><td>Cài đặt hàm duyệt cây nhị phân theo thứ tự giữa...</td><td class="muted">CTDL&GT</td><td><span class="badge amber">Lập trình</span></td><td><span class="grade-pill f">Khó</span></td><td class="num">6</td><td style="text-align:right"><button class="icon-act"><i data-lucide="pencil" class="icon-sm"></i></button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  var s = document.getElementById('qbSearch');
+  if (s) s.addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#qbTable tbody tr').forEach(function (tr) {
+      tr.style.display = tr.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

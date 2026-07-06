@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Đăng ký môn học — LMS Portal</title>
@@ -12,7 +14,7 @@
 <style>
   /* ---- Registration page ------------------------------------------------ */
   .reg-page { grid-template-columns: 1fr var(--rail-w); align-items: start; }
-  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 20px; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; flex-wrap: wrap; margin-bottom: 16px; }
   .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
   .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
   .page-head .ph-act { display: flex; gap: 8px; align-items: center; }
@@ -63,7 +65,7 @@
   .reg-btn { border: 1px solid hsl(var(--primary)); background: hsl(var(--primary)); color: #fff; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: filter .12s; white-space: nowrap; }
   .reg-btn svg { width: 15px; height: 15px; }
   .reg-btn:hover { filter: brightness(1.07); }
-  .reg-btn.remove { background: #fff; color: hsl(var(--danger)); border-color: hsl(var(--danger) / 0.4); }
+  .reg-btn.remove { background: hsl(var(--card)); color: hsl(var(--danger)); border-color: hsl(var(--danger) / 0.4); }
   .reg-btn.remove:hover { background: hsl(var(--danger-muted)); filter: none; }
   .reg-btn.disabled { background: hsl(var(--muted)); border-color: hsl(var(--border)); color: hsl(var(--muted-foreground)); cursor: not-allowed; }
   .reg-btn.disabled:hover { filter: none; }
@@ -107,7 +109,7 @@
 <div class="app">
 
   <!-- ============================== SIDEBAR ============================== -->
-  <aside class="sidebar">
+    <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
       <div>
@@ -143,14 +145,14 @@
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+            <a class="nav-subitem" href="tai-lieu-tham-khao.html"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
           </div>
         </div>
       </div>
       <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
       <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
-      <a class="nav-item active" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item active" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
       <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
       <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
     </nav>
@@ -163,7 +165,7 @@
           <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
         </div>
       </div>
-      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
     </div>
   </aside>
 
@@ -171,7 +173,7 @@
   <div class="main">
 
     <!-- Topbar -->
-    <header class="topbar">
+        <header class="topbar">
       <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
       <div class="search">
         <i data-lucide="search" class="icon"></i>
@@ -181,6 +183,7 @@
         <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
         <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
         <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
         <div class="profile-menu" id="profileMenu">
           <div class="profile" id="profileTrigger">
             <div class="profile-meta">
@@ -192,7 +195,7 @@
           </div>
           <div class="dropdown" role="menu">
             <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
-            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
             <div class="dropdown-sep"></div>
             <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
           </div>
@@ -396,6 +399,7 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
 <script>
   lucide.createIcons();
 

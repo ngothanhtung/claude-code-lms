@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Giám sát điểm danh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+</head>
+<body data-active="attendance">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content single">
+      <div class="page" data-screen-label="Giám sát điểm danh">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Giám sát điểm danh</h1>
+            <p>Thứ 5, 11/06/2026 · 64 buổi học · chuyên cần toàn trường 91%</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="download" class="icon-sm"></i> Báo cáo chuyên cần</button>
+            <button class="btn lg primary"><i data-lucide="user-x" class="icon-sm"></i> Gửi cảnh báo học vụ</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-green"><i data-lucide="user-check" class="icon"></i></div>
+            <div class="ms-val">91%</div>
+            <div class="ms-lbl">Chuyên cần toàn trường</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-blue"><i data-lucide="presentation" class="icon"></i></div>
+            <div class="ms-val">39<span style="font-size:16px;color:hsl(var(--muted-foreground))">/64</span></div>
+            <div class="ms-lbl">Buổi đã điểm danh hôm nay</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-amber"><i data-lucide="clock-alert" class="icon"></i></div>
+            <div class="ms-val" style="color:hsl(32 80% 40%)">2</div>
+            <div class="ms-lbl">Lớp đang học chưa điểm danh</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-red"><i data-lucide="shield-alert" class="icon"></i></div>
+            <div class="ms-val" style="color:hsl(var(--danger))">17</div>
+            <div class="ms-lbl">SV vượt ngưỡng vắng 20%</div>
+          </div>
+        </div>
+
+        <!-- Buổi học hôm nay -->
+        <div class="card card-pad">
+          <div class="section-head">
+            <h2>Trạng thái điểm danh hôm nay</h2>
+            <div class="select-mini">
+              <select>
+                <option>Tất cả ca học</option>
+                <option>Ca 1 · 07:30</option>
+                <option>Ca 2 · 10:00</option>
+                <option>Ca 3 · 13:00</option>
+                <option>Ca 4 · 15:00</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead>
+                <tr><th>Lớp học phần</th><th>Giảng viên</th><th>Ca · Phòng</th><th class="num">Có mặt</th><th>Tỷ lệ</th><th>Trạng thái</th><th class="num">Thao tác</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="nm" style="font-weight:600">Cơ sở dữ liệu</div><div class="sub muted">CNTT-K21A</div></td>
+                  <td>TS. Nguyễn Minh Tuấn</td>
+                  <td><span class="muted">Ca 1 · A1-201</span></td>
+                  <td class="num">39/42</td>
+                  <td><div class="col-bar"><div class="track"><span class="ok" style="width:93%"></span></div><span class="pct">93%</span></div></td>
+                  <td><span class="stt ok">Đã điểm danh</span></td>
+                  <td class="num"><button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="nm" style="font-weight:600">Mạng máy tính</div><div class="sub muted">CNTT-K22A</div></td>
+                  <td>TS. Phan Quốc Việt</td>
+                  <td><span class="muted">Ca 1 · A1-105</span></td>
+                  <td class="num">—</td>
+                  <td><div class="col-bar"><div class="track"><span style="width:0%"></span></div><span class="pct">—</span></div></td>
+                  <td><span class="stt warn">Chưa điểm danh</span></td>
+                  <td class="num"><button class="btn"><i data-lucide="send" class="icon-sm"></i> Nhắc GV</button></td>
+                </tr>
+                <tr>
+                  <td><div class="nm" style="font-weight:600">Anh văn 3</div><div class="sub muted">CNTT-K23B</div></td>
+                  <td>ThS. Trần Mỹ Hằng</td>
+                  <td><span class="muted">Ca 1 · A1-302</span></td>
+                  <td class="num">—</td>
+                  <td><div class="col-bar"><div class="track"><span style="width:0%"></span></div><span class="pct">—</span></div></td>
+                  <td><span class="stt warn">Chưa điểm danh</span></td>
+                  <td class="num"><button class="btn"><i data-lucide="send" class="icon-sm"></i> Nhắc GV</button></td>
+                </tr>
+                <tr>
+                  <td><div class="nm" style="font-weight:600">CTDL &amp; giải thuật</div><div class="sub muted">CNTT-K22A</div></td>
+                  <td>TS. Nguyễn Minh Tuấn</td>
+                  <td><span class="muted">Ca 1 · A2-105</span></td>
+                  <td class="num">44/48</td>
+                  <td><div class="col-bar"><div class="track"><span class="ok" style="width:92%"></span></div><span class="pct">92%</span></div></td>
+                  <td><span class="stt ok">Đã điểm danh</span></td>
+                  <td class="num"><button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="nm" style="font-weight:600">Lập trình Java</div><div class="sub muted">CNTT-K22C</div></td>
+                  <td><span class="muted">Trống GV — nghỉ ốm</span></td>
+                  <td><span class="muted">Ca 2 · B1-204</span></td>
+                  <td class="num">—</td>
+                  <td><div class="col-bar"><div class="track"><span style="width:0%"></span></div><span class="pct">—</span></div></td>
+                  <td><span class="stt bad">Buổi học bị hủy</span></td>
+                  <td class="num"><button class="btn primary" onclick="window.location.href='staff-scheduling.html'">Xếp dạy bù</button></td>
+                </tr>
+                <tr>
+                  <td><div class="nm" style="font-weight:600">Toán rời rạc</div><div class="sub muted">K24A</div></td>
+                  <td>TS. Đặng Thái Sơn</td>
+                  <td><span class="muted">Ca 2 · A2-201</span></td>
+                  <td class="num">52/61</td>
+                  <td><div class="col-bar"><div class="track"><span class="warn" style="width:85%"></span></div><span class="pct">85%</span></div></td>
+                  <td><span class="stt ok">Đã điểm danh</span></td>
+                  <td class="num"><button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="nm" style="font-weight:600">HTTT quản lý</div><div class="sub muted">CNTT-K21A</div></td>
+                  <td>ThS. Vũ Thị Dung</td>
+                  <td><span class="muted">Ca 4 · A1-204</span></td>
+                  <td class="num">—</td>
+                  <td><div class="col-bar"><div class="track"><span style="width:0%"></span></div><span class="pct">—</span></div></td>
+                  <td><span class="stt idle">Chưa đến giờ</span></td>
+                  <td class="num"><button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SV vượt ngưỡng vắng -->
+        <div class="card card-pad" style="margin-top:20px">
+          <div class="section-head">
+            <h2>Sinh viên vượt ngưỡng vắng</h2>
+            <span class="badge red">17 SV · ngưỡng cấm thi 30%</span>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead>
+                <tr><th>Sinh viên</th><th>Lớp học phần</th><th class="num">Buổi vắng</th><th>Tỷ lệ vắng</th><th>Mức cảnh báo</th><th class="num">Thao tác</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(0 72% 51%)">QB</div><div><div class="nm">Nguyễn Quốc Bảo</div><div class="sub">21520034 · CNTT-K21A</div></div></div></td>
+                  <td>Cơ sở dữ liệu</td>
+                  <td class="num">6/19</td>
+                  <td><div class="col-bar"><div class="track"><span class="bad" style="width:32%"></span></div><span class="pct">32%</span></div></td>
+                  <td><span class="badge red">Cấm thi nếu vắng thêm</span></td>
+                  <td class="num"><button class="btn primary"><i data-lucide="send" class="icon-sm"></i> Gửi cảnh báo</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(262 83% 58%)">TL</div><div><div class="nm">Đặng Thùy Linh</div><div class="sub">24520154 · CNTT-K24B</div></div></div></td>
+                  <td>Toán rời rạc</td>
+                  <td class="num">5/17</td>
+                  <td><div class="col-bar"><div class="track"><span class="bad" style="width:29%"></span></div><span class="pct">29%</span></div></td>
+                  <td><span class="badge red">Cảnh báo mức 2</span></td>
+                  <td class="num"><button class="btn primary"><i data-lucide="send" class="icon-sm"></i> Gửi cảnh báo</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(32 95% 48%)">TN</div><div><div class="nm">Bùi Thanh Nam</div><div class="sub">23520412 · CNTT-K23B</div></div></div></td>
+                  <td>Anh văn 3</td>
+                  <td class="num">4/16</td>
+                  <td><div class="col-bar"><div class="track"><span class="warn" style="width:25%"></span></div><span class="pct">25%</span></div></td>
+                  <td><span class="badge amber">Cảnh báo mức 1</span></td>
+                  <td class="num"><button class="btn"><i data-lucide="send" class="icon-sm"></i> Gửi cảnh báo</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(217 91% 50%)">HN</div><div><div class="nm">Hoàng Thị Ngọc</div><div class="sub">23520093 · CNTT-K23A</div></div></div></td>
+                  <td>HTTT quản lý</td>
+                  <td class="num">4/18</td>
+                  <td><div class="col-bar"><div class="track"><span class="warn" style="width:22%"></span></div><span class="pct">22%</span></div></td>
+                  <td><span class="badge amber">Cảnh báo mức 1</span></td>
+                  <td class="num"><button class="btn"><i data-lucide="send" class="icon-sm"></i> Gửi cảnh báo</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(172 66% 36%)">VT</div><div><div class="nm">Lý Văn Thành</div><div class="sub">22520388 · CNTT-K22B</div></div></div></td>
+                  <td>Lập trình HĐT</td>
+                  <td class="num">4/19</td>
+                  <td><div class="col-bar"><div class="track"><span class="warn" style="width:21%"></span></div><span class="pct">21%</span></div></td>
+                  <td><span class="badge amber">Cảnh báo mức 1</span></td>
+                  <td class="num"><button class="btn"><i data-lucide="send" class="icon-sm"></i> Gửi cảnh báo</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="rail-foot" style="margin-top:10px"><a class="link" href="#">Xem đủ 17 sinh viên <i data-lucide="arrow-right" class="icon-sm"></i></a></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Bài đã giao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="assignments" data-open="baitap">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Bài tập đã giao</h1>
+            <p>14 bài tập đang mở · 5 lớp học phần</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn primary lg"><i data-lucide="file-plus-2" class="icon-sm"></i> Tạo bài tập</button>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="filter-row">
+            <div class="tabs" id="asgTabs">
+              <button class="tab active">Đang mở <span class="tab-count">14</span></button>
+              <button class="tab">Đã đóng <span class="tab-count">28</span></button>
+              <button class="tab">Nháp <span class="tab-count">3</span></button>
+            </div>
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" placeholder="Tìm bài tập..." id="asgSearch" />
+            </div>
+          </div>
+
+          <div class="tbl-wrap">
+            <table class="tbl" id="asgTable">
+              <thead>
+                <tr>
+                  <th>Bài tập</th>
+                  <th>Lớp</th>
+                  <th>Hạn nộp</th>
+                  <th style="min-width:160px">Đã nộp</th>
+                  <th class="num">Cần chấm</th>
+                  <th style="text-align:right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="cell-user"><div class="task-ico ico-tint-indigo" style="width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none"><i data-lucide="file-text" class="icon-sm"></i></div><div><div class="nm">BTL chương 3 — Quản lý thư viện</div><div class="sub">Bài tập lớn</div></div></div></td>
+                  <td class="muted">OOP · K22B</td>
+                  <td><span class="badge red">Hạn 27/05</span></td>
+                  <td><div class="col-bar"><div class="track"><span style="width:68%"></span></div><span class="pct">38/56</span></div></td>
+                  <td class="num"><strong>18</strong></td>
+                  <td style="text-align:right"><a class="btn primary" href="teacher-grading.html">Chấm</a></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="task-ico ico-tint-amber" style="width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none"><i data-lucide="help-circle" class="icon-sm"></i></div><div><div class="nm">Bài tập số 4 — Generics & Collections</div><div class="sub">Bài tập tuần</div></div></div></td>
+                  <td class="muted">Java · K22C</td>
+                  <td><span class="badge amber">Hạn 31/05</span></td>
+                  <td><div class="col-bar"><div class="track"><span style="width:79%"></span></div><span class="pct">30/38</span></div></td>
+                  <td class="num"><strong>8</strong></td>
+                  <td style="text-align:right"><a class="btn primary" href="teacher-grading.html">Chấm</a></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="task-ico ico-tint-green" style="width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none"><i data-lucide="database" class="icon-sm"></i></div><div><div class="nm">Lab 5 — Truy vấn nâng cao SQL</div><div class="sub">Bài thực hành</div></div></div></td>
+                  <td class="muted">CSDL · K21A</td>
+                  <td><span class="badge amber">Hạn 02/06</span></td>
+                  <td><div class="col-bar"><div class="track"><span style="width:86%"></span></div><span class="pct">36/42</span></div></td>
+                  <td class="num"><strong>6</strong></td>
+                  <td style="text-align:right"><a class="btn primary" href="teacher-grading.html">Chấm</a></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="task-ico ico-tint-blue" style="width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none"><i data-lucide="network" class="icon-sm"></i></div><div><div class="nm">Bài tập cây nhị phân tìm kiếm</div><div class="sub">Bài tập tuần</div></div></div></td>
+                  <td class="muted">CTDL&GT · K22A</td>
+                  <td><span class="badge green">Hạn 05/06</span></td>
+                  <td><div class="col-bar"><div class="track"><span style="width:100%"></span></div><span class="pct">48/48</span></div></td>
+                  <td class="num"><strong>0</strong></td>
+                  <td style="text-align:right"><button class="btn">Xem</button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="task-ico ico-tint-indigo" style="width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none"><i data-lucide="folder-git-2" class="icon-sm"></i></div><div><div class="nm">Đề tài đồ án cuối kỳ</div><div class="sub">Đồ án</div></div></div></td>
+                  <td class="muted">OOP · K22B</td>
+                  <td><span class="badge green">Hạn 20/06</span></td>
+                  <td><div class="col-bar"><div class="track"><span style="width:30%"></span></div><span class="pct">17/56</span></div></td>
+                  <td class="num"><strong>0</strong></td>
+                  <td style="text-align:right"><button class="btn">Xem</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  document.querySelectorAll('#asgTabs .tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('#asgTabs .tab').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+    });
+  });
+  var s = document.getElementById('asgSearch');
+  if (s) s.addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#asgTable tbody tr').forEach(function (tr) {
+      tr.style.display = tr.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

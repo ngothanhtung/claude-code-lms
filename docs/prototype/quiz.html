@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Làm bài Quiz — LMS Portal</title>
@@ -103,7 +105,7 @@
 
 <div class="app">
 
-  <aside class="sidebar">
+    <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
       <div>
@@ -123,31 +125,32 @@
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem active" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
+            <a class="nav-subitem active" href="#"><span class="nav-dot"></span> Bài tập cá nhân</a>
             <a class="nav-subitem" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
             <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
           </div>
         </div>
       </div>
-      <a class="nav-item" href="#" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
       <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
-      <div class="nav-group open" id="navTaiLieu">
+      <div class="nav-group" id="navTaiLieu">
         <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
           <i data-lucide="folder-open" class="icon"></i> Tài liệu
           <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+            <a class="nav-subitem" href="tai-lieu-tham-khao.html"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
           </div>
         </div>
       </div>
-      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
-      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
-      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
-      <a class="nav-item" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
-      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
     </nav>
 
     <div class="assistant">
@@ -158,12 +161,12 @@
           <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
         </div>
       </div>
-      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
     </div>
   </aside>
 
   <div class="main">
-    <header class="topbar">
+        <header class="topbar">
       <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
       <div class="search">
         <i data-lucide="search" class="icon"></i>
@@ -173,18 +176,19 @@
         <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
         <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
         <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
         <div class="profile-menu" id="profileMenu">
           <div class="profile" id="profileTrigger">
             <div class="profile-meta">
               <div class="profile-name">Ngô Thanh Tùng</div>
               <div class="profile-sub">MSSV: 21123456</div>
             </div>
-            <div class="avatar">A</div>
+            <div class="avatar">NT</div>
             <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
           </div>
           <div class="dropdown" role="menu">
             <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
-            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
             <div class="dropdown-sep"></div>
             <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
           </div>
@@ -288,6 +292,7 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
 <script>
   lucide.createIcons();
 

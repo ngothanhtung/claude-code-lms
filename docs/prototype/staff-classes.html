@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Danh sách lớp học</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+<style>
+  /* ── Page-specific helpers for the class registry ── */
+  .cls-code { font-family: 'Inter', monospace; font-weight: 700; font-size: 13px; letter-spacing: -.01em; }
+  .cap-cell { min-width: 132px; }
+  .cap-cell .cap-top { display: flex; align-items: baseline; justify-content: space-between; font-size: 12.5px; font-variant-numeric: tabular-nums; margin-bottom: 5px; }
+  .cap-cell .cap-top .cap-pct { color: hsl(var(--muted-foreground)); font-weight: 600; }
+  .cap-cell .track { height: 7px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; }
+  .cap-cell .track > span { display: block; height: 100%; border-radius: 99px; }
+  .sched-cell { font-size: 12.5px; line-height: 1.5; }
+  .sched-cell .sc-room { color: hsl(var(--muted-foreground)); }
+  .row-act { display: inline-flex; gap: 6px; }
+  .clickable { cursor: pointer; }
+  .empty-state { text-align: center; padding: 48px 20px; color: hsl(var(--muted-foreground)); }
+  .empty-state i { width: 40px; height: 40px; opacity: .4; margin-bottom: 10px; }
+
+  /* ── Right-side detail drawer ── */
+  .scrim { position: fixed; inset: 0; background: hsl(222 47% 11% / .45); opacity: 0; visibility: hidden; transition: opacity .22s; z-index: 80; }
+  .scrim.open { opacity: 1; visibility: visible; }
+  .drawer { position: fixed; top: 0; right: 0; height: 100%; width: 460px; max-width: 92vw; background: hsl(var(--card)); box-shadow: var(--shadow-pop);
+    transform: translateX(100%); transition: transform .26s cubic-bezier(.22,1,.36,1); z-index: 90; display: flex; flex-direction: column; }
+  .drawer.open { transform: none; }
+  .drawer-head { display: flex; align-items: flex-start; gap: 12px; padding: 22px 22px 18px; border-bottom: 1px solid hsl(var(--border)); }
+  .drawer-head .dh-l { flex: 1; min-width: 0; }
+  .drawer-head h2 { margin: 0 0 4px; font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+  .drawer-head .dh-code { font-size: 12.5px; color: hsl(var(--muted-foreground)); font-weight: 600; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 20px 22px; }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; margin-bottom: 22px; }
+  .meta-grid .mi-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; color: hsl(var(--muted-foreground)); margin-bottom: 3px; }
+  .meta-grid .mi-val { font-size: 13.5px; font-weight: 600; }
+  .roster { display: flex; flex-direction: column; gap: 2px; }
+  .roster-item { display: flex; align-items: center; gap: 11px; padding: 9px 4px; border-bottom: 1px solid hsl(var(--border)); }
+  .roster-item:last-child { border-bottom: none; }
+  .roster-item .ri-id { font-size: 12px; color: hsl(var(--muted-foreground)); font-variant-numeric: tabular-nums; margin-left: auto; }
+  .drawer-foot { padding: 16px 22px; border-top: 1px solid hsl(var(--border)); display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ── Centered modal (add / edit class) ── */
+  .modal-card { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -46%); z-index: 90; width: 560px; max-width: 94vw; max-height: 90vh; overflow-y: auto;
+    background: hsl(var(--card)); border-radius: var(--radius); box-shadow: var(--shadow-pop); opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s; }
+  .modal-card.open { opacity: 1; visibility: visible; transform: translate(-50%, -50%); }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px; border-bottom: 1px solid hsl(var(--border)); }
+  .modal-head h2 { margin: 0; font-size: 17px; font-weight: 800; }
+  .modal-body { padding: 20px 22px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 12.5px; font-weight: 600; }
+  .field input, .field select { font: inherit; font-size: 13.5px; padding: 9px 12px; border: 1px solid hsl(var(--input)); border-radius: 10px;
+    background: hsl(var(--background)); color: hsl(var(--foreground)); outline: none; transition: border-color .15s, box-shadow .15s; }
+  .field input:focus, .field select:focus { border-color: hsl(var(--ring)); box-shadow: 0 0 0 3px hsl(var(--ring) / .15); }
+  .modal-foot { padding: 16px 22px; border-top: 1px solid hsl(var(--border)); display: flex; justify-content: flex-end; gap: 10px; }
+
+  @media (max-width: 720px){ .meta-grid, .form-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-active="classes" data-search="Tìm mã lớp, tên học phần, giảng viên...">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content single">
+      <div class="page" data-screen-label="Danh sách lớp học">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Danh sách lớp học phần</h1>
+            <p>Học kỳ II, năm học 2025 – 2026 · <strong id="phCount">86</strong> lớp học phần · 42 giảng viên phụ trách</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg" id="exportBtn"><i data-lucide="download" class="icon-sm"></i> Xuất Excel</button>
+            <button class="btn lg primary" id="addBtn"><i data-lucide="plus" class="icon-sm"></i> Thêm lớp học phần</button>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico indigo"><i data-lucide="layout-grid" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Tổng lớp học phần</div>
+            <div class="stat-value">86</div>
+            <div class="stat-foot">12 khoa · 38 học phần</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico blue"><i data-lucide="users" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Sinh viên đăng ký</div>
+            <div class="stat-value">2.940</div>
+            <div class="stat-foot">Sĩ số trung bình 34/lớp</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico amber"><i data-lucide="gauge" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Lớp gần đầy / đã đầy</div>
+            <div class="stat-value">12</div>
+            <div class="stat-foot">Cân nhắc mở thêm lớp</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico" style="background:hsl(var(--danger-muted));color:hsl(var(--danger))"><i data-lucide="alert-triangle" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Lớp cần xử lý</div>
+            <div class="stat-value" style="color:hsl(var(--danger))">5</div>
+            <div class="stat-foot danger">2 chưa phân GV · 3 sĩ số thấp</div>
+          </div>
+        </div>
+
+        <!-- Table card -->
+        <div class="card card-pad" style="margin-top:20px">
+          <div class="page-head" style="margin-bottom:16px;align-items:center">
+            <div class="tabs" id="statusTabs">
+              <button class="tab active" data-filter="all">Tất cả</button>
+              <button class="tab" data-filter="open">Đang mở</button>
+              <button class="tab" data-filter="full">Gần đầy / Đầy</button>
+              <button class="tab" data-filter="action">Cần xử lý <span class="tab-count">5</span></button>
+            </div>
+          </div>
+
+          <div class="filter-row">
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" id="searchInput" placeholder="Tìm mã lớp, học phần, giảng viên..." />
+            </div>
+            <div class="select-mini">
+              <select id="deptFilter">
+                <option value="">Tất cả khoa / bộ môn</option>
+                <option>Bộ môn CNPM</option>
+                <option>Bộ môn HTTT</option>
+                <option>Bộ môn KHMT</option>
+                <option>Bộ môn Ngoại ngữ</option>
+                <option>Bộ môn Toán</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="select-mini">
+              <select id="sortFilter">
+                <option value="code">Sắp xếp: Mã lớp</option>
+                <option value="cap">Sắp xếp: Sĩ số (cao → thấp)</option>
+                <option value="name">Sắp xếp: Tên học phần</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <span class="badge" style="margin-left:auto" id="resultCount">86 lớp</span>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:6px">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Mã lớp · Học phần</th>
+                  <th>Giảng viên</th>
+                  <th>Bộ môn</th>
+                  <th class="num">Tín chỉ</th>
+                  <th class="cap-cell">Sĩ số</th>
+                  <th>Lịch học · Phòng</th>
+                  <th>Trạng thái</th>
+                  <th class="num">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="classRows"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" style="display:none">
+              <i data-lucide="search-x"></i>
+              <div>Không tìm thấy lớp học phần phù hợp.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detail drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="dh-l">
+      <h2 id="dwTitle">—</h2>
+      <div class="dh-code" id="dwCode">—</div>
+    </div>
+    <span id="dwBadge"></span>
+    <button class="icon-btn" id="dwClose" aria-label="Đóng"><i data-lucide="x" class="icon-lg"></i></button>
+  </div>
+  <div class="drawer-body">
+    <div class="meta-grid">
+      <div><div class="mi-label">Giảng viên</div><div class="mi-val" id="dwTeacher">—</div></div>
+      <div><div class="mi-label">Bộ môn</div><div class="mi-val" id="dwDept">—</div></div>
+      <div><div class="mi-label">Số tín chỉ</div><div class="mi-val" id="dwCredits">—</div></div>
+      <div><div class="mi-label">Học kỳ</div><div class="mi-val">HK II · 2025–2026</div></div>
+      <div><div class="mi-label">Lịch học</div><div class="mi-val" id="dwSchedule">—</div></div>
+      <div><div class="mi-label">Phòng học</div><div class="mi-val" id="dwRoom">—</div></div>
+    </div>
+
+    <div class="cap-cell" style="margin-bottom:22px">
+      <div class="cap-top"><strong id="dwCapText">—</strong><span class="cap-pct" id="dwCapPct">—</span></div>
+      <div class="track"><span id="dwCapBar"></span></div>
+    </div>
+
+    <div class="section-head" style="margin-bottom:10px">
+      <h2 style="font-size:14px">Danh sách sinh viên</h2>
+      <a class="link" href="#" id="dwViewAll">Xem đầy đủ</a>
+    </div>
+    <div class="roster" id="dwRoster"></div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn primary" id="dwEdit"><i data-lucide="pencil" class="icon-sm"></i> Chỉnh sửa lớp</button>
+    <button class="btn"><i data-lucide="user-plus" class="icon-sm"></i> Thêm sinh viên</button>
+    <button class="btn" style="margin-left:auto;color:hsl(var(--danger))"><i data-lucide="archive" class="icon-sm"></i> Đóng lớp</button>
+  </div>
+</aside>
+
+<!-- Add / edit modal -->
+<div class="modal-card" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-head">
+    <h2 id="modalTitle">Thêm lớp học phần</h2>
+    <button class="icon-btn" id="modalClose" aria-label="Đóng"><i data-lucide="x" class="icon-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="field"><label>Mã lớp học phần</label><input id="fCode" placeholder="VD: IT4409.K22A" /></div>
+      <div class="field"><label>Số tín chỉ</label><input id="fCredits" type="number" min="1" max="6" value="3" /></div>
+      <div class="field full"><label>Tên học phần</label><input id="fName" placeholder="VD: Lập trình hướng đối tượng" /></div>
+      <div class="field"><label>Bộ môn</label>
+        <select id="fDept"><option>Bộ môn CNPM</option><option>Bộ môn HTTT</option><option>Bộ môn KHMT</option><option>Bộ môn Ngoại ngữ</option><option>Bộ môn Toán</option></select>
+      </div>
+      <div class="field"><label>Giảng viên phụ trách</label>
+        <select id="fTeacher"><option value="">— Chưa phân công —</option><option>TS. Nguyễn Minh Tuấn</option><option>TS. Lê Văn Hùng</option><option>ThS. Vũ Thị Dung</option><option>TS. Phan Quốc Việt</option><option>TS. Đặng Thái Sơn</option><option>ThS. Trần Mỹ Hằng</option></select>
+      </div>
+      <div class="field"><label>Sĩ số tối đa</label><input id="fCap" type="number" min="10" max="200" value="50" /></div>
+      <div class="field"><label>Sĩ số đăng ký</label><input id="fEnrolled" type="number" min="0" value="0" /></div>
+      <div class="field"><label>Lịch học</label><input id="fSchedule" placeholder="VD: Thứ 2, 4 · Ca 1" /></div>
+      <div class="field"><label>Phòng học</label><input id="fRoom" placeholder="VD: A1-201" /></div>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" id="modalCancel">Hủy</button>
+    <button class="btn primary" id="modalSave"><i data-lucide="check" class="icon-sm"></i> Lưu lớp học phần</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script src="staff-classes.js"></script>
+</body>
+</html>

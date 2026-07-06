@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Danh sách giảng viên</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+<style>
+/* ── Teacher-list page helpers ── */
+.av-lg { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 15px; font-weight: 700; color: #fff; flex: none; }
+.degree-pill { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 7px; font-size: 11.5px; font-weight: 700; background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+.degree-pill.ts  { background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+.degree-pill.pgs { background: hsl(243 75% 93%); color: hsl(243 75% 38%); }
+.degree-pill.gs  { background: hsl(243 75% 30%); color: #fff; }
+.load-bar { display: flex; align-items: center; gap: 9px; min-width: 120px; }
+.load-bar .track { flex: 1; height: 7px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; }
+.load-bar .track > span { display: block; height: 100%; border-radius: 99px; }
+.load-bar .pct { font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; width: 36px; text-align: right; flex: none; }
+.email-cell { font-size: 12.5px; color: hsl(var(--muted-foreground)); }
+.dept-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; }
+
+/* ── Right drawer ── */
+.scrim { position: fixed; inset: 0; background: hsl(222 47% 11% / .45); opacity: 0; visibility: hidden; transition: opacity .22s; z-index: 80; }
+.scrim.open { opacity: 1; visibility: visible; }
+.drawer { position: fixed; top: 0; right: 0; height: 100%; width: 480px; max-width: 93vw; background: hsl(var(--card)); box-shadow: var(--shadow-pop); transform: translateX(100%); transition: transform .26s cubic-bezier(.22,1,.36,1); z-index: 90; display: flex; flex-direction: column; }
+.drawer.open { transform: none; }
+.drawer-head { padding: 22px 22px 18px; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: flex-start; gap: 14px; }
+.dh-av { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-size: 19px; font-weight: 700; color: #fff; flex: none; }
+.dh-l { flex: 1; min-width: 0; }
+.dh-l h2 { margin: 0 0 4px; font-size: 18px; font-weight: 800; }
+.dh-l .dh-sub { font-size: 12.5px; color: hsl(var(--muted-foreground)); }
+.drawer-body { flex: 1; overflow-y: auto; padding: 20px 22px; display: flex; flex-direction: column; gap: 22px; }
+.meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+.mi-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; color: hsl(var(--muted-foreground)); margin-bottom: 3px; }
+.mi-val { font-size: 13.5px; font-weight: 600; }
+.class-item { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid hsl(var(--border)); }
+.class-item:last-child { border-bottom: none; }
+.ci-ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+.ci-code { font-size: 12px; font-weight: 700; color: hsl(var(--muted-foreground)); font-variant-numeric: tabular-nums; }
+.drawer-foot { padding: 16px 22px; border-top: 1px solid hsl(var(--border)); display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── Modal ── */
+.modal-card { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-46%); z-index: 90; width: 580px; max-width: 94vw; max-height: 90vh; overflow-y: auto; background: hsl(var(--card)); border-radius: var(--radius); box-shadow: var(--shadow-pop); opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s; }
+.modal-card.open { opacity: 1; visibility: visible; transform: translate(-50%,-50%); }
+.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px; border-bottom: 1px solid hsl(var(--border)); }
+.modal-head h2 { margin: 0; font-size: 17px; font-weight: 800; }
+.modal-body { padding: 20px 22px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size: 12.5px; font-weight: 600; }
+.field input, .field select { font: inherit; font-size: 13.5px; padding: 9px 12px; border: 1px solid hsl(var(--input)); border-radius: 10px; background: hsl(var(--background)); color: hsl(var(--foreground)); outline: none; transition: border-color .15s, box-shadow .15s; }
+.field input:focus, .field select:focus { border-color: hsl(var(--ring)); box-shadow: 0 0 0 3px hsl(var(--ring) / .15); }
+.form-section { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: hsl(var(--muted-foreground)); margin: 4px 0 -4px; grid-column: 1/-1; padding-top: 8px; border-top: 1px solid hsl(var(--border)); }
+.modal-foot { padding: 16px 22px; border-top: 1px solid hsl(var(--border)); display: flex; justify-content: flex-end; gap: 10px; }
+.empty-state { text-align: center; padding: 48px 20px; color: hsl(var(--muted-foreground)); }
+
+@media (max-width: 720px) { .meta-grid, .form-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-active="teachers" data-search="Tìm tên, mã GV, bộ môn, email...">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content single">
+      <div class="page" data-screen-label="Danh sách giảng viên">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Danh sách giảng viên</h1>
+            <p>Khoa CNTT &amp; các bộ môn · Năm học 2025 – 2026 · <strong id="phCount">24</strong> giảng viên</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg" id="exportBtn"><i data-lucide="download" class="icon-sm"></i> Xuất Excel</button>
+            <button class="btn lg primary" id="addBtn"><i data-lucide="user-plus" class="icon-sm"></i> Thêm giảng viên</button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico indigo"><i data-lucide="users" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Tổng giảng viên</div>
+            <div class="stat-value">24</div>
+            <div class="stat-foot">7 Tiến sĩ · 14 Thạc sĩ · 3 PGS</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico green"><i data-lucide="briefcase" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Đang phụ trách lớp</div>
+            <div class="stat-value">21</div>
+            <div class="stat-foot">Tổng 86 lớp học phần</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico amber"><i data-lucide="flame" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Vượt định mức tải</div>
+            <div class="stat-value">3</div>
+            <div class="stat-foot danger">Cần điều chỉnh phân công</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top">
+              <div class="stat-ico" style="background:hsl(var(--muted));color:hsl(var(--muted-foreground))"><i data-lucide="user-minus" class="icon-lg"></i></div>
+            </div>
+            <div class="stat-label" style="margin-top:14px">Chưa có lớp / Nghỉ</div>
+            <div class="stat-value">3</div>
+            <div class="stat-foot">2 chưa phân công · 1 nghỉ dài hạn</div>
+          </div>
+        </div>
+
+        <!-- Table card -->
+        <div class="card card-pad" style="margin-top:20px">
+          <div class="page-head" style="margin-bottom:16px;align-items:center">
+            <div class="tabs" id="statusTabs">
+              <button class="tab active" data-filter="all">Tất cả</button>
+              <button class="tab" data-filter="active">Đang dạy</button>
+              <button class="tab" data-filter="over">Vượt tải <span class="tab-count">3</span></button>
+              <button class="tab" data-filter="idle">Chưa có lớp</button>
+            </div>
+          </div>
+
+          <div class="filter-row">
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" id="searchInput" placeholder="Tìm tên, mã GV, email, bộ môn..." />
+            </div>
+            <div class="select-mini">
+              <select id="deptFilter">
+                <option value="">Tất cả bộ môn</option>
+                <option>Bộ môn CNPM</option>
+                <option>Bộ môn HTTT</option>
+                <option>Bộ môn KHMT</option>
+                <option>Bộ môn Ngoại ngữ</option>
+                <option>Bộ môn Toán</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="select-mini">
+              <select id="sortFilter">
+                <option value="name">Sắp xếp: Tên A–Z</option>
+                <option value="load">Sắp xếp: Tải giảng dạy</option>
+                <option value="classes">Sắp xếp: Số lớp</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <span class="badge" style="margin-left:auto" id="resultCount">24 giảng viên</span>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:6px">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Giảng viên</th>
+                  <th>Bộ môn</th>
+                  <th>Liên hệ</th>
+                  <th class="num">Lớp HP</th>
+                  <th class="num">Tiết/tuần</th>
+                  <th style="min-width:160px">Tải GD (định mức 20)</th>
+                  <th>Trạng thái</th>
+                  <th class="num">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="teacherRows"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" style="display:none">
+              <i data-lucide="search-x"></i>
+              <div>Không tìm thấy giảng viên phù hợp.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scrim -->
+<div class="scrim" id="scrim"></div>
+
+<!-- Detail drawer -->
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="dh-av" id="dwAv">—</div>
+    <div class="dh-l">
+      <h2 id="dwName">—</h2>
+      <div class="dh-sub" id="dwSub">—</div>
+    </div>
+    <span id="dwBadge"></span>
+    <button class="icon-btn" id="dwClose" aria-label="Đóng"><i data-lucide="x" class="icon-lg"></i></button>
+  </div>
+  <div class="drawer-body">
+
+    <div>
+      <div class="section-head" style="margin-bottom:12px"><h2 style="font-size:14px">Thông tin giảng viên</h2></div>
+      <div class="meta-grid">
+        <div><div class="mi-label">Mã GV</div><div class="mi-val" id="dwCode">—</div></div>
+        <div><div class="mi-label">Chức danh</div><div class="mi-val" id="dwTitle">—</div></div>
+        <div><div class="mi-label">Bộ môn</div><div class="mi-val" id="dwDept">—</div></div>
+        <div><div class="mi-label">Điện thoại</div><div class="mi-val" id="dwPhone">—</div></div>
+        <div class="full"><div class="mi-label">Email</div><div class="mi-val" id="dwEmail">—</div></div>
+        <div><div class="mi-label">Tiết/tuần</div><div class="mi-val" id="dwPeriods">—</div></div>
+        <div><div class="mi-label">Tải giảng dạy</div>
+          <div style="margin-top:6px">
+            <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:5px">
+              <strong id="dwLoadPct" style="font-size:18px">—</strong>
+              <span style="font-size:12px;color:hsl(var(--muted-foreground))">/ định mức 100%</span>
+            </div>
+            <div style="height:8px;border-radius:99px;background:hsl(var(--muted));overflow:hidden"><div id="dwLoadBar" style="height:100%;border-radius:99px;transition:width .3s"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-head" style="margin-bottom:10px">
+        <h2 style="font-size:14px">Lớp học phần đang dạy</h2>
+        <span class="badge" id="dwClassBadge"></span>
+      </div>
+      <div id="dwClasses"></div>
+    </div>
+
+  </div>
+  <div class="drawer-foot">
+    <button class="btn primary" id="dwEdit"><i data-lucide="pencil" class="icon-sm"></i> Chỉnh sửa</button>
+    <button class="btn" onclick="window.location.href='staff-scheduling.html'"><i data-lucide="calendar-plus" class="icon-sm"></i> Xếp lịch</button>
+    <button class="btn" style="margin-left:auto;color:hsl(var(--danger))"><i data-lucide="user-x" class="icon-sm"></i> Tạm nghỉ</button>
+  </div>
+</aside>
+
+<!-- Add / Edit modal -->
+<div class="modal-card" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-head">
+    <h2 id="modalTitle">Thêm giảng viên</h2>
+    <button class="icon-btn" id="modalClose" aria-label="Đóng"><i data-lucide="x" class="icon-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="field full"><label>Họ và tên</label><input id="fName" placeholder="VD: Nguyễn Văn A" /></div>
+      <div class="field"><label>Mã giảng viên</label><input id="fCode" placeholder="VD: GV00025" /></div>
+      <div class="field"><label>Chức danh / Học vị</label>
+        <select id="fDegree"><option>ThS.</option><option>TS.</option><option>PGS.TS.</option><option>GS.TS.</option></select>
+      </div>
+      <div class="field"><label>Bộ môn</label>
+        <select id="fDept"><option>Bộ môn CNPM</option><option>Bộ môn HTTT</option><option>Bộ môn KHMT</option><option>Bộ môn Ngoại ngữ</option><option>Bộ môn Toán</option></select>
+      </div>
+      <div class="field"><label>Chuyên ngành</label><input id="fSpec" placeholder="VD: Kỹ thuật phần mềm" /></div>
+
+      <div class="form-section">Liên hệ</div>
+      <div class="field"><label>Email</label><input id="fEmail" type="email" placeholder="gv@university.edu.vn" /></div>
+      <div class="field"><label>Điện thoại</label><input id="fPhone" placeholder="0912 345 678" /></div>
+
+      <div class="form-section">Giảng dạy</div>
+      <div class="field"><label>Định mức tiết/tuần</label><input id="fQuota" type="number" min="4" max="30" value="20" /></div>
+      <div class="field"><label>Số lớp HP hiện tại</label><input id="fClasses" type="number" min="0" value="0" /></div>
+      <div class="field"><label>Tiết/tuần hiện tại</label><input id="fPeriods" type="number" min="0" value="0" /></div>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" id="modalCancel">Hủy</button>
+    <button class="btn primary" id="modalSave"><i data-lucide="check" class="icon-sm"></i> Lưu giảng viên</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script src="staff-teachers.js"></script>
+</body>
+</html>

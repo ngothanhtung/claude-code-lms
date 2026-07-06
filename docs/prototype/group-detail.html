@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Chi tiết nhóm — LMS Portal</title>
@@ -100,7 +102,7 @@
 <div class="app">
 
   <!-- ============================== SIDEBAR ============================== -->
-  <aside class="sidebar">
+    <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
       <div>
@@ -121,30 +123,31 @@
         <div class="nav-sub">
           <div class="nav-sub-inner">
             <a class="nav-subitem" href="assignments-personal.html"><span class="nav-dot"></span> Bài tập cá nhân</a>
-            <a class="nav-subitem active" href="assignments-group.html"><span class="nav-dot"></span> Bài tập nhóm</a>
+            <a class="nav-subitem active" href="#"><span class="nav-dot"></span> Bài tập nhóm</a>
             <a class="nav-subitem" href="final-project.html"><span class="nav-dot"></span> Đồ án cuối kỳ</a>
           </div>
         </div>
       </div>
-      <a class="nav-item" href="#" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="results.html" data-tip="Kết quả học tập"><i data-lucide="bar-chart-3" class="icon"></i> Kết quả học tập</a>
+      <a class="nav-item" href="attendance.html" data-tip="Điểm danh"><i data-lucide="user-check" class="icon"></i> Điểm danh</a>
       <a class="nav-item" href="exams.html" data-tip="Lịch thi"><i data-lucide="calendar-clock" class="icon"></i> Lịch thi</a>
-      <div class="nav-group open" id="navTaiLieu">
+      <div class="nav-group" id="navTaiLieu">
         <button class="nav-item nav-parent" type="button" data-tip="Tài liệu">
           <i data-lucide="folder-open" class="icon"></i> Tài liệu
           <i data-lucide="chevron-down" class="icon-sm nav-caret"></i>
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+            <a class="nav-subitem" href="tai-lieu-tham-khao.html"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
           </div>
         </div>
       </div>
-      <a class="nav-item" href="#" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
-      <a class="nav-item" href="#" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
-      <a class="nav-item" href="#" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
-      <a class="nav-item" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
-      <a class="nav-item" href="#" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
+      <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
+      <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
+      <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
+      <a class="nav-item" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
     </nav>
 
     <div class="assistant">
@@ -155,7 +158,7 @@
           <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
         </div>
       </div>
-      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
     </div>
   </aside>
 
@@ -163,7 +166,7 @@
   <div class="main">
 
     <!-- Topbar -->
-    <header class="topbar">
+        <header class="topbar">
       <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
       <div class="search">
         <i data-lucide="search" class="icon"></i>
@@ -173,18 +176,19 @@
         <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
         <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
         <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
         <div class="profile-menu" id="profileMenu">
           <div class="profile" id="profileTrigger">
             <div class="profile-meta">
               <div class="profile-name">Ngô Thanh Tùng</div>
               <div class="profile-sub">MSSV: 21123456</div>
             </div>
-            <div class="avatar">A</div>
+            <div class="avatar">NT</div>
             <i data-lucide="chevron-down" class="icon-sm profile-caret" style="color:hsl(var(--muted-foreground))"></i>
           </div>
           <div class="dropdown" role="menu">
             <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
-            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
             <div class="dropdown-sep"></div>
             <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
           </div>
@@ -207,7 +211,7 @@
         <div class="gd-hero">
           <div class="gd-hero-ico"><i data-lucide="users"></i></div>
           <div class="gd-hero-main">
-            <div class="gd-eyebrow">Nhóm 3 · 4 thành viên</div>
+            <div class="gd-eyebrow">Nhóm 3 · 2 thành viên</div>
             <h1>Xây dựng API cho hệ thống TMĐT</h1>
             <div class="gh-sub">Claude Code for BackEnd · GV: Hoàng Anh Khoa</div>
             <div class="gd-hero-meta">
@@ -228,7 +232,7 @@
           <div>
             <!-- Members -->
             <div class="card-pad">
-              <div class="sec-h"><h2>Thành viên nhóm</h2><span class="sh-cnt">4 người</span></div>
+              <div class="sec-h"><h2>Thành viên nhóm</h2><span class="sh-cnt">2 người</span></div>
 
               <div class="member">
                 <div class="av a4 lead">T</div>
@@ -238,7 +242,7 @@
                 </div>
                 <div class="m-role">
                   <span class="role-tag lead">Nhóm trưởng</span>
-                  <span class="m-contrib"><b>5</b> task · <b>32%</b></span>
+                  <span class="m-contrib"><b>9</b> task · <b>52%</b></span>
                 </div>
               </div>
 
@@ -249,32 +253,8 @@
                   <div class="m-meta"><span><i data-lucide="hash"></i> 21123480</span><span><i data-lucide="mail"></i> ha.tt@sv.edu.vn</span></div>
                 </div>
                 <div class="m-role">
-                  <span class="role-tag">Backend</span>
-                  <span class="m-contrib"><b>4</b> task · <b>26%</b></span>
-                </div>
-              </div>
-
-              <div class="member">
-                <div class="av a3">M</div>
-                <div class="m-info">
-                  <div class="m-name">Lê Hoàng Minh</div>
-                  <div class="m-meta"><span><i data-lucide="hash"></i> 21123502</span><span><i data-lucide="mail"></i> minh.lh@sv.edu.vn</span></div>
-                </div>
-                <div class="m-role">
-                  <span class="role-tag">Database · DevOps</span>
-                  <span class="m-contrib"><b>4</b> task · <b>24%</b></span>
-                </div>
-              </div>
-
-              <div class="member">
-                <div class="av a2">L</div>
-                <div class="m-info">
-                  <div class="m-name">Phạm Khánh Lan</div>
-                  <div class="m-meta"><span><i data-lucide="hash"></i> 21123517</span><span><i data-lucide="mail"></i> lan.pk@sv.edu.vn</span></div>
-                </div>
-                <div class="m-role">
-                  <span class="role-tag">Test · Docs</span>
-                  <span class="m-contrib"><b>3</b> task · <b>18%</b></span>
+                  <span class="role-tag">Thành viên</span>
+                  <span class="m-contrib"><b>7</b> task · <b>48%</b></span>
                 </div>
               </div>
             </div>
@@ -284,20 +264,12 @@
               <div class="sec-h"><h2>Phân công công việc</h2><span class="sh-cnt">16 task</span></div>
               <div class="alloc">
                 <div class="alloc-row">
-                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(32 85% 52%)"></span> Ngô Thanh Tùng</span><span class="at-val">5 task · 4 xong</span></div>
-                  <div class="alloc-track"><span style="width:80%; background:hsl(32 85% 52%)"></span></div>
+                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(32 85% 52%)"></span> Ngô Thanh Tùng</span><span class="at-val">9 task · 6 xong</span></div>
+                  <div class="alloc-track"><span style="width:67%; background:hsl(32 85% 52%)"></span></div>
                 </div>
                 <div class="alloc-row">
-                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(262 70% 58%)"></span> Trần Thu Hà</span><span class="at-val">4 task · 2 xong</span></div>
-                  <div class="alloc-track"><span style="width:50%; background:hsl(262 70% 58%)"></span></div>
-                </div>
-                <div class="alloc-row">
-                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(221 75% 56%)"></span> Lê Hoàng Minh</span><span class="at-val">4 task · 3 xong</span></div>
-                  <div class="alloc-track"><span style="width:75%; background:hsl(221 75% 56%)"></span></div>
-                </div>
-                <div class="alloc-row">
-                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(142 60% 42%)"></span> Phạm Khánh Lan</span><span class="at-val">3 task · 1 xong</span></div>
-                  <div class="alloc-track"><span style="width:33%; background:hsl(142 60% 42%)"></span></div>
+                  <div class="alloc-top"><span class="at-name"><span class="dot" style="background:hsl(262 70% 58%)"></span> Trần Thu Hà</span><span class="at-val">7 task · 4 xong</span></div>
+                  <div class="alloc-track"><span style="width:57%; background:hsl(262 70% 58%)"></span></div>
                 </div>
               </div>
             </div>
@@ -311,7 +283,7 @@
               <div class="gd-prog">
                 <div class="ring" style="--p:40"><b>40%</b></div>
                 <div class="gd-prog-stats">
-                  <div class="gps-row"><span>Task hoàn thành</span><span class="v">10 / 16</span></div>
+                  <div class="gps-row"><span>Task hoàn thành</span><span class="v">6 / 16</span></div>
                   <div class="gps-row"><span>Đang thực hiện</span><span class="v">4</span></div>
                   <div class="gps-row"><span>Milestone hiện tại</span><span class="v">4 / 8</span></div>
                   <div class="gps-row"><span>Hạn nộp</span><span class="v soon">Còn 20 ngày</span></div>
@@ -356,6 +328,7 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
 <script>
   lucide.createIcons();
 

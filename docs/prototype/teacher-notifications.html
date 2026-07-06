@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Thông báo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="notifications">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Thông báo</h1>
+            <p>4 thông báo chưa đọc</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="check-check" class="icon-sm"></i> Đánh dấu đã đọc</button>
+            <button class="btn primary lg"><i data-lucide="megaphone" class="icon-sm"></i> Gửi thông báo lớp</button>
+          </div>
+        </div>
+
+        <div class="split">
+          <div class="card card-pad">
+            <div class="filter-row">
+              <div class="tabs" id="ntfTabs">
+                <button class="tab active">Tất cả</button>
+                <button class="tab">Chưa đọc <span class="tab-count">4</span></button>
+                <button class="tab">Bài nộp</button>
+                <button class="tab">Hệ thống</button>
+              </div>
+            </div>
+
+            <div class="notif">
+              <div class="notif-ico ico-tint-indigo"><i data-lucide="file-text" class="icon-sm"></i></div>
+              <div><div class="notif-title">Trần Văn An đã nộp BTL chương 3</div><div class="notif-sub">Lập trình HĐT · CNTT-K22B</div><div class="notif-time">5 phút trước</div></div>
+              <span class="notif-unread"></span>
+            </div>
+            <div class="notif">
+              <div class="notif-ico ico-tint-amber"><i data-lucide="user-plus" class="icon-sm"></i></div>
+              <div><div class="notif-title">3 yêu cầu xin gia hạn nộp bài</div><div class="notif-sub">Lập trình HĐT · CNTT-K22B</div><div class="notif-time">40 phút trước</div></div>
+              <span class="notif-unread"></span>
+            </div>
+            <div class="notif">
+              <div class="notif-ico ico-tint-red"><i data-lucide="megaphone" class="icon-sm"></i></div>
+              <div><div class="notif-title">Nhắc nhở từ Phòng Đào tạo</div><div class="notif-sub">Hạn nhập điểm quá trình: 10/06/2026</div><div class="notif-time">2 giờ trước</div></div>
+              <span class="notif-unread"></span>
+            </div>
+            <div class="notif">
+              <div class="notif-ico ico-tint-green"><i data-lucide="calendar-clock" class="icon-sm"></i></div>
+              <div><div class="notif-title">Phân công coi thi học kỳ II</div><div class="notif-sub">Phòng Khảo thí · 5 ca thi</div><div class="notif-time">5 giờ trước</div></div>
+              <span class="notif-unread"></span>
+            </div>
+            <div class="notif">
+              <div class="notif-ico ico-tint-blue"><i data-lucide="users" class="icon-sm"></i></div>
+              <div><div class="notif-title">Lê Thị Bình đã nộp Bài tập số 4</div><div class="notif-sub">Lập trình Java · CNTT-K22C</div><div class="notif-time">Hôm qua</div></div>
+            </div>
+            <div class="notif">
+              <div class="notif-ico ico-tint-amber"><i data-lucide="calendar-heart" class="icon-sm"></i></div>
+              <div><div class="notif-title">Họp Bộ môn CNPM định kỳ</div><div class="notif-sub">Thứ 2, 02/06 · 14:00 · VP Bộ môn</div><div class="notif-time">2 ngày trước</div></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card card-pad">
+              <div class="section-head"><h2>Gửi nhanh</h2></div>
+              <div class="qa-grid" style="grid-template-columns:1fr">
+                <a class="qa" href="#" style="flex-direction:row;align-items:center;gap:12px;text-align:left"><div class="qa-ico ico-tint-red"><i data-lucide="megaphone" class="icon-lg"></i></div><div class="qa-label">Thông báo cả lớp</div></a>
+                <a class="qa" href="#" style="flex-direction:row;align-items:center;gap:12px;text-align:left"><div class="qa-ico ico-tint-indigo"><i data-lucide="mail" class="icon-lg"></i></div><div class="qa-label">Nhắn riêng sinh viên</div></a>
+                <a class="qa" href="#" style="flex-direction:row;align-items:center;gap:12px;text-align:left"><div class="qa-ico ico-tint-green"><i data-lucide="calendar-plus" class="icon-lg"></i></div><div class="qa-label">Tạo nhắc lịch học</div></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  document.querySelectorAll('#ntfTabs .tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('#ntfTabs .tab').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

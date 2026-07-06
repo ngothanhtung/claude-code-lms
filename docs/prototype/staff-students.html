@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Danh sách học viên</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+<style>
+/* ── Student page helpers ── */
+.av-md { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 13.5px; font-weight: 700; color: #fff; flex: none; }
+.pct-bar { display: flex; align-items: center; gap: 8px; }
+.pct-bar .track { flex: 1; min-width: 80px; height: 7px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; }
+.pct-bar .track > span { display: block; height: 100%; border-radius: 99px; }
+.pct-bar .pv { font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; width: 34px; text-align: right; flex: none; }
+.empty-state { text-align: center; padding: 48px 20px; color: hsl(var(--muted-foreground)); }
+
+/* ── Scrim ── */
+.scrim { position: fixed; inset: 0; background: hsl(222 47% 11% / .45); opacity: 0; visibility: hidden; transition: opacity .22s; z-index: 80; }
+.scrim.open { opacity: 1; visibility: visible; }
+
+/* ── Detail drawer (wider for 4 tabs) ── */
+.drawer { position: fixed; top: 0; right: 0; height: 100%; width: 580px; max-width: 95vw; background: hsl(var(--card)); box-shadow: var(--shadow-pop); transform: translateX(100%); transition: transform .26s cubic-bezier(.22,1,.36,1); z-index: 90; display: flex; flex-direction: column; }
+.drawer.open { transform: none; }
+.drawer-head { padding: 20px 22px 0; border-bottom: 1px solid hsl(var(--border)); }
+.dh-top { display: flex; align-items: flex-start; gap: 14px; padding-bottom: 16px; }
+.dh-av { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 18px; font-weight: 700; color: #fff; flex: none; }
+.dh-l { flex: 1; min-width: 0; }
+.dh-l h2 { margin: 0 0 3px; font-size: 18px; font-weight: 800; }
+.dh-l .dh-sub { font-size: 12.5px; color: hsl(var(--muted-foreground)); }
+/* Tabs inside drawer */
+.dw-tabs { display: flex; gap: 0; border-top: 1px solid hsl(var(--border)); margin: 0 -22px; padding: 0 22px; overflow-x: auto; }
+.dw-tab { font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: hsl(var(--muted-foreground)); padding: 11px 14px; border-bottom: 2.5px solid transparent; white-space: nowrap; transition: color .15s, border-color .15s; }
+.dw-tab:hover { color: hsl(var(--foreground)); }
+.dw-tab.active { color: hsl(var(--primary)); border-bottom-color: hsl(var(--primary)); }
+.dw-panel { display: none; }
+.dw-panel.active { display: block; }
+
+.drawer-body { flex: 1; overflow-y: auto; padding: 20px 22px; }
+.drawer-foot { padding: 14px 22px; border-top: 1px solid hsl(var(--border)); display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Tab 1 — Thông tin chung */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+.info-grid .full { grid-column: 1/-1; }
+.mi-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; color: hsl(var(--muted-foreground)); margin-bottom: 3px; }
+.mi-val { font-size: 13.5px; font-weight: 600; }
+
+/* Tab 2 — Lớp học */
+.course-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid hsl(var(--border)); }
+.course-row:last-child { border-bottom: none; }
+.cr-ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+.cr-code { font-size: 11.5px; color: hsl(var(--muted-foreground)); font-variant-numeric: tabular-nums; font-weight: 700; }
+.cr-score { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* Tab 3 — Học phí */
+.hp-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.hp-box { border-radius: 12px; padding: 14px 16px; }
+.hp-box .hb-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; opacity: .75; margin-bottom: 6px; }
+.hp-box .hb-val { font-size: 20px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.hp-box .hb-sub { font-size: 11.5px; opacity: .75; margin-top: 2px; }
+.tx-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid hsl(var(--border)); font-size: 13px; }
+.tx-row:last-child { border-bottom: none; }
+.tx-date { color: hsl(var(--muted-foreground)); font-size: 12px; min-width: 72px; flex: none; font-variant-numeric: tabular-nums; }
+.tx-amt { font-weight: 700; margin-left: auto; font-variant-numeric: tabular-nums; }
+.tx-amt.pos { color: hsl(var(--success)); }
+.tx-amt.neg { color: hsl(var(--danger)); }
+
+/* Tab 4 — Điểm danh */
+.att-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid hsl(var(--border)); }
+.att-row:last-child { border-bottom: none; }
+.att-pct { font-size: 15px; font-weight: 900; min-width: 46px; text-align: right; flex: none; font-variant-numeric: tabular-nums; }
+.absent-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 7px; font-size: 12px; font-weight: 700; background: hsl(var(--danger-muted)); color: hsl(var(--danger)); }
+.absent-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.absent-item { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 9px 12px; border-radius: 10px; background: hsl(var(--muted)); }
+.absent-item .ai-date { font-weight: 700; min-width: 72px; font-variant-numeric: tabular-nums; flex: none; }
+
+/* ── Add/Edit modal ── */
+.modal-card { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-46%); z-index: 90; width: 560px; max-width: 94vw; max-height: 90vh; overflow-y: auto; background: hsl(var(--card)); border-radius: var(--radius); box-shadow: var(--shadow-pop); opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s; }
+.modal-card.open { opacity: 1; visibility: visible; transform: translate(-50%,-50%); }
+.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px; border-bottom: 1px solid hsl(var(--border)); }
+.modal-head h2 { margin: 0; font-size: 17px; font-weight: 800; }
+.modal-body { padding: 20px 22px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field.full { grid-column: 1/-1; }
+.field label { font-size: 12.5px; font-weight: 600; }
+.field input, .field select { font: inherit; font-size: 13.5px; padding: 9px 12px; border: 1px solid hsl(var(--input)); border-radius: 10px; background: hsl(var(--background)); color: hsl(var(--foreground)); outline: none; transition: border-color .15s, box-shadow .15s; }
+.field input:focus, .field select:focus { border-color: hsl(var(--ring)); box-shadow: 0 0 0 3px hsl(var(--ring) / .15); }
+.form-section { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: hsl(var(--muted-foreground)); margin: 4px 0 -4px; grid-column: 1/-1; padding-top: 8px; border-top: 1px solid hsl(var(--border)); }
+.modal-foot { padding: 16px 22px; border-top: 1px solid hsl(var(--border)); display: flex; justify-content: flex-end; gap: 10px; }
+
+@media (max-width: 600px) { .info-grid, .form-grid, .hp-summary { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-active="students" data-search="Tìm mã SV, họ tên, lớp, email...">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content single">
+      <div class="page" data-screen-label="Danh sách học viên">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Danh sách học viên</h1>
+            <p>Khoa CNTT · Năm học 2025 – 2026 · <strong id="phCount">—</strong> học viên</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg" id="exportBtn"><i data-lucide="download" class="icon-sm"></i> Xuất Excel</button>
+            <button class="btn lg primary" id="addBtn"><i data-lucide="user-plus" class="icon-sm"></i> Thêm học viên</button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top"><div class="stat-ico indigo"><i data-lucide="graduation-cap" class="icon-lg"></i></div></div>
+            <div class="stat-label" style="margin-top:14px">Tổng học viên</div>
+            <div class="stat-value" id="sTotalVal">—</div>
+            <div class="stat-foot">K21 · K22 · K23 · K24</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top"><div class="stat-ico green"><i data-lucide="book-open-check" class="icon-lg"></i></div></div>
+            <div class="stat-label" style="margin-top:14px">Đang học bình thường</div>
+            <div class="stat-value" id="sActiveVal">—</div>
+            <div class="stat-foot">Không có cảnh báo</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top"><div class="stat-ico amber"><i data-lucide="alert-triangle" class="icon-lg"></i></div></div>
+            <div class="stat-label" style="margin-top:14px">Cảnh báo học vụ</div>
+            <div class="stat-value" id="sWarnVal" style="color:hsl(var(--warning))">—</div>
+            <div class="stat-foot">Vắng &gt; 20% hoặc nợ học phí</div>
+          </div>
+          <div class="stat">
+            <div class="stat-top"><div class="stat-ico" style="background:hsl(var(--danger-muted));color:hsl(var(--danger))"><i data-lucide="wallet" class="icon-lg"></i></div></div>
+            <div class="stat-label" style="margin-top:14px">Còn nợ học phí</div>
+            <div class="stat-value" id="sDebtVal" style="color:hsl(var(--danger))">—</div>
+            <div class="stat-foot" id="sDebtFoot">—</div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card card-pad" style="margin-top:20px">
+          <div class="page-head" style="margin-bottom:16px;align-items:center">
+            <div class="tabs" id="statusTabs">
+              <button class="tab active" data-filter="all">Tất cả</button>
+              <button class="tab" data-filter="active">Bình thường</button>
+              <button class="tab" data-filter="warning">Cảnh báo <span class="tab-count" id="tabWarnCount">—</span></button>
+              <button class="tab" data-filter="suspended">Đình chỉ</button>
+            </div>
+          </div>
+
+          <div class="filter-row">
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" id="searchInput" placeholder="Tìm mã SV, họ tên, lớp, email..." />
+            </div>
+            <div class="select-mini">
+              <select id="cohortFilter">
+                <option value="">Tất cả khóa</option>
+                <option>K21</option><option>K22</option><option>K23</option><option>K24</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="select-mini">
+              <select id="sortFilter">
+                <option value="name">Sắp xếp: Tên A–Z</option>
+                <option value="code">Sắp xếp: Mã SV</option>
+                <option value="att">Sắp xếp: Chuyên cần (thấp nhất)</option>
+                <option value="debt">Sắp xếp: Nợ học phí</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <span class="badge" style="margin-left:auto" id="resultCount">—</span>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:6px">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Học viên</th>
+                  <th>Khóa · Lớp</th>
+                  <th>Liên hệ</th>
+                  <th class="num">Lớp HP</th>
+                  <th style="min-width:130px">Học phí</th>
+                  <th style="min-width:130px">Chuyên cần</th>
+                  <th>Trạng thái</th>
+                  <th class="num">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="studentRows"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" style="display:none">
+              <i data-lucide="search-x"></i>
+              <div>Không tìm thấy học viên phù hợp.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scrim -->
+<div class="scrim" id="scrim"></div>
+
+<!-- Detail drawer -->
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="dh-top">
+      <div class="dh-av" id="dwAv">—</div>
+      <div class="dh-l">
+        <h2 id="dwName">—</h2>
+        <div class="dh-sub" id="dwSub">—</div>
+      </div>
+      <span id="dwBadge" style="flex:none"></span>
+      <button class="icon-btn" id="dwClose" aria-label="Đóng"><i data-lucide="x" class="icon-lg"></i></button>
+    </div>
+    <div class="dw-tabs" id="dwTabs">
+      <button class="dw-tab active" data-tab="general">Thông tin chung</button>
+      <button class="dw-tab" data-tab="classes">Lớp học</button>
+      <button class="dw-tab" data-tab="tuition">Học phí</button>
+      <button class="dw-tab" data-tab="attendance">Điểm danh</button>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+    <!-- Tab 1: Thông tin chung -->
+    <div class="dw-panel active" id="panel-general">
+      <div class="info-grid">
+        <div><div class="mi-label">Mã sinh viên</div><div class="mi-val" id="dg-code">—</div></div>
+        <div><div class="mi-label">Giới tính</div><div class="mi-val" id="dg-gender">—</div></div>
+        <div><div class="mi-label">Ngày sinh</div><div class="mi-val" id="dg-dob">—</div></div>
+        <div><div class="mi-label">CCCD / CMND</div><div class="mi-val" id="dg-id">—</div></div>
+        <div><div class="mi-label">Khóa · Lớp</div><div class="mi-val" id="dg-class">—</div></div>
+        <div><div class="mi-label">Chuyên ngành</div><div class="mi-val" id="dg-major">—</div></div>
+        <div><div class="mi-label">Email</div><div class="mi-val" id="dg-email">—</div></div>
+        <div><div class="mi-label">Điện thoại</div><div class="mi-val" id="dg-phone">—</div></div>
+        <div class="full"><div class="mi-label">Địa chỉ thường trú</div><div class="mi-val" id="dg-addr">—</div></div>
+        <div><div class="mi-label">Năm nhập học</div><div class="mi-val" id="dg-year">—</div></div>
+        <div><div class="mi-label">Trạng thái học vụ</div><div class="mi-val" id="dg-status">—</div></div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Lớp học -->
+    <div class="dw-panel" id="panel-classes">
+      <div id="dw-courses"></div>
+    </div>
+
+    <!-- Tab 3: Học phí -->
+    <div class="dw-panel" id="panel-tuition">
+      <div class="hp-summary" id="dw-hp-summary"></div>
+      <div style="height:8px;border-radius:99px;background:hsl(var(--muted));overflow:hidden;margin-bottom:20px">
+        <div id="dw-hp-bar" style="height:100%;border-radius:99px;transition:width .4s"></div>
+      </div>
+      <div class="section-head" style="margin-bottom:10px"><h2 style="font-size:13.5px">Lịch sử giao dịch</h2></div>
+      <div id="dw-hp-txs"></div>
+    </div>
+
+    <!-- Tab 4: Điểm danh -->
+    <div class="dw-panel" id="panel-attendance">
+      <div class="section-head" style="margin-bottom:10px"><h2 style="font-size:13.5px">Chuyên cần theo học phần</h2></div>
+      <div id="dw-att-courses"></div>
+      <div class="section-head" style="margin-bottom:10px;margin-top:22px"><h2 style="font-size:13.5px">Buổi vắng gần đây</h2></div>
+      <div class="absent-list" id="dw-att-absents"></div>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn primary" id="dwEdit"><i data-lucide="pencil" class="icon-sm"></i> Chỉnh sửa</button>
+    <button class="btn" onclick="window.location.href='staff-tuition.html'"><i data-lucide="receipt" class="icon-sm"></i> Thu học phí</button>
+    <button class="btn" onclick="window.location.href='staff-attendance.html'"><i data-lucide="user-check" class="icon-sm"></i> Điểm danh</button>
+    <button class="btn" style="margin-left:auto;color:hsl(var(--danger))"><i data-lucide="shield-alert" class="icon-sm"></i> Cảnh báo</button>
+  </div>
+</aside>
+
+<!-- Add/Edit modal -->
+<div class="modal-card" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-head">
+    <h2 id="modalTitle">Thêm học viên</h2>
+    <button class="icon-btn" id="modalClose" aria-label="Đóng"><i data-lucide="x" class="icon-lg"></i></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="field full"><label>Họ và tên</label><input id="fName" placeholder="VD: Nguyễn Văn A" /></div>
+      <div class="field"><label>Mã sinh viên</label><input id="fCode" placeholder="VD: 21010001" /></div>
+      <div class="field"><label>Giới tính</label>
+        <select id="fGender"><option>Nam</option><option>Nữ</option><option>Khác</option></select>
+      </div>
+      <div class="field"><label>Ngày sinh</label><input id="fDob" type="date" /></div>
+      <div class="field"><label>CCCD / CMND</label><input id="fId" placeholder="012345678901" /></div>
+      <div class="form-section">Học vụ</div>
+      <div class="field"><label>Khóa</label>
+        <select id="fCohort"><option>K21</option><option>K22</option><option>K23</option><option>K24</option></select>
+      </div>
+      <div class="field"><label>Lớp</label><input id="fClass" placeholder="VD: CNTT-K22A" /></div>
+      <div class="field"><label>Chuyên ngành</label>
+        <select id="fMajor"><option>Công nghệ thông tin</option><option>Kỹ thuật phần mềm</option><option>Hệ thống thông tin</option><option>An toàn thông tin</option></select>
+      </div>
+      <div class="form-section">Liên hệ</div>
+      <div class="field"><label>Email</label><input id="fEmail" type="email" placeholder="sv@student.uni.edu.vn" /></div>
+      <div class="field"><label>Điện thoại</label><input id="fPhone" placeholder="0912 345 678" /></div>
+      <div class="field full"><label>Địa chỉ thường trú</label><input id="fAddr" placeholder="VD: 123 Nguyễn Trãi, Q.1, TP.HCM" /></div>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" id="modalCancel">Hủy</button>
+    <button class="btn primary" id="modalSave"><i data-lucide="check" class="icon-sm"></i> Lưu học viên</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script src="staff-students.js"></script>
+</body>
+</html>

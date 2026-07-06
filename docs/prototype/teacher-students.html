@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Sinh viên</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="students">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Sinh viên</h1>
+            <p>248 sinh viên trên 5 lớp học phần</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="upload" class="icon-sm"></i> Nhập danh sách</button>
+            <button class="btn lg"><i data-lucide="download" class="icon-sm"></i> Xuất Excel</button>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="filter-row">
+            <div class="filter-search">
+              <i data-lucide="search"></i>
+              <input type="text" placeholder="Tìm theo tên hoặc MSSV..." id="stuSearch" />
+            </div>
+            <div class="select-mini">
+              <select id="stuClass">
+                <option>Tất cả lớp</option>
+                <option>OOP · CNTT-K22B</option>
+                <option>CSDL · CNTT-K21A</option>
+                <option>CTDL&GT · CNTT-K22A</option>
+                <option>Java · CNTT-K22C</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="select-mini">
+              <select>
+                <option>Sắp xếp: Điểm TB</option>
+                <option>Sắp xếp: Họ tên</option>
+                <option>Sắp xếp: Chuyên cần</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="tbl-wrap">
+            <table class="tbl" id="stuTable">
+              <thead>
+                <tr>
+                  <th>Sinh viên</th>
+                  <th>Lớp</th>
+                  <th>Email</th>
+                  <th class="num">Chuyên cần</th>
+                  <th class="num">Điểm TB</th>
+                  <th class="num">Xếp loại</th>
+                  <th style="text-align:right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(243 75% 60%),hsl(262 83% 58%))">TA</div><div><div class="nm">Trần Văn An</div><div class="sub">21123401</div></div></div></td>
+                  <td class="muted">OOP · K22B</td>
+                  <td class="muted">an.tv@stu.edu.vn</td>
+                  <td class="num">95%</td>
+                  <td class="num"><strong>8.7</strong></td>
+                  <td class="num"><span class="grade-pill a">A</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(142 64% 42%),hsl(168 70% 38%))">LB</div><div><div class="nm">Lê Thị Bình</div><div class="sub">21123402</div></div></div></td>
+                  <td class="muted">Java · K22C</td>
+                  <td class="muted">binh.lt@stu.edu.vn</td>
+                  <td class="num">100%</td>
+                  <td class="num"><strong>9.1</strong></td>
+                  <td class="num"><span class="grade-pill a">A</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(221 83% 55%),hsl(199 80% 48%))">PC</div><div><div class="nm">Phạm Hoàng Cường</div><div class="sub">21123403</div></div></div></td>
+                  <td class="muted">CSDL · K21A</td>
+                  <td class="muted">cuong.ph@stu.edu.vn</td>
+                  <td class="num">88%</td>
+                  <td class="num"><strong>7.4</strong></td>
+                  <td class="num"><span class="grade-pill b">B</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(28 85% 52%),hsl(14 80% 52%))">NĐ</div><div><div class="nm">Nguyễn Văn Đức</div><div class="sub">21123404</div></div></div></td>
+                  <td class="muted">OOP · K22B</td>
+                  <td class="muted">duc.nv@stu.edu.vn</td>
+                  <td class="num">72%</td>
+                  <td class="num"><strong>6.2</strong></td>
+                  <td class="num"><span class="grade-pill c">C</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(262 70% 56%),hsl(288 70% 52%))">VE</div><div><div class="nm">Vũ Thị Em</div><div class="sub">21123405</div></div></div></td>
+                  <td class="muted">Java · K22C</td>
+                  <td class="muted">em.vt@stu.edu.vn</td>
+                  <td class="num">91%</td>
+                  <td class="num"><strong>8.0</strong></td>
+                  <td class="num"><span class="grade-pill b">B</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(174 62% 38%),hsl(192 70% 42%))">ĐG</div><div><div class="nm">Đỗ Văn Giang</div><div class="sub">21123406</div></div></div></td>
+                  <td class="muted">CSDL · K21A</td>
+                  <td class="muted">giang.dv@stu.edu.vn</td>
+                  <td class="num">64%</td>
+                  <td class="num"><strong>4.8</strong></td>
+                  <td class="num"><span class="grade-pill f">F</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(338 75% 56%),hsl(14 80% 56%))">BH</div><div><div class="nm">Bùi Thị Hoa</div><div class="sub">21123407</div></div></div></td>
+                  <td class="muted">OOP · K22B</td>
+                  <td class="muted">hoa.bt@stu.edu.vn</td>
+                  <td class="num">98%</td>
+                  <td class="num"><strong>8.9</strong></td>
+                  <td class="num"><span class="grade-pill a">A</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(243 75% 60%),hsl(221 83% 55%))">PK</div><div><div class="nm">Phan Văn Khôi</div><div class="sub">21123408</div></div></div></td>
+                  <td class="muted">CSDL · K21A</td>
+                  <td class="muted">khoi.pv@stu.edu.vn</td>
+                  <td class="num">82%</td>
+                  <td class="num"><strong>7.0</strong></td>
+                  <td class="num"><span class="grade-pill b">B</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(142 64% 42%),hsl(110 60% 42%))">LL</div><div><div class="nm">Lý Thị Lan</div><div class="sub">21123409</div></div></div></td>
+                  <td class="muted">CTDL&GT · K22A</td>
+                  <td class="muted">lan.lt@stu.edu.vn</td>
+                  <td class="num">93%</td>
+                  <td class="num"><strong>8.3</strong></td>
+                  <td class="num"><span class="grade-pill a">A</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="av" style="background:linear-gradient(150deg,hsl(199 80% 48%),hsl(174 62% 40%))">HM</div><div><div class="nm">Hồ Văn Minh</div><div class="sub">21123410</div></div></div></td>
+                  <td class="muted">CTDL&GT · K22A</td>
+                  <td class="muted">minh.hv@stu.edu.vn</td>
+                  <td class="num">77%</td>
+                  <td class="num"><strong>6.8</strong></td>
+                  <td class="num"><span class="grade-pill c">C</span></td>
+                  <td style="text-align:right"><button class="icon-act" aria-label="Xem"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  var s = document.getElementById('stuSearch');
+  if (s) s.addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#stuTable tbody tr').forEach(function (tr) {
+      tr.style.display = tr.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

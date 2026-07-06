@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hỗ trợ — LMS Portal</title>
@@ -10,72 +12,118 @@
 <link rel="stylesheet" href="theme.css" />
 <link rel="stylesheet" href="dashboard.css" />
 <style>
-  /* ---- Support page ----------------------------------------------------- */
-  .support-page { grid-template-columns: 1fr var(--rail-w); align-items: start; }
-  .page-head { margin-bottom: 22px; }
-  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
-  .page-head p { color: hsl(var(--muted-foreground)); font-size: 13.5px; margin-top: 5px; }
+  /* ---- Support page ------------------------------------------------------ */
+  .support-page { grid-template-columns: 1fr; }
 
-  /* Hero search */
-  .help-hero { background: linear-gradient(115deg, hsl(243 75% 59%), hsl(255 70% 60%)); border-radius: var(--radius); padding: 30px 28px; margin-bottom: 20px; color: #fff; box-shadow: var(--shadow-pop); }
-  .help-hero h2 { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; }
-  .help-hero p { font-size: 13px; opacity: .9; margin-top: 5px; }
-  .hero-search { display: flex; align-items: center; gap: 11px; background: #fff; border-radius: 12px; padding: 13px 16px; margin-top: 18px; }
-  .hero-search svg { width: 19px; height: 19px; color: hsl(var(--muted-foreground)); flex-shrink: 0; }
-  .hero-search input { border: none; outline: none; background: transparent; font: inherit; font-size: 14.5px; width: 100%; color: hsl(var(--foreground)); }
-  .hero-tags { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-  .hero-tag { font-size: 12px; font-weight: 600; color: #fff; background: hsl(0 0% 100% / 0.16); border-radius: 99px; padding: 6px 13px; cursor: pointer; transition: background .12s; }
-  .hero-tag:hover { background: hsl(0 0% 100% / 0.26); }
+  /* Hero / search */
+  .sup-hero {
+    position: relative; overflow: hidden; border-radius: calc(var(--radius) + 2px);
+    background: linear-gradient(135deg, hsl(243 75% 59%), hsl(252 83% 50%));
+    color: #fff; padding: 34px 30px 30px; box-shadow: var(--shadow-card); text-align: center;
+  }
+  .sup-hero::after { content: ""; position: absolute; right: -70px; top: -70px; width: 280px; height: 280px; border-radius: 50%; background: hsl(0 0% 100% / 0.08); }
+  .sup-hero::before { content: ""; position: absolute; left: -50px; bottom: -90px; width: 200px; height: 200px; border-radius: 50%; background: hsl(0 0% 100% / 0.06); }
+  .sup-hero-in { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
+  .sup-hero .eyebrow { display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; background: hsl(0 0% 100% / 0.16); padding: 5px 12px; border-radius: 99px; }
+  .sup-hero h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin: 14px 0 6px; }
+  .sup-hero p { font-size: 14px; opacity: .92; line-height: 1.5; }
+  .sup-searchbox { display: flex; align-items: center; gap: 10px; background: hsl(var(--card)); border-radius: 13px; padding: 6px 6px 6px 16px; margin-top: 20px; box-shadow: 0 10px 30px hsl(252 80% 25% / 0.28); }
+  .sup-searchbox svg { width: 19px; height: 19px; color: hsl(var(--muted-foreground)); flex: none; }
+  .sup-searchbox input { flex: 1; border: none; outline: none; font: inherit; font-size: 14px; color: hsl(var(--foreground)); padding: 9px 0; }
+  .sup-searchbox .btn { padding: 9px 18px; flex: none; }
+  .sup-suggest { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+  .sup-suggest span { font-size: 12px; opacity: .85; }
+  .sup-suggest a { font-size: 12px; font-weight: 600; color: #fff; text-decoration: none; background: hsl(0 0% 100% / 0.16); padding: 4px 11px; border-radius: 99px; transition: background .15s; }
+  .sup-suggest a:hover { background: hsl(0 0% 100% / 0.28); }
 
-  /* Quick-help categories */
-  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
-  .cat-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-card); cursor: pointer; transition: border-color .12s, box-shadow .12s, transform .12s; }
-  .cat-card:hover { border-color: hsl(var(--primary) / 0.4); box-shadow: var(--shadow-pop); transform: translateY(-2px); }
-  .cat-ico { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 13px; }
+  /* Category cards */
+  .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 20px; }
+  .cat-card { display: flex; flex-direction: column; gap: 10px; padding: 18px; border: 1px solid hsl(var(--border)); border-radius: 13px; background: var(--card, #fff); box-shadow: var(--shadow-card); cursor: pointer; text-decoration: none; color: inherit; transition: transform .12s, border-color .15s, box-shadow .15s; }
+  .cat-card:hover { transform: translateY(-2px); border-color: hsl(243 60% 84%); box-shadow: var(--shadow-pop); }
+  .cat-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
   .cat-ico svg { width: 21px; height: 21px; }
-  .cat-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
-  .cat-card p { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 5px; line-height: 1.5; }
-  .cat-card .cat-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: hsl(var(--primary)); margin-top: 11px; }
-  .cat-card .cat-link svg { width: 13px; height: 13px; }
+  .cat-card .cc-title { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .cat-card .cc-sub { font-size: 12px; color: hsl(var(--muted-foreground)); line-height: 1.45; }
+  .cat-card .cc-link { font-size: 12px; font-weight: 700; color: hsl(var(--primary)); display: flex; align-items: center; gap: 5px; margin-top: auto; }
+  .cat-card .cc-link svg { width: 14px; height: 14px; }
 
-  /* FAQ accordion */
-  .faq { display: flex; flex-direction: column; }
+  /* Two-column body */
+  .sup-grid { display: grid; grid-template-columns: 1fr 360px; gap: 20px; align-items: start; margin-top: 20px; }
+
+  /* FAQ */
+  .faq-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .faq-tab { border: 1px solid hsl(var(--border)); background: hsl(var(--card)); font: inherit; font-size: 12.5px; font-weight: 600; color: hsl(var(--muted-foreground)); padding: 7px 14px; border-radius: 99px; cursor: pointer; transition: all .15s; }
+  .faq-tab:hover { background: hsl(var(--muted)); }
+  .faq-tab.active { background: hsl(var(--primary) / 0.1); border-color: hsl(243 75% 82%); color: hsl(var(--primary)); }
   .faq-item { border-bottom: 1px solid hsl(var(--border)); }
   .faq-item:last-child { border-bottom: none; }
-  .faq-q { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 16px 0; font: inherit; font-size: 14px; font-weight: 600; color: hsl(var(--foreground)); }
-  .faq-q .faq-caret { margin-left: auto; flex-shrink: 0; transition: transform .2s; color: hsl(var(--muted-foreground)); }
-  .faq-q .faq-caret svg { width: 18px; height: 18px; }
-  .faq-q .faq-num { width: 26px; height: 26px; border-radius: 8px; background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); font-size: 12px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
-  .faq-item.open .faq-caret { transform: rotate(180deg); }
-  .faq-item.open .faq-num { background: hsl(var(--primary)); color: #fff; }
-  .faq-a { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
-  .faq-a-inner { padding: 0 0 18px 38px; font-size: 13.5px; color: hsl(var(--muted-foreground)); line-height: 1.65; }
+  .faq-q { display: flex; align-items: center; gap: 13px; padding: 16px 4px; cursor: pointer; user-select: none; }
+  .faq-q .fq-ico { width: 30px; height: 30px; border-radius: 8px; flex: none; display: grid; place-items: center; background: hsl(var(--primary) / 0.08); color: hsl(var(--primary)); }
+  .faq-q .fq-ico svg { width: 15px; height: 15px; }
+  .faq-q .fq-text { flex: 1; font-size: 13.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .faq-q .fq-caret { color: hsl(var(--muted-foreground)); transition: transform .2s; flex: none; }
+  .faq-item.open .fq-caret { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0 4px 18px 47px; font-size: 13px; line-height: 1.65; color: hsl(222 22% 35%); }
+  .faq-item.open .faq-a { display: block; }
+  .faq-a strong { color: hsl(var(--foreground)); font-weight: 600; }
+  .faq-a a { color: hsl(var(--primary)); font-weight: 600; text-decoration: none; }
+  .faq-a a:hover { text-decoration: underline; }
+  .faq-hidden { display: none; }
+  .faq-empty { display: none; text-align: center; padding: 30px 10px; color: hsl(var(--muted-foreground)); font-size: 13px; }
+  .faq-empty.show { display: block; }
 
-  /* Rail */
-  .rail { display: flex; flex-direction: column; gap: 16px; }
-  .contact-card .cc-row { display: flex; align-items: center; gap: 13px; padding: 12px 0; border-bottom: 1px solid hsl(var(--border)); }
-  .contact-card .cc-row:last-child { border-bottom: none; }
-  .cc-ico { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; flex-shrink: 0; }
-  .cc-ico svg { width: 19px; height: 19px; }
-  .cc-body { flex: 1; min-width: 0; }
-  .cc-t { font-size: 13px; font-weight: 700; }
-  .cc-s { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
-  .cc-arr { color: hsl(var(--muted-foreground)); flex-shrink: 0; }
-  .cc-arr svg { width: 16px; height: 16px; }
+  /* Contact channel cards (rail) */
+  .chan { display: flex; align-items: flex-start; gap: 13px; padding: 14px 0; border-bottom: 1px solid hsl(var(--border)); }
+  .chan:first-child { padding-top: 0; }
+  .chan:last-child { border-bottom: none; padding-bottom: 0; }
+  .chan-ico { width: 40px; height: 40px; border-radius: 11px; flex: none; display: grid; place-items: center; }
+  .chan-ico svg { width: 19px; height: 19px; }
+  .chan-body { flex: 1; min-width: 0; }
+  .chan-title { font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .chan-sub { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 3px; line-height: 1.45; }
+  .chan-status { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+  .st-online { background: hsl(var(--success-muted)); color: hsl(142 71% 32%); }
+  .st-online .pip { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: hsl(var(--success)); margin-right: 4px; vertical-align: middle; }
+  .chan-action { margin-top: 9px; }
+  .chan-action .btn { padding: 6px 13px; font-size: 12px; }
 
-  .status-card .st-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; }
-  .st-dot { width: 9px; height: 9px; border-radius: 99px; flex-shrink: 0; }
-  .st-dot.ok { background: hsl(142 71% 42%); box-shadow: 0 0 0 3px hsl(142 71% 42% / 0.18); }
-  .st-dot.warn { background: hsl(var(--warning)); box-shadow: 0 0 0 3px hsl(var(--warning) / 0.18); }
-  .st-name { font-weight: 500; }
-  .st-state { margin-left: auto; font-size: 12px; font-weight: 600; color: hsl(var(--muted-foreground)); }
+  /* Ticket form */
+  .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+  .field > label { font-size: 12.5px; font-weight: 600; }
+  .field .req { color: hsl(var(--danger)); }
+  .field input[type=text], .field textarea, .field select {
+    width: 100%; font: inherit; font-size: 13px; color: hsl(var(--foreground));
+    background: hsl(var(--background)); border: 1px solid hsl(var(--input));
+    border-radius: 9px; padding: 10px 12px; outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .field textarea { resize: vertical; min-height: 84px; line-height: 1.5; }
+  .field input::placeholder, .field textarea::placeholder { color: hsl(var(--muted-foreground)); }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: hsl(var(--ring)); background: hsl(var(--card)); box-shadow: 0 0 0 3px hsl(var(--ring) / 0.14); }
+  .field input.invalid, .field textarea.invalid, .select-wrap.invalid select { border-color: hsl(var(--danger)); box-shadow: 0 0 0 3px hsl(var(--danger) / 0.12); }
+  .select-wrap { position: relative; }
+  .select-wrap select { appearance: none; -webkit-appearance: none; padding-right: 36px; cursor: pointer; }
+  .select-caret { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: hsl(var(--muted-foreground)); pointer-events: none; width: 15px; height: 15px; }
+  .ticket-success { display: none; text-align: center; padding: 16px 6px; }
+  .ticket-success.show { display: block; }
+  .ts-ico { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 12px; display: grid; place-items: center; background: hsl(var(--success) / 0.12); color: hsl(var(--success)); }
+  .ts-ico svg { width: 28px; height: 28px; }
+  .ticket-success h3 { font-size: 16px; font-weight: 700; }
+  .ticket-success p { font-size: 12.5px; color: hsl(var(--muted-foreground)); margin-top: 5px; line-height: 1.5; }
+  .ticket-success .tk-code { display: inline-block; margin-top: 12px; font-size: 12.5px; font-weight: 700; background: hsl(var(--muted)); padding: 5px 12px; border-radius: 8px; letter-spacing: .04em; }
 
-  .ticket-card { background: hsl(var(--muted) / 0.5); border: 1px solid hsl(var(--border)); }
-  .ticket-card .tk-t { font-size: 14px; font-weight: 700; }
-  .ticket-card .tk-s { font-size: 12px; color: hsl(var(--muted-foreground)); margin-top: 4px; line-height: 1.5; }
+  /* My tickets */
+  .tkt { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid hsl(var(--border)); }
+  .tkt:last-child { border-bottom: none; padding-bottom: 0; }
+  .tkt:first-child { padding-top: 0; }
+  .tkt-ico { width: 34px; height: 34px; border-radius: 9px; flex: none; display: grid; place-items: center; }
+  .tkt-ico svg { width: 16px; height: 16px; }
+  .tkt-body { flex: 1; min-width: 0; }
+  .tkt-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tkt-meta { font-size: 11.5px; color: hsl(var(--muted-foreground)); margin-top: 2px; }
 
-  @media (max-width: 1320px) { .support-page { grid-template-columns: 1fr; } .rail { order: 0; } }
-  @media (max-width: 760px) { .cat-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 1180px) { .sup-grid { grid-template-columns: 1fr; } .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px)  { .cat-grid { grid-template-columns: 1fr; } .sup-hero h1 { font-size: 23px; } }
 </style>
 </head>
 <body>
@@ -83,7 +131,7 @@
 <div class="app">
 
   <!-- ============================== SIDEBAR ============================== -->
-  <aside class="sidebar">
+    <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
       <div>
@@ -119,15 +167,15 @@
         </button>
         <div class="nav-sub">
           <div class="nav-sub-inner">
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu tham khảo</a>
-            <a class="nav-subitem" href="#"><span class="nav-dot"></span> Tài liệu luyện thi</a>
+            <a class="nav-subitem" href="tai-lieu-tham-khao.html"><span class="nav-dot"></span> Tài liệu tham khảo</a>
+            <a class="nav-subitem" href="tai-lieu-luyen-thi.html"><span class="nav-dot"></span> Tài liệu luyện thi</a>
           </div>
         </div>
       </div>
       <a class="nav-item" href="notifications.html" data-tip="Thông báo"><i data-lucide="bell" class="icon"></i> Thông báo <span class="nav-badge">6</span></a>
       <a class="nav-item" href="tuition.html" data-tip="Học phí"><i data-lucide="circle-dollar-sign" class="icon"></i> Học phí</a>
       <a class="nav-item" href="registration.html" data-tip="Đăng ký môn học"><i data-lucide="clipboard-check" class="icon"></i> Đăng ký môn học</a>
-      <a class="nav-item active" href="support.html" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
+      <a class="nav-item active" href="#" data-tip="Hỗ trợ"><i data-lucide="life-buoy" class="icon"></i> Hỗ trợ</a>
       <a class="nav-item" href="settings.html" data-tip="Cài đặt"><i data-lucide="settings" class="icon"></i> Cài đặt</a>
     </nav>
 
@@ -139,7 +187,7 @@
           <div class="assistant-sub">Bạn cần hỗ trợ gì?</div>
         </div>
       </div>
-      <button class="assistant-btn"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
+      <button class="assistant-btn" onclick="window.location.href='ai-chat.html'"><i data-lucide="message-circle" class="icon-sm"></i> Chat ngay</button>
     </div>
   </aside>
 
@@ -147,7 +195,7 @@
   <div class="main">
 
     <!-- Topbar -->
-    <header class="topbar">
+        <header class="topbar">
       <button class="icon-btn" id="menuToggle" aria-label="Thu gọn menu"><i data-lucide="menu" class="icon-lg"></i></button>
       <div class="search">
         <i data-lucide="search" class="icon"></i>
@@ -157,6 +205,7 @@
         <button class="icon-btn" aria-label="Lịch"><i data-lucide="calendar" class="icon-lg"></i></button>
         <button class="icon-btn" aria-label="Thông báo"><i data-lucide="bell" class="icon-lg"></i><span class="dot-badge">6</span></button>
         <button class="icon-btn" aria-label="Tin nhắn"><i data-lucide="message-square" class="icon-lg"></i></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Chế độ sáng/tối"></button>
         <div class="profile-menu" id="profileMenu">
           <div class="profile" id="profileTrigger">
             <div class="profile-meta">
@@ -168,7 +217,7 @@
           </div>
           <div class="dropdown" role="menu">
             <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="user-round" class="icon-sm"></i> Tài khoản</a>
-            <a class="dropdown-item" href="#" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
+            <a class="dropdown-item" href="settings.html" role="menuitem"><i data-lucide="settings" class="icon-sm"></i> Cấu hình</a>
             <div class="dropdown-sep"></div>
             <a class="dropdown-item danger" href="#" role="menuitem"><i data-lucide="log-out" class="icon-sm"></i> Thoát</a>
           </div>
@@ -177,166 +226,221 @@
     </header>
 
     <!-- Content -->
-    <div class="content support-page">
-
+    <div class="content support-page" data-screen-label="Hỗ trợ">
       <div class="col-main">
 
-        <!-- Page header -->
-        <div class="page-head">
-          <h1>Trung tâm hỗ trợ</h1>
-          <p>Tìm câu trả lời nhanh hoặc liên hệ các phòng ban của trường</p>
+        <!-- Hero / search -->
+        <div class="sup-hero">
+          <div class="sup-hero-in">
+            <span class="eyebrow"><i data-lucide="life-buoy" style="width:13px;height:13px"></i> Trung tâm hỗ trợ</span>
+            <h1>Chúng tôi có thể giúp gì cho bạn?</h1>
+            <p>Tìm câu trả lời nhanh trong thư viện hướng dẫn, hoặc liên hệ trực tiếp với đội ngũ hỗ trợ kỹ thuật &amp; phòng đào tạo.</p>
+            <div class="sup-searchbox">
+              <i data-lucide="search"></i>
+              <input type="text" id="helpSearch" placeholder="Nhập câu hỏi của bạn, ví dụ: quên mật khẩu, nộp bài tập..." />
+              <button class="btn primary" id="helpSearchBtn">Tìm kiếm</button>
+            </div>
+            <div class="sup-suggest">
+              <span>Phổ biến:</span>
+              <a href="#" data-q="mật khẩu">Đặt lại mật khẩu</a>
+              <a href="#" data-q="nộp bài">Nộp bài tập</a>
+              <a href="#" data-q="học phí">Học phí</a>
+              <a href="#" data-q="điểm">Xem điểm</a>
+            </div>
+          </div>
         </div>
 
-        <!-- Hero search -->
-        <div class="help-hero">
-          <h2>Chúng tôi có thể giúp gì cho bạn?</h2>
-          <p>Tra cứu hướng dẫn, câu hỏi thường gặp và các kênh liên hệ.</p>
-          <div class="hero-search">
-            <i data-lucide="search"></i>
-            <input type="text" id="faqSearch" placeholder="Nhập câu hỏi của bạn, ví dụ: cách xem điểm, gia hạn học phí..." />
-          </div>
-          <div class="hero-tags">
-            <span class="hero-tag">Quên mật khẩu</span>
-            <span class="hero-tag">Xem điểm thi</span>
-            <span class="hero-tag">Gia hạn học phí</span>
-            <span class="hero-tag">Đăng ký môn học</span>
-          </div>
-        </div>
-
-        <!-- Categories -->
+        <!-- Category cards -->
         <div class="cat-grid">
-          <div class="cat-card">
+          <a class="cat-card" href="#faqSection" data-cat="account">
             <div class="cat-ico ico-tint-indigo"><i data-lucide="user-cog"></i></div>
-            <h3>Tài khoản &amp; đăng nhập</h3>
-            <p>Đặt lại mật khẩu, cập nhật thông tin cá nhân, bảo mật tài khoản.</p>
-            <span class="cat-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
-          </div>
-          <div class="cat-card">
-            <div class="cat-ico ico-tint-green"><i data-lucide="book-open"></i></div>
-            <h3>Học tập &amp; điểm số</h3>
-            <p>Đăng ký môn, nộp bài tập, tra cứu điểm và lịch thi.</p>
-            <span class="cat-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
-          </div>
-          <div class="cat-card">
-            <div class="cat-ico ico-tint-amber"><i data-lucide="wallet"></i></div>
-            <h3>Học phí &amp; thanh toán</h3>
-            <p>Nộp học phí, gia hạn, miễn giảm, học bổng và biên lai.</p>
-            <span class="cat-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
-          </div>
+            <div class="cc-title">Tài khoản &amp; Đăng nhập</div>
+            <div class="cc-sub">Mật khẩu, thông tin cá nhân, bảo mật tài khoản</div>
+            <span class="cc-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
+          </a>
+          <a class="cat-card" href="#faqSection" data-cat="learning">
+            <div class="cat-ico ico-tint-blue"><i data-lucide="book-open"></i></div>
+            <div class="cc-title">Học tập &amp; Bài tập</div>
+            <div class="cc-sub">Vào lớp, nộp bài, xem tài liệu, điểm số</div>
+            <span class="cc-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
+          </a>
+          <a class="cat-card" href="#faqSection" data-cat="tuition">
+            <div class="cat-ico ico-tint-green"><i data-lucide="circle-dollar-sign"></i></div>
+            <div class="cc-title">Học phí &amp; Thanh toán</div>
+            <div class="cc-sub">Đóng học phí, hóa đơn, miễn giảm</div>
+            <span class="cc-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
+          </a>
+          <a class="cat-card" href="#faqSection" data-cat="tech">
+            <div class="cat-ico ico-tint-amber"><i data-lucide="wrench"></i></div>
+            <div class="cc-title">Sự cố kỹ thuật</div>
+            <div class="cc-sub">Lỗi trang web, video, tải tệp, ứng dụng</div>
+            <span class="cc-link">Xem hướng dẫn <i data-lucide="arrow-right"></i></span>
+          </a>
         </div>
 
-        <!-- FAQ -->
-        <div class="card card-pad">
-          <div class="section-head">
-            <h2>Câu hỏi thường gặp</h2>
-            <span class="badge blue">6 câu hỏi</span>
+        <!-- Two-column body -->
+        <div class="sup-grid">
+
+          <!-- FAQ -->
+          <div class="card card-pad" id="faqSection">
+            <div class="section-head"><h2>Câu hỏi thường gặp</h2></div>
+
+            <div class="faq-tabs" id="faqTabs">
+              <button class="faq-tab active" data-cat="all">Tất cả</button>
+              <button class="faq-tab" data-cat="account">Tài khoản</button>
+              <button class="faq-tab" data-cat="learning">Học tập</button>
+              <button class="faq-tab" data-cat="tuition">Học phí</button>
+              <button class="faq-tab" data-cat="tech">Kỹ thuật</button>
+            </div>
+
+            <div id="faqList">
+              <div class="faq-item" data-cat="account">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="key-round"></i></div><div class="fq-text">Tôi quên mật khẩu đăng nhập, phải làm sao?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Tại màn hình đăng nhập, chọn <strong>"Quên mật khẩu"</strong> và nhập email sinh viên (định dạng <strong>mssv@university.edu.vn</strong>). Hệ thống sẽ gửi liên kết đặt lại mật khẩu trong vòng vài phút. Nếu không nhận được email, hãy kiểm tra hộp thư Spam hoặc liên hệ phòng CNTT qua hotline bên cạnh.</div>
+              </div>
+              <div class="faq-item" data-cat="account">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="id-card"></i></div><div class="fq-text">Làm sao để cập nhật thông tin cá nhân và ảnh đại diện?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Vào <strong>Cài đặt → Tài khoản</strong>, bạn có thể chỉnh sửa số điện thoại, email phụ và ảnh đại diện. Lưu ý: họ tên và mã số sinh viên do phòng Đào tạo quản lý — nếu sai sót, vui lòng gửi yêu cầu hỗ trợ kèm minh chứng.</div>
+              </div>
+              <div class="faq-item" data-cat="learning">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="upload"></i></div><div class="fq-text">Cách nộp bài tập và kiểm tra bài đã nộp thành công?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Mở môn học → tab <strong>Bài tập</strong> → chọn bài cần nộp → <strong>"Nộp bài"</strong> và tải tệp lên (PDF, DOCX, ZIP, tối đa 50MB). Sau khi nộp, trạng thái sẽ chuyển sang <strong>"Đã nộp"</strong> kèm thời gian. Bạn có thể nộp lại trước hạn — hệ thống lưu phiên bản mới nhất.</div>
+              </div>
+              <div class="faq-item" data-cat="learning">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="video"></i></div><div class="fq-text">Tôi không vào được lớp học trực tuyến?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Nút <strong>"Vào lớp trực tuyến"</strong> chỉ hoạt động trong khung giờ buổi học. Hãy đảm bảo trình duyệt cho phép truy cập micro/camera và sử dụng Chrome hoặc Edge bản mới nhất. Nếu vẫn lỗi, thử tải lại trang hoặc xem lại bản ghi hình trong tab <strong>Tài liệu</strong>.</div>
+              </div>
+              <div class="faq-item" data-cat="learning">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="bar-chart-3"></i></div><div class="fq-text">Khi nào điểm thành phần và điểm thi được công bố?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Điểm chuyên cần và bài tập được cập nhật liên tục trong tab <strong>Điểm số</strong> của môn học. Điểm thi cuối kỳ thường công bố sau <strong>7–14 ngày</strong> kể từ ngày thi. Bạn sẽ nhận thông báo khi có điểm mới.</div>
+              </div>
+              <div class="faq-item" data-cat="tuition">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="credit-card"></i></div><div class="fq-text">Tôi có thể đóng học phí bằng những hình thức nào?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Vào mục <strong>Học phí</strong>, bạn có thể thanh toán qua chuyển khoản ngân hàng, ví điện tử (Momo, ZaloPay, VNPay) hoặc thẻ nội địa/quốc tế. Hóa đơn điện tử sẽ được phát hành tự động sau 24 giờ. Mọi thắc mắc về số tiền vui lòng liên hệ phòng Tài chính.</div>
+              </div>
+              <div class="faq-item" data-cat="tuition">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="receipt"></i></div><div class="fq-text">Làm sao để xin xác nhận đã đóng học phí?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Sau khi thanh toán thành công, vào <strong>Học phí → Lịch sử giao dịch</strong> để tải biên lai PDF. Nếu cần dấu xác nhận của trường, hãy gửi yêu cầu hỗ trợ với loại <strong>"Học phí &amp; Thanh toán"</strong>.</div>
+              </div>
+              <div class="faq-item" data-cat="tech">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="monitor-x"></i></div><div class="fq-text">Trang web tải chậm hoặc hiển thị lỗi, tôi nên làm gì?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Hãy thử <strong>xóa bộ nhớ đệm (cache)</strong> và tải lại trang bằng tổ hợp <strong>Ctrl + Shift + R</strong>. Đảm bảo kết nối mạng ổn định và trình duyệt được cập nhật. Nếu sự cố vẫn tiếp diễn, gửi yêu cầu hỗ trợ kèm ảnh chụp màn hình để chúng tôi xử lý nhanh hơn.</div>
+              </div>
+              <div class="faq-item" data-cat="tech">
+                <div class="faq-q"><div class="fq-ico"><i data-lucide="smartphone"></i></div><div class="fq-text">Có ứng dụng di động cho LMS Portal không?</div><i data-lucide="chevron-down" class="fq-caret"></i></div>
+                <div class="faq-a">Có. Ứng dụng <strong>LMS Portal</strong> hiện có trên App Store và Google Play. Đăng nhập bằng cùng tài khoản sinh viên để nhận thông báo, xem lịch học và nộp bài ngay trên điện thoại.</div>
+              </div>
+            </div>
+            <div class="faq-empty" id="faqEmpty"><i data-lucide="search-x" style="width:34px;height:34px;opacity:.5;display:block;margin:0 auto 10px"></i>Không tìm thấy câu hỏi phù hợp. Hãy thử từ khóa khác hoặc gửi yêu cầu hỗ trợ.</div>
           </div>
-          <div class="faq" id="faq">
 
-            <div class="faq-item open">
-              <button class="faq-q"><span class="faq-num">1</span> Tôi quên mật khẩu đăng nhập, phải làm sao?</button>
-              <div class="faq-a">
-                <div class="faq-a-inner">Tại màn hình đăng nhập, bấm "Quên mật khẩu" và nhập email sinh viên của bạn. Hệ thống sẽ gửi liên kết đặt lại mật khẩu trong vòng vài phút. Nếu không nhận được email, hãy kiểm tra mục Spam hoặc liên hệ Phòng CNTT.</div>
+          <!-- Right rail -->
+          <aside class="rail">
+
+            <!-- Contact channels -->
+            <div class="card card-pad">
+              <div class="section-head"><h2>Liên hệ trực tiếp</h2></div>
+
+              <div class="chan">
+                <div class="chan-ico ico-tint-indigo"><i data-lucide="message-circle"></i></div>
+                <div class="chan-body">
+                  <div class="chan-title">Chat trực tuyến <span class="chan-status st-online"><span class="pip"></span>Đang mở</span></div>
+                  <div class="chan-sub">Phản hồi tức thì · 7:30 – 21:00 hằng ngày</div>
+                  <div class="chan-action"><button class="btn primary" id="openChat"><i data-lucide="message-circle" class="icon-sm"></i> Bắt đầu chat</button></div>
+                </div>
+              </div>
+
+              <div class="chan">
+                <div class="chan-ico ico-tint-blue"><i data-lucide="phone"></i></div>
+                <div class="chan-body">
+                  <div class="chan-title">Hotline hỗ trợ</div>
+                  <div class="chan-sub">1900 1234 (nhánh 2) · Giờ hành chính, T2–T6</div>
+                  <div class="chan-action"><a class="btn" href="tel:19001234"><i data-lucide="phone" class="icon-sm"></i> Gọi ngay</a></div>
+                </div>
+              </div>
+
+              <div class="chan">
+                <div class="chan-ico ico-tint-green"><i data-lucide="mail"></i></div>
+                <div class="chan-body">
+                  <div class="chan-title">Email</div>
+                  <div class="chan-sub">hotro@university.edu.vn · phản hồi trong 24h</div>
+                  <div class="chan-action"><a class="btn" href="mailto:hotro@university.edu.vn"><i data-lucide="mail" class="icon-sm"></i> Gửi email</a></div>
+                </div>
+              </div>
+
+              <div class="chan">
+                <div class="chan-ico ico-tint-amber"><i data-lucide="map-pin"></i></div>
+                <div class="chan-body">
+                  <div class="chan-title">Văn phòng hỗ trợ</div>
+                  <div class="chan-sub">Phòng A1-102, tầng 1 nhà A1 · 8:00 – 17:00</div>
+                </div>
               </div>
             </div>
 
-            <div class="faq-item">
-              <button class="faq-q"><span class="faq-num">2</span> Làm thế nào để xem điểm thi cuối kỳ?</button>
-              <div class="faq-a">
-                <div class="faq-a-inner">Vào mục "Kết quả học tập" ở thanh điều hướng bên trái. Điểm thường được công bố trong vòng 2 tuần sau ngày thi. Bạn có thể lọc theo học kỳ và tải bảng điểm dạng PDF.</div>
+            <!-- Submit ticket -->
+            <div class="card card-pad">
+              <div class="section-head"><h2>Gửi yêu cầu hỗ trợ</h2></div>
+
+              <form id="ticketForm" novalidate>
+                <div class="field">
+                  <label for="tkCat">Loại vấn đề <span class="req">*</span></label>
+                  <div class="select-wrap">
+                    <select id="tkCat" required>
+                      <option value="" disabled selected>Chọn loại vấn đề...</option>
+                      <option>Tài khoản &amp; Đăng nhập</option>
+                      <option>Học tập &amp; Bài tập</option>
+                      <option>Học phí &amp; Thanh toán</option>
+                      <option>Sự cố kỹ thuật</option>
+                      <option>Khác</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="select-caret"></i>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="tkSubject">Tiêu đề <span class="req">*</span></label>
+                  <input type="text" id="tkSubject" placeholder="Tóm tắt ngắn gọn vấn đề của bạn" required />
+                </div>
+                <div class="field">
+                  <label for="tkMsg">Mô tả chi tiết <span class="req">*</span></label>
+                  <textarea id="tkMsg" placeholder="Mô tả cụ thể vấn đề, các bước đã thử và mã lỗi (nếu có)..." required></textarea>
+                </div>
+                <button class="btn primary" type="submit" style="width:100%;justify-content:center"><i data-lucide="send" class="icon-sm"></i> Gửi yêu cầu</button>
+              </form>
+
+              <div class="ticket-success" id="ticketSuccess">
+                <div class="ts-ico"><i data-lucide="check"></i></div>
+                <h3>Đã gửi yêu cầu!</h3>
+                <p>Đội ngũ hỗ trợ sẽ phản hồi qua email và mục Thông báo trong vòng 24 giờ làm việc.</p>
+                <div class="tk-code" id="tkCode">#YC-000000</div>
+                <div style="margin-top:14px"><button class="btn" id="tkNew">Gửi yêu cầu khác</button></div>
               </div>
             </div>
 
-            <div class="faq-item">
-              <button class="faq-q"><span class="faq-num">3</span> Tôi có thể gia hạn thời gian nộp học phí không?</button>
-              <div class="faq-a">
-                <div class="faq-a-inner">Sinh viên có hoàn cảnh khó khăn có thể nộp đơn xin gia hạn tại Phòng Tài chính – Kế toán trước hạn nộp ít nhất 5 ngày làm việc. Đơn cần có xác nhận của cố vấn học tập.</div>
+            <!-- My tickets -->
+            <div class="card card-pad">
+              <div class="section-head"><h2>Yêu cầu của tôi</h2></div>
+              <div class="tkt">
+                <div class="tkt-ico ico-tint-amber"><i data-lucide="loader"></i></div>
+                <div class="tkt-body"><div class="tkt-title">Lỗi không tải được Lecture 7.pdf</div><div class="tkt-meta">#YC-204871 · 30/05</div></div>
+                <span class="badge amber">Đang xử lý</span>
+              </div>
+              <div class="tkt">
+                <div class="tkt-ico ico-tint-green"><i data-lucide="check-circle-2"></i></div>
+                <div class="tkt-body"><div class="tkt-title">Yêu cầu xác nhận học phí HK1</div><div class="tkt-meta">#YC-203650 · 22/05</div></div>
+                <span class="badge green">Đã xong</span>
               </div>
             </div>
 
-            <div class="faq-item">
-              <button class="faq-q"><span class="faq-num">4</span> Số tín chỉ tối thiểu và tối đa mỗi học kỳ là bao nhiêu?</button>
-              <div class="faq-a">
-                <div class="faq-a-inner">Mỗi học kỳ, sinh viên cần đăng ký tối thiểu 12 tín chỉ và tối đa 24 tín chỉ. Sinh viên thuộc diện cảnh báo học vụ sẽ bị giới hạn ở mức thấp hơn theo quy định.</div>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-q"><span class="faq-num">5</span> Tôi nộp nhầm bài tập, có thể nộp lại không?</button>
-              <div class="faq-a">
-                <div class="faq-a-inner">Nếu thời hạn nộp vẫn còn, bạn có thể tải lên phiên bản mới — hệ thống tự động lưu bản nộp gần nhất. Sau khi hết hạn, vui lòng liên hệ trực tiếp giảng viên phụ trách học phần.</div>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-q"><span class="faq-num">6</span> Làm sao để đăng ký học lại / học cải thiện?</button>
-              <div class="faq-a">
-                <div class="faq-a-inner">Trong đợt đăng ký môn học, vào mục "Đăng ký môn học" và tìm học phần cần học lại. Học phần đã đạt nhưng muốn cải thiện điểm sẽ được đánh dấu riêng; điểm cao nhất sẽ được tính vào điểm trung bình tích lũy.</div>
-              </div>
-            </div>
-
-          </div>
-          <div class="cart-empty" id="faqEmpty" style="display:none;text-align:center;padding:24px;color:hsl(var(--muted-foreground));font-size:13px;">Không tìm thấy câu hỏi phù hợp. Hãy thử từ khóa khác hoặc gửi yêu cầu hỗ trợ.</div>
+          </aside>
         </div>
 
       </div>
-
-      <!-- =============================== RAIL =============================== -->
-      <aside class="rail">
-
-        <!-- Contact channels -->
-        <div class="card card-pad contact-card">
-          <div class="section-head" style="margin-bottom:6px;">
-            <h2>Liên hệ trực tiếp</h2>
-          </div>
-          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
-            <div class="cc-ico ico-tint-green"><i data-lucide="message-circle"></i></div>
-            <div class="cc-body"><div class="cc-t">Chat với AI Assistant</div><div class="cc-s">Phản hồi tức thì · 24/7</div></div>
-            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
-          </a>
-          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
-            <div class="cc-ico ico-tint-indigo"><i data-lucide="phone"></i></div>
-            <div class="cc-body"><div class="cc-t">Tổng đài sinh viên</div><div class="cc-s">(024) 3754 7461 · 8:00–17:00</div></div>
-            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
-          </a>
-          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
-            <div class="cc-ico ico-tint-blue"><i data-lucide="mail"></i></div>
-            <div class="cc-body"><div class="cc-t">Email hỗ trợ</div><div class="cc-s">hotro@lms.edu.vn</div></div>
-            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
-          </a>
-          <a class="cc-row" href="#" style="text-decoration:none;color:inherit;">
-            <div class="cc-ico ico-tint-amber"><i data-lucide="map-pin"></i></div>
-            <div class="cc-body"><div class="cc-t">Văn phòng một cửa</div><div class="cc-s">Tầng 1, Nhà G2 · Phòng 102</div></div>
-            <div class="cc-arr"><i data-lucide="chevron-right"></i></div>
-          </a>
-        </div>
-
-        <!-- System status -->
-        <div class="card card-pad status-card">
-          <div class="section-head" style="margin-bottom:6px;">
-            <h2>Tình trạng hệ thống</h2>
-          </div>
-          <div class="st-row"><span class="st-dot ok"></span><span class="st-name">Cổng đăng nhập</span><span class="st-state">Hoạt động</span></div>
-          <div class="st-row"><span class="st-dot ok"></span><span class="st-name">Hệ thống đăng ký môn</span><span class="st-state">Hoạt động</span></div>
-          <div class="st-row"><span class="st-dot ok"></span><span class="st-name">Thanh toán học phí</span><span class="st-state">Hoạt động</span></div>
-          <div class="st-row"><span class="st-dot warn"></span><span class="st-name">Tra cứu điểm</span><span class="st-state">Bảo trì 23:00</span></div>
-        </div>
-
-        <!-- Submit ticket -->
-        <div class="card card-pad ticket-card">
-          <div class="tk-t">Chưa tìm được câu trả lời?</div>
-          <div class="tk-s">Gửi yêu cầu hỗ trợ và đội ngũ của trường sẽ phản hồi trong vòng 1 ngày làm việc.</div>
-          <button class="btn primary" id="ticketBtn" style="margin-top:13px;width:100%;justify-content:center;"><i data-lucide="send" class="icon-sm"></i> Gửi yêu cầu hỗ trợ</button>
-        </div>
-
-      </aside>
-
     </div>
-
   </div>
 </div>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
 <script>
   lucide.createIcons();
 
@@ -360,51 +464,98 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') profileMenu.classList.remove('open'); });
   }
 
-  // Expandable nav groups
+  // Nav groups
   document.querySelectorAll('.nav-group .nav-parent').forEach(p => {
     p.addEventListener('click', () => p.closest('.nav-group').classList.toggle('open'));
   });
 
   // FAQ accordion
-  const faq = document.getElementById('faq');
-  faq.querySelectorAll('.faq-item').forEach(item => {
-    const q = item.querySelector('.faq-q');
-    const a = item.querySelector('.faq-a');
-    function setH() { a.style.maxHeight = item.classList.contains('open') ? a.scrollHeight + 'px' : '0'; }
-    if (item.classList.contains('open')) setH();
-    q.addEventListener('click', () => {
-      const wasOpen = item.classList.contains('open');
-      faq.querySelectorAll('.faq-item').forEach(o => { o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight = '0'; });
-      if (!wasOpen) { item.classList.add('open'); setH(); }
-    });
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.closest('.faq-item').classList.toggle('open'));
   });
 
-  // FAQ search
-  const faqSearch = document.getElementById('faqSearch');
+  // FAQ category filter
+  const faqTabs = document.getElementById('faqTabs');
+  const faqItems = Array.from(document.querySelectorAll('#faqList .faq-item'));
   const faqEmpty = document.getElementById('faqEmpty');
-  faqSearch.addEventListener('input', () => {
-    const query = faqSearch.value.trim().toLowerCase();
-    let visible = 0;
-    faq.querySelectorAll('.faq-item').forEach(item => {
-      const text = item.textContent.toLowerCase();
-      const show = !query || text.includes(query);
-      item.style.display = show ? 'block' : 'none';
-      if (show) visible++;
+  let activeCat = 'all';
+  let activeQuery = '';
+
+  function applyFaqFilter() {
+    let shown = 0;
+    faqItems.forEach(item => {
+      const matchCat = activeCat === 'all' || item.dataset.cat === activeCat;
+      const text = item.querySelector('.fq-text').textContent.toLowerCase() + ' ' + item.querySelector('.faq-a').textContent.toLowerCase();
+      const matchQuery = !activeQuery || text.includes(activeQuery);
+      const show = matchCat && matchQuery;
+      item.classList.toggle('faq-hidden', !show);
+      if (show) shown++;
     });
-    faqEmpty.style.display = visible ? 'none' : 'block';
+    faqEmpty.classList.toggle('show', shown === 0);
+  }
+
+  faqTabs.addEventListener('click', e => {
+    const btn = e.target.closest('.faq-tab');
+    if (!btn) return;
+    faqTabs.querySelectorAll('.faq-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    applyFaqFilter();
   });
 
-  // Hero tags fill search
-  document.querySelectorAll('.hero-tag').forEach(t => {
-    t.addEventListener('click', () => {
-      faqSearch.value = t.textContent;
-      faqSearch.dispatchEvent(new Event('input'));
-      faqSearch.focus();
+  // Category cards → set FAQ filter
+  document.querySelectorAll('.cat-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const cat = card.dataset.cat;
+      const tab = faqTabs.querySelector('.faq-tab[data-cat="' + cat + '"]');
+      if (tab) { faqTabs.querySelectorAll('.faq-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); activeCat = cat; applyFaqFilter(); }
     });
   });
 
-  document.getElementById('ticketBtn').addEventListener('click', () => {
-    alert('Biểu mẫu gửi yêu cầu hỗ trợ sẽ mở ở đây.');
+  // Help search
+  const helpSearch = document.getElementById('helpSearch');
+  function runSearch() {
+    activeQuery = helpSearch.value.trim().toLowerCase();
+    // reset category to all when searching so results aren't double-filtered
+    if (activeQuery) { faqTabs.querySelectorAll('.faq-tab').forEach(t => t.classList.remove('active')); faqTabs.querySelector('.faq-tab[data-cat="all"]').classList.add('active'); activeCat = 'all'; }
+    document.getElementById('faqSection').scrollIntoView ? null : null;
+    applyFaqFilter();
+  }
+  helpSearch.addEventListener('input', runSearch);
+  document.getElementById('helpSearchBtn').addEventListener('click', e => { e.preventDefault(); runSearch(); document.getElementById('faqSection').classList.add('flash'); });
+  document.querySelectorAll('.sup-suggest a').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); helpSearch.value = a.dataset.q; runSearch(); });
+  });
+
+  // Chat button → AI assistant cue
+  document.getElementById('openChat').addEventListener('click', () => {
+    const btn = document.querySelector('.assistant-btn');
+    if (btn) { btn.style.outline = '3px solid hsl(var(--ring) / .5)'; btn.style.outlineOffset = '2px'; setTimeout(() => { btn.style.outline = ''; }, 1400); }
+  });
+
+  // Ticket form
+  const ticketForm = document.getElementById('ticketForm');
+  const ticketSuccess = document.getElementById('ticketSuccess');
+  ticketForm.addEventListener('submit', e => {
+    e.preventDefault();
+    let ok = true;
+    const cat = document.getElementById('tkCat');
+    const subject = document.getElementById('tkSubject');
+    const msg = document.getElementById('tkMsg');
+    [[cat, cat.closest('.select-wrap')], [subject, subject], [msg, msg]].forEach(([input, target]) => {
+      if (!input.value.trim()) { target.classList.add('invalid'); ok = false; } else { target.classList.remove('invalid'); }
+    });
+    if (!ok) return;
+    document.getElementById('tkCode').textContent = '#YC-' + Math.floor(200000 + Math.random() * 800000);
+    ticketForm.style.display = 'none';
+    ticketSuccess.classList.add('show');
+  });
+  [['tkSubject'], ['tkMsg']].forEach(([id]) => document.getElementById(id).addEventListener('input', e => e.target.classList.remove('invalid')));
+  document.getElementById('tkCat').addEventListener('change', e => e.target.closest('.select-wrap').classList.remove('invalid'));
+  document.getElementById('tkNew').addEventListener('click', () => {
+    ticketForm.reset();
+    ticketForm.style.display = '';
+    ticketSuccess.classList.remove('show');
   });
 </script>
 </body>

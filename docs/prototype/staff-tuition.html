@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Thu học phí</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+</head>
+<body data-active="tuition">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content single">
+      <div class="page" data-screen-label="Thu học phí">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Thu học phí</h1>
+            <p>Học kỳ II, 2025 - 2026 · hạn chốt công nợ 20/06/2026</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="download" class="icon-sm"></i> Xuất công nợ</button>
+            <button class="btn lg"><i data-lucide="send" class="icon-sm"></i> Gửi nhắc nợ đợt 3</button>
+            <button class="btn lg primary"><i data-lucide="receipt" class="icon-sm"></i> Ghi nhận thanh toán</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-indigo"><i data-lucide="wallet" class="icon"></i></div>
+            <div class="ms-val">38,4 tỷ</div>
+            <div class="ms-lbl">Tổng phải thu HK II</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-green"><i data-lucide="banknote" class="icon"></i></div>
+            <div class="ms-val" style="color:hsl(142 64% 32%)">29,9 tỷ</div>
+            <div class="ms-lbl">Đã thu · 78%</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-amber"><i data-lucide="hourglass" class="icon"></i></div>
+            <div class="ms-val">8,5 tỷ</div>
+            <div class="ms-lbl">Còn phải thu · 412 SV</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-red"><i data-lucide="clock-alert" class="icon"></i></div>
+            <div class="ms-val" style="color:hsl(var(--danger))">86</div>
+            <div class="ms-lbl">SV quá hạn đợt 2</div>
+          </div>
+        </div>
+
+        <div class="split">
+          <!-- Danh sách công nợ -->
+          <div class="card card-pad">
+            <div class="filter-row">
+              <div class="tabs" id="payTabs">
+                <button class="tab active" data-st="all">Tất cả</button>
+                <button class="tab" data-st="part">Đóng một phần</button>
+                <button class="tab" data-st="due">Quá hạn <span class="tab-count">86</span></button>
+                <button class="tab" data-st="paid">Đã đóng đủ</button>
+              </div>
+              <div class="filter-search" style="margin-left:auto">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Tìm MSSV, họ tên..." />
+              </div>
+              <div class="select-mini">
+                <select>
+                  <option>Tất cả khóa</option>
+                  <option>K21</option>
+                  <option>K22</option>
+                  <option>K23</option>
+                  <option>K24</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+            </div>
+
+            <div class="tbl-wrap">
+              <table class="tbl" id="payTbl">
+                <thead>
+                  <tr>
+                    <th>Sinh viên</th>
+                    <th class="num">Phải nộp</th>
+                    <th class="num">Đã nộp</th>
+                    <th class="num">Còn nợ</th>
+                    <th>Trạng thái</th>
+                    <th class="num">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-st="due">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(0 72% 51%)">QB</div><div><div class="nm">Nguyễn Quốc Bảo</div><div class="sub">21520034 · CNTT-K21A</div></div></div></td>
+                    <td class="num"><span class="money">12.500.000 ₫</span></td>
+                    <td class="num"><span class="money">0 ₫</span></td>
+                    <td class="num"><span class="money neg">12.500.000 ₫</span></td>
+                    <td><span class="stt bad">Quá hạn đợt 2</span></td>
+                    <td class="num">
+                      <span class="act-pair">
+                        <button class="icon-act" title="Gửi nhắc nợ"><i data-lucide="send" class="icon-sm"></i></button>
+                        <button class="icon-act ok" title="Ghi nhận thanh toán"><i data-lucide="receipt" class="icon-sm"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr data-st="part">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(142 71% 40%)">LB</div><div><div class="nm">Lê Thị Bình</div><div class="sub">23520188 · CNTT-K23B</div></div></div></td>
+                    <td class="num"><span class="money">11.250.000 ₫</span></td>
+                    <td class="num"><span class="money">5.000.000 ₫</span></td>
+                    <td class="num"><span class="money neg">6.250.000 ₫</span></td>
+                    <td><span class="stt warn">Gia hạn đến 30/06</span></td>
+                    <td class="num">
+                      <span class="act-pair">
+                        <button class="icon-act" title="Gửi nhắc nợ"><i data-lucide="send" class="icon-sm"></i></button>
+                        <button class="icon-act ok" title="Ghi nhận thanh toán"><i data-lucide="receipt" class="icon-sm"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr data-st="due">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(32 95% 48%)">TN</div><div><div class="nm">Bùi Thanh Nam</div><div class="sub">23520412 · CNTT-K23B</div></div></div></td>
+                    <td class="num"><span class="money">11.250.000 ₫</span></td>
+                    <td class="num"><span class="money">3.000.000 ₫</span></td>
+                    <td class="num"><span class="money neg">8.250.000 ₫</span></td>
+                    <td><span class="stt bad">Quá hạn đợt 2</span></td>
+                    <td class="num">
+                      <span class="act-pair">
+                        <button class="icon-act" title="Gửi nhắc nợ"><i data-lucide="send" class="icon-sm"></i></button>
+                        <button class="icon-act ok" title="Ghi nhận thanh toán"><i data-lucide="receipt" class="icon-sm"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr data-st="part">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(262 83% 58%)">MK</div><div><div class="nm">Đỗ Minh Khôi</div><div class="sub">21520267 · CNTT-K21B</div></div></div></td>
+                    <td class="num"><span class="money">12.500.000 ₫</span></td>
+                    <td class="num"><span class="money">8.000.000 ₫</span></td>
+                    <td class="num"><span class="money neg">4.500.000 ₫</span></td>
+                    <td><span class="stt warn">Đóng một phần</span></td>
+                    <td class="num">
+                      <span class="act-pair">
+                        <button class="icon-act" title="Gửi nhắc nợ"><i data-lucide="send" class="icon-sm"></i></button>
+                        <button class="icon-act ok" title="Ghi nhận thanh toán"><i data-lucide="receipt" class="icon-sm"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr data-st="paid">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(243 75% 59%)">TA</div><div><div class="nm">Trần Văn An</div><div class="sub">21520011 · CNTT-K21A</div></div></div></td>
+                    <td class="num"><span class="money">12.500.000 ₫</span></td>
+                    <td class="num"><span class="money pos">12.500.000 ₫</span></td>
+                    <td class="num"><span class="money">0 ₫</span></td>
+                    <td><span class="stt ok">Đã đóng đủ</span></td>
+                    <td class="num"><button class="icon-act" title="Xem biên lai"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                  </tr>
+                  <tr data-st="due">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(217 91% 50%)">HN</div><div><div class="nm">Hoàng Thị Ngọc</div><div class="sub">23520093 · CNTT-K23A</div></div></div></td>
+                    <td class="num"><span class="money">11.250.000 ₫</span></td>
+                    <td class="num"><span class="money">0 ₫</span></td>
+                    <td class="num"><span class="money neg">11.250.000 ₫</span></td>
+                    <td><span class="stt bad">Quá hạn · chờ đơn nghỉ học</span></td>
+                    <td class="num">
+                      <span class="act-pair">
+                        <button class="icon-act" title="Gửi nhắc nợ"><i data-lucide="send" class="icon-sm"></i></button>
+                        <button class="icon-act" title="Xem hồ sơ"><i data-lucide="eye" class="icon-sm"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr data-st="part">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(172 66% 36%)">PC</div><div><div class="nm">Phạm Hoàng Cường</div><div class="sub">22520301 · CNTT-K22A</div></div></div></td>
+                    <td class="num"><span class="money">11.875.000 ₫</span></td>
+                    <td class="num"><span class="money">6.000.000 ₫</span></td>
+                    <td class="num"><span class="money neg">5.875.000 ₫</span></td>
+                    <td><span class="stt warn">Đóng một phần</span></td>
+                    <td class="num">
+                      <span class="act-pair">
+                        <button class="icon-act" title="Gửi nhắc nợ"><i data-lucide="send" class="icon-sm"></i></button>
+                        <button class="icon-act ok" title="Ghi nhận thanh toán"><i data-lucide="receipt" class="icon-sm"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr data-st="paid">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(142 71% 40%)">VH</div><div><div class="nm">Ngô Việt Hoàng</div><div class="sub">24520076 · CNTT-K24A</div></div></div></td>
+                    <td class="num"><span class="money">10.800.000 ₫</span></td>
+                    <td class="num"><span class="money pos">10.800.000 ₫</span></td>
+                    <td class="num"><span class="money">0 ₫</span></td>
+                    <td><span class="stt ok">Đã đóng đủ</span></td>
+                    <td class="num"><button class="icon-act" title="Xem biên lai"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                  </tr>
+                  <tr data-st="due">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(262 83% 58%)">TL</div><div><div class="nm">Đặng Thùy Linh</div><div class="sub">24520154 · CNTT-K24B</div></div></div></td>
+                    <td class="num"><span class="money">10.800.000 ₫</span></td>
+                    <td class="num"><span class="money">2.000.000 ₫</span></td>
+                    <td class="num"><span class="money neg">8.800.000 ₫</span></td>
+                    <td><span class="stt bad">Quá hạn đợt 2</span></td>
+                    <td class="num">
+                      <span class="act-pair">
+                        <button class="icon-act" title="Gửi nhắc nợ"><i data-lucide="send" class="icon-sm"></i></button>
+                        <button class="icon-act ok" title="Ghi nhận thanh toán"><i data-lucide="receipt" class="icon-sm"></i></button>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr data-st="paid">
+                    <td><div class="cell-user"><div class="av" style="background:hsl(32 95% 48%)">GH</div><div><div class="nm">Vũ Gia Hân</div><div class="sub">22520442 · CNTT-K22B</div></div></div></td>
+                    <td class="num"><span class="money">11.875.000 ₫</span></td>
+                    <td class="num"><span class="money pos">11.875.000 ₫</span></td>
+                    <td class="num"><span class="money">0 ₫</span></td>
+                    <td><span class="stt ok">Đã đóng đủ</span></td>
+                    <td class="num"><button class="icon-act" title="Xem biên lai"><i data-lucide="eye" class="icon-sm"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Rail: tổng quan + giao dịch -->
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="card card-pad">
+              <div class="section-head"><h2>Cơ cấu thu</h2></div>
+              <div class="results-body" style="flex-direction:column;align-items:center">
+                <div class="donut">
+                  <svg width="132" height="132" viewBox="0 0 132 132">
+                    <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--muted))" stroke-width="16"/>
+                    <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-1))" stroke-width="16" stroke-dasharray="232.3 351.9" stroke-dashoffset="0"/>
+                    <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-3))" stroke-width="16" stroke-dasharray="70.4 351.9" stroke-dashoffset="-232.3"/>
+                    <circle cx="66" cy="66" r="56" fill="none" stroke="hsl(var(--chart-4))" stroke-width="16" stroke-dasharray="49.2 351.9" stroke-dashoffset="-302.7"/>
+                  </svg>
+                  <div class="donut-center">
+                    <div>
+                      <div class="big">78%</div>
+                      <div class="small">đã thu</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="legend" style="width:100%;margin-top:14px">
+                  <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-1))"></span><span class="lbl">Đã đóng đủ</span><span class="val">1.892 SV (66%)</span></div>
+                  <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-3))"></span><span class="lbl">Đóng một phần</span><span class="val">326 SV (20%)</span></div>
+                  <div class="legend-row"><span class="dot" style="background:hsl(var(--chart-4))"></span><span class="lbl">Chưa đóng / quá hạn</span><span class="val">86 SV (14%)</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="section-head"><h2>Giao dịch gần đây</h2><a class="link" href="#">Tất cả</a></div>
+              <div class="notif">
+                <div class="notif-ico ico-tint-green"><i data-lucide="banknote" class="icon-sm"></i></div>
+                <div>
+                  <div class="notif-title">Trần Văn An · 12.500.000 ₫</div>
+                  <div class="notif-sub">Chuyển khoản · VCB · đã khớp biên lai</div>
+                  <div class="notif-time">10 phút trước</div>
+                </div>
+              </div>
+              <div class="notif">
+                <div class="notif-ico ico-tint-amber"><i data-lucide="hourglass" class="icon-sm"></i></div>
+                <div>
+                  <div class="notif-title">Vũ Gia Hân · 11.875.000 ₫</div>
+                  <div class="notif-sub">Chuyển khoản · chờ đối soát</div>
+                  <div class="notif-time">35 phút trước</div>
+                </div>
+                <span class="notif-unread"></span>
+              </div>
+              <div class="notif">
+                <div class="notif-ico ico-tint-green"><i data-lucide="banknote" class="icon-sm"></i></div>
+                <div>
+                  <div class="notif-title">Ngô Việt Hoàng · 10.800.000 ₫</div>
+                  <div class="notif-sub">Cổng thanh toán · đã khớp biên lai</div>
+                  <div class="notif-time">1 giờ trước</div>
+                </div>
+              </div>
+              <div class="notif">
+                <div class="notif-ico ico-tint-blue"><i data-lucide="receipt" class="icon-sm"></i></div>
+                <div>
+                  <div class="notif-title">Đỗ Minh Khôi · 4.000.000 ₫</div>
+                  <div class="notif-sub">Tiền mặt tại quầy · biên lai #20486</div>
+                  <div class="notif-time">Hôm nay, 08:55</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script>
+  lucide.createIcons();
+  // Payment status tab filtering
+  (function(){
+    const tabs = document.querySelectorAll('#payTabs .tab');
+    const rows = document.querySelectorAll('#payTbl tbody tr');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const st = t.dataset.st;
+      rows.forEach(r => { r.style.display = (st === 'all' || r.dataset.st === st) ? '' : 'none'; });
+    }));
+  })();
+</script>
+</body>
+</html>

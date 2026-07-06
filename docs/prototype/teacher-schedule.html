@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Lịch giảng dạy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+</head>
+<body data-active="schedule">
+<div class="app">
+  <aside class="sidebar" id="tSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="tTopbar"></header>
+    <div class="content single">
+      <div class="page">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Lịch giảng dạy</h1>
+            <p>Tuần 11 · 25/05 – 30/05/2026 · 12 buổi dạy</p>
+          </div>
+          <div class="ph-actions">
+            <div class="tabs">
+              <button class="tab active">Tuần</button>
+              <button class="tab">Tháng</button>
+            </div>
+            <div class="sched-nav">
+              <button aria-label="Tuần trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+              <button aria-label="Tuần sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+            </div>
+            <button class="btn lg"><i data-lucide="calendar-check-2" class="icon-sm"></i> Hôm nay</button>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="timetable">
+            <div class="tt-head"></div>
+            <div class="tt-head">Thứ 2<span class="tt-date">25/05</span></div>
+            <div class="tt-head">Thứ 3<span class="tt-date">26/05</span></div>
+            <div class="tt-head">Thứ 4<span class="tt-date">27/05</span></div>
+            <div class="tt-head">Thứ 5<span class="tt-date">28/05</span></div>
+            <div class="tt-head">Thứ 6<span class="tt-date">29/05</span></div>
+            <div class="tt-head">Thứ 7<span class="tt-date">30/05</span></div>
+
+            <!-- Ca sáng 1 -->
+            <div class="tt-time">07:30<br>09:20</div>
+            <div class="tt-cell"></div>
+            <div class="tt-cell"></div>
+            <div class="tt-cell"></div>
+            <div class="tt-event blue"><div class="te-name">CTDL & GT</div><div class="te-meta">K22A · A2-105</div></div>
+            <div class="tt-cell"></div>
+            <div class="tt-event blue"><div class="te-name">CTDL & GT</div><div class="te-meta">K22A · A2-105</div></div>
+
+            <!-- Ca sáng 2 -->
+            <div class="tt-time">08:00<br>09:50</div>
+            <div class="tt-cell"></div>
+            <div class="tt-event green"><div class="te-name">Cơ sở dữ liệu</div><div class="te-meta">K21A · A1-201</div></div>
+            <div class="tt-cell"></div>
+            <div class="tt-cell"></div>
+            <div class="tt-event green"><div class="te-name">Cơ sở dữ liệu</div><div class="te-meta">K21A · A1-201</div></div>
+            <div class="tt-cell"></div>
+
+            <!-- Ca sáng 3 -->
+            <div class="tt-time">10:00<br>11:50</div>
+            <div class="tt-event violet"><div class="te-name">Lập trình HĐT</div><div class="te-meta">K22B · B1-302</div></div>
+            <div class="tt-cell"></div>
+            <div class="tt-event violet"><div class="te-name">Lập trình HĐT</div><div class="te-meta">K22B · B1-302</div></div>
+            <div class="tt-cell"></div>
+            <div class="tt-event violet"><div class="te-name">Lập trình HĐT</div><div class="te-meta">K22B · Online</div></div>
+            <div class="tt-event amber"><div class="te-name">Lập trình Java</div><div class="te-meta">K22C · B1-204</div></div>
+
+            <!-- Ca chiều 1 -->
+            <div class="tt-time">13:00<br>14:50</div>
+            <div class="tt-cell"></div>
+            <div class="tt-cell"></div>
+            <div class="tt-event amber"><div class="te-name">Lập trình Java</div><div class="te-meta">K22C · B1-204</div></div>
+            <div class="tt-event rust"><div class="te-name">Claude Code</div><div class="te-meta">K21B · Lab 302</div></div>
+            <div class="tt-event green"><div class="te-name">Đồ án môn học</div><div class="te-meta">K21 · Lab 301</div></div>
+            <div class="tt-cell"></div>
+
+            <!-- Ca chiều 2 -->
+            <div class="tt-time">15:00<br>16:50</div>
+            <div class="tt-cell"></div>
+            <div class="tt-event blue"><div class="te-name">Hướng dẫn NCKH</div><div class="te-meta">VP Bộ môn</div></div>
+            <div class="tt-cell"></div>
+            <div class="tt-cell"></div>
+            <div class="tt-cell"></div>
+            <div class="tt-cell"></div>
+          </div>
+        </div>
+
+        <div class="card card-pad" style="margin-top:20px">
+          <div class="section-head"><h2>Buổi dạy hôm nay · Thứ 6, 29/05</h2><span class="badge green">3 buổi</span></div>
+          <div class="slot live">
+            <div class="slot-time">08:00 - 09:50</div><div class="slot-bar"></div>
+            <div class="slot-body"><div class="slot-row"><div class="slot-info"><div class="slot-title">Cơ sở dữ liệu · CNTT-K21A</div><div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> A1-201 · 42 SV</div></div><span class="slot-tag" style="color:hsl(142 71% 36%)">Đang dạy</span></div></div>
+          </div>
+          <div class="slot">
+            <div class="slot-time">10:00 - 11:50</div><div class="slot-bar"></div>
+            <div class="slot-body"><div class="slot-row"><div class="slot-info"><div class="slot-title">Lập trình HĐT · CNTT-K22B</div><div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> Online · 56 SV</div></div><button class="btn btn-outline-primary">Bắt đầu lớp</button></div></div>
+          </div>
+          <div class="slot">
+            <div class="slot-time">13:00 - 14:50</div><div class="slot-bar"></div>
+            <div class="slot-body"><div class="slot-row"><div class="slot-info"><div class="slot-title">Đồ án môn học · CNTT-K21</div><div class="slot-room"><i data-lucide="map-pin" class="icon-sm"></i> Lab CNTT-301 · 24 SV</div></div><button class="btn">Xem chi tiết</button></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="teacher-shell.js"></script>
+<script>
+  lucide.createIcons();
+  document.querySelectorAll('.page-head .tabs .tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      this.parentNode.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Tác vụ hành chính</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+</head>
+<body data-active="tasks">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content single">
+      <div class="page" data-screen-label="Tác vụ hành chính">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Tác vụ hành chính</h1>
+            <p>Đơn từ, yêu cầu và công việc hành chính của Phòng Đào tạo</p>
+          </div>
+          <div class="ph-actions">
+            <button class="btn lg"><i data-lucide="download" class="icon-sm"></i> Xuất báo cáo</button>
+            <button class="btn lg primary"><i data-lucide="plus" class="icon-sm"></i> Tạo tác vụ</button>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-amber"><i data-lucide="inbox" class="icon"></i></div>
+            <div class="ms-val">9</div>
+            <div class="ms-lbl">Chờ xử lý</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-blue"><i data-lucide="loader" class="icon"></i></div>
+            <div class="ms-val">4</div>
+            <div class="ms-lbl">Đang xử lý</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-red"><i data-lucide="clock-alert" class="icon"></i></div>
+            <div class="ms-val" style="color:hsl(var(--danger))">2</div>
+            <div class="ms-lbl">Quá hạn</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-ico ico-tint-green"><i data-lucide="check-check" class="icon"></i></div>
+            <div class="ms-val">23</div>
+            <div class="ms-lbl">Hoàn thành tuần này</div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="filter-row">
+            <div class="tabs" id="catTabs">
+              <button class="tab active" data-cat="all">Tất cả <span class="tab-count">13</span></button>
+              <button class="tab" data-cat="sv">Đơn sinh viên <span class="tab-count">6</span></button>
+              <button class="tab" data-cat="gv">Yêu cầu giảng viên <span class="tab-count">4</span></button>
+              <button class="tab" data-cat="nb">Nội bộ <span class="tab-count">3</span></button>
+            </div>
+            <div class="filter-search" style="margin-left:auto">
+              <i data-lucide="search"></i>
+              <input type="text" placeholder="Tìm tác vụ, người gửi..." />
+            </div>
+            <div class="select-mini">
+              <select>
+                <option>Mọi trạng thái</option>
+                <option>Chờ duyệt</option>
+                <option>Đang xử lý</option>
+                <option>Quá hạn</option>
+              </select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="tbl-wrap">
+            <table class="tbl" id="taskTbl">
+              <thead>
+                <tr>
+                  <th>Tác vụ</th>
+                  <th>Người gửi / liên quan</th>
+                  <th>Loại</th>
+                  <th>Hạn xử lý</th>
+                  <th>Trạng thái</th>
+                  <th class="num">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-cat="gv">
+                  <td><div class="nm" style="font-weight:600">Xếp lịch dạy bù — GV nghỉ ốm</div><div class="sub muted">Lập trình Java · CNTT-K22C · 2 buổi</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(221 83% 53%)">LH</div><div><div class="nm">TS. Lê Văn Hùng</div><div class="sub">Bộ môn CNPM</div></div></div></td>
+                  <td><span class="badge blue">Lịch dạy</span></td>
+                  <td><span class="muted">10/06/2026</span></td>
+                  <td><span class="stt bad">Quá hạn</span></td>
+                  <td class="num"><button class="btn primary" onclick="window.location.href='staff-scheduling.html'">Xếp lịch</button></td>
+                </tr>
+                <tr data-cat="sv">
+                  <td><div class="nm" style="font-weight:600">Đơn hoãn thi cuối kỳ — CSDL</div><div class="sub muted">Kèm giấy xác nhận y tế</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(262 83% 58%)">TA</div><div><div class="nm">Trần Văn An</div><div class="sub">CNTT-K21A</div></div></div></td>
+                  <td><span class="badge amber">Hoãn thi</span></td>
+                  <td><span class="muted">12/06/2026</span></td>
+                  <td><span class="stt warn">Chờ duyệt</span></td>
+                  <td class="num">
+                    <span class="act-pair">
+                      <button class="icon-act ok" title="Duyệt"><i data-lucide="check" class="icon-sm"></i></button>
+                      <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                      <button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button>
+                    </span>
+                  </td>
+                </tr>
+                <tr data-cat="gv">
+                  <td><div class="nm" style="font-weight:600">Yêu cầu đổi lịch — Lập trình HĐT</div><div class="sub muted">Chuyển Thứ 4 ca 2 → Thứ 5 ca 2, từ tuần 14</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(243 75% 59%)">NT</div><div><div class="nm">TS. Nguyễn Minh Tuấn</div><div class="sub">Bộ môn CNPM</div></div></div></td>
+                  <td><span class="badge blue">Lịch dạy</span></td>
+                  <td><span class="muted">12/06/2026</span></td>
+                  <td><span class="stt warn">Chờ duyệt</span></td>
+                  <td class="num">
+                    <span class="act-pair">
+                      <button class="icon-act ok" title="Duyệt"><i data-lucide="check" class="icon-sm"></i></button>
+                      <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                      <button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button>
+                    </span>
+                  </td>
+                </tr>
+                <tr data-cat="sv">
+                  <td><div class="nm" style="font-weight:600">Đơn xin gia hạn học phí đến 30/06</div><div class="sub muted">Còn nợ 6.250.000 ₫ · cam kết của phụ huynh</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(142 71% 40%)">LB</div><div><div class="nm">Lê Thị Bình</div><div class="sub">CNTT-K23B</div></div></div></td>
+                  <td><span class="badge green">Học phí</span></td>
+                  <td><span class="muted">13/06/2026</span></td>
+                  <td><span class="stt warn">Chờ duyệt</span></td>
+                  <td class="num">
+                    <span class="act-pair">
+                      <button class="icon-act ok" title="Duyệt"><i data-lucide="check" class="icon-sm"></i></button>
+                      <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                      <button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button>
+                    </span>
+                  </td>
+                </tr>
+                <tr data-cat="nb">
+                  <td><div class="nm" style="font-weight:600">Đối soát 28 giao dịch chuyển khoản</div><div class="sub muted">Đợt thu 09–10/06 · chưa khớp biên lai</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(172 66% 36%)">PT</div><div><div class="nm">Phòng Tài chính</div><div class="sub">Bàn giao 11/06</div></div></div></td>
+                  <td><span class="badge green">Học phí</span></td>
+                  <td><span class="muted">Hôm nay, 17:00</span></td>
+                  <td><span class="stt warn">Chờ xử lý</span></td>
+                  <td class="num"><button class="btn" onclick="window.location.href='staff-tuition.html'">Đối soát</button></td>
+                </tr>
+                <tr data-cat="sv">
+                  <td><div class="nm" style="font-weight:600">Đơn phúc khảo điểm giữa kỳ — CTDL&amp;GT</div><div class="sub muted">Bài thi tự luận · yêu cầu chấm lại câu 3</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(32 95% 48%)">PC</div><div><div class="nm">Phạm Hoàng Cường</div><div class="sub">CNTT-K22A</div></div></div></td>
+                  <td><span class="badge amber">Phúc khảo</span></td>
+                  <td><span class="muted">15/06/2026</span></td>
+                  <td><span class="stt idle">Đang xử lý</span></td>
+                  <td class="num"><button class="btn">Theo dõi</button></td>
+                </tr>
+                <tr data-cat="gv">
+                  <td><div class="nm" style="font-weight:600">Đăng ký phòng Lab cho buổi thực hành bù</div><div class="sub muted">Cần Lab 40 máy · tuần 14, ca 3</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(0 72% 51%)">VD</div><div><div class="nm">ThS. Vũ Thị Dung</div><div class="sub">Bộ môn HTTT</div></div></div></td>
+                  <td><span class="badge blue">Phòng học</span></td>
+                  <td><span class="muted">13/06/2026</span></td>
+                  <td><span class="stt warn">Chờ duyệt</span></td>
+                  <td class="num">
+                    <span class="act-pair">
+                      <button class="icon-act ok" title="Duyệt"><i data-lucide="check" class="icon-sm"></i></button>
+                      <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                      <button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button>
+                    </span>
+                  </td>
+                </tr>
+                <tr data-cat="sv">
+                  <td><div class="nm" style="font-weight:600">Đơn xin nghỉ học tạm thời 1 học kỳ</div><div class="sub muted">Lý do gia đình · cần xác nhận khoa</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(217 91% 50%)">HN</div><div><div class="nm">Hoàng Thị Ngọc</div><div class="sub">CNTT-K23A</div></div></div></td>
+                  <td><span class="badge red">Học vụ</span></td>
+                  <td><span class="muted">16/06/2026</span></td>
+                  <td><span class="stt idle">Đang xử lý</span></td>
+                  <td class="num"><button class="btn">Theo dõi</button></td>
+                </tr>
+                <tr data-cat="nb">
+                  <td><div class="nm" style="font-weight:600">Nhắc 6 lớp chưa nhập điểm quá trình</div><div class="sub muted">Hạn nhập điểm 10/06 đã qua</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(243 75% 59%)">ĐT</div><div><div class="nm">Phòng Đào tạo</div><div class="sub">Việc định kỳ</div></div></div></td>
+                  <td><span class="badge amber">Điểm số</span></td>
+                  <td><span class="muted">11/06/2026</span></td>
+                  <td><span class="stt bad">Quá hạn</span></td>
+                  <td class="num"><button class="btn"><i data-lucide="send" class="icon-sm"></i> Nhắc GV</button></td>
+                </tr>
+                <tr data-cat="sv">
+                  <td><div class="nm" style="font-weight:600">Cấp bảng điểm tiếng Anh có xác nhận</div><div class="sub muted">Phục vụ hồ sơ trao đổi sinh viên</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(262 83% 58%)">MK</div><div><div class="nm">Đỗ Minh Khôi</div><div class="sub">CNTT-K21B</div></div></div></td>
+                  <td><span class="badge blue">Hồ sơ</span></td>
+                  <td><span class="muted">17/06/2026</span></td>
+                  <td><span class="stt idle">Đang xử lý</span></td>
+                  <td class="num"><button class="btn">Theo dõi</button></td>
+                </tr>
+                <tr data-cat="gv">
+                  <td><div class="nm" style="font-weight:600">Xác nhận khối lượng giảng dạy HK II</div><div class="sub muted">Phục vụ tính thù lao · 42 giảng viên</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(172 66% 36%)">KC</div><div><div class="nm">Khoa CNTT</div><div class="sub">Văn phòng khoa</div></div></div></td>
+                  <td><span class="badge amber">Hành chính</span></td>
+                  <td><span class="muted">18/06/2026</span></td>
+                  <td><span class="stt warn">Chờ xử lý</span></td>
+                  <td class="num"><button class="btn">Bắt đầu</button></td>
+                </tr>
+                <tr data-cat="sv">
+                  <td><div class="nm" style="font-weight:600">Đơn chuyển lớp học phần Anh văn 3</div><div class="sub muted">K23B → K23C · trùng lịch học lại</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(32 95% 48%)">TN</div><div><div class="nm">Bùi Thanh Nam</div><div class="sub">CNTT-K23B</div></div></div></td>
+                  <td><span class="badge blue">Lớp học phần</span></td>
+                  <td><span class="muted">14/06/2026</span></td>
+                  <td><span class="stt warn">Chờ duyệt</span></td>
+                  <td class="num">
+                    <span class="act-pair">
+                      <button class="icon-act ok" title="Duyệt"><i data-lucide="check" class="icon-sm"></i></button>
+                      <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                      <button class="icon-act" title="Xem chi tiết"><i data-lucide="eye" class="icon-sm"></i></button>
+                    </span>
+                  </td>
+                </tr>
+                <tr data-cat="nb">
+                  <td><div class="nm" style="font-weight:600">Chuẩn bị danh sách thi cuối kỳ đợt 1</div><div class="sub muted">In danh sách phòng thi · 24 môn, 86 lớp</div></td>
+                  <td><div class="cell-user"><div class="av" style="background:hsl(243 75% 59%)">ĐT</div><div><div class="nm">Phòng Đào tạo</div><div class="sub">Việc định kỳ</div></div></div></td>
+                  <td><span class="badge amber">Kỳ thi</span></td>
+                  <td><span class="muted">19/06/2026</span></td>
+                  <td><span class="stt idle">Đang xử lý</span></td>
+                  <td class="num"><button class="btn">Theo dõi</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script>
+  lucide.createIcons();
+  // Category tab filtering
+  (function(){
+    const tabs = document.querySelectorAll('#catTabs .tab');
+    const rows = document.querySelectorAll('#taskTbl tbody tr');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const cat = t.dataset.cat;
+      rows.forEach(r => { r.style.display = (cat === 'all' || r.dataset.cat === cat) ? '' : 'none'; });
+    }));
+  })();
+</script>
+</body>
+</html>

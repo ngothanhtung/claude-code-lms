@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UniLMS — Sắp lịch giảng dạy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&subset=vietnamese,latin-ext" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<link rel="stylesheet" href="dashboard.css" />
+<link rel="stylesheet" href="teacher.css" />
+<link rel="stylesheet" href="staff.css" />
+</head>
+<body data-active="scheduling">
+<div class="app">
+  <aside class="sidebar" id="sSidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="sTopbar"></header>
+    <div class="content single">
+      <div class="page" data-screen-label="Sắp lịch giảng dạy">
+
+        <div class="page-head">
+          <div class="ph-l">
+            <h1>Sắp lịch giảng dạy</h1>
+            <p>Tuần 13 · 08/06 – 13/06/2026 · 86 lớp học phần · 1 xung đột, 3 lớp chưa xếp lịch</p>
+          </div>
+          <div class="ph-actions">
+            <div class="tabs" id="viewTabs">
+              <button class="tab active" data-panel="tkb">Thời khóa biểu</button>
+              <button class="tab" data-panel="pc">Phân công GV</button>
+              <button class="tab" data-panel="yc">Yêu cầu đổi lịch <span class="tab-count">3</span></button>
+            </div>
+            <button class="btn lg primary"><i data-lucide="calendar-plus" class="icon-sm"></i> Xếp lớp mới</button>
+          </div>
+        </div>
+
+        <!-- ================= TAB: Thời khóa biểu ================= -->
+        <div class="tab-panel active" id="panel-tkb">
+          <div class="card card-pad">
+            <div class="filter-row">
+              <div class="select-mini">
+                <select>
+                  <option>Khoa CNTT — tất cả bộ môn</option>
+                  <option>Bộ môn CNPM</option>
+                  <option>Bộ môn HTTT</option>
+                  <option>Bộ môn KHMT</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="select-mini">
+                <select>
+                  <option>Tất cả giảng viên</option>
+                  <option>TS. Nguyễn Minh Tuấn</option>
+                  <option>TS. Lê Văn Hùng</option>
+                  <option>ThS. Vũ Thị Dung</option>
+                  <option>TS. Phan Quốc Việt</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="select-mini">
+                <select>
+                  <option>Tất cả phòng</option>
+                  <option>Tòa A1</option>
+                  <option>Tòa A2</option>
+                  <option>Tòa B1</option>
+                  <option>Lab CNTT</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="sched-nav" style="margin-left:auto">
+                <button aria-label="Tuần trước"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+                <button aria-label="Tuần sau"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+              </div>
+              <button class="btn">Tuần này</button>
+            </div>
+
+            <div class="timetable">
+              <div class="tt-head"></div>
+              <div class="tt-head">Thứ 2<span class="tt-date">08/06</span></div>
+              <div class="tt-head">Thứ 3<span class="tt-date">09/06</span></div>
+              <div class="tt-head">Thứ 4<span class="tt-date">10/06</span></div>
+              <div class="tt-head">Thứ 5<span class="tt-date">11/06</span></div>
+              <div class="tt-head">Thứ 6<span class="tt-date">12/06</span></div>
+              <div class="tt-head">Thứ 7<span class="tt-date">13/06</span></div>
+
+              <div class="tt-time">07:30<br>09:20</div>
+              <div class="tt-event blue"><div class="te-name">CTDL &amp; GT · K22A</div><div class="te-meta">A2-105</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-event green"><div class="te-name">Mạng máy tính · K22A</div><div class="te-meta">A1-105</div><div class="te-gv">TS. P.Q. Việt</div></div>
+              <div class="tt-cell"></div>
+              <div class="tt-event blue"><div class="te-name">CTDL &amp; GT · K22A</div><div class="te-meta">A2-105</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-event green"><div class="te-name">Anh văn 3 · K23B</div><div class="te-meta">A1-302</div><div class="te-gv">ThS. T.M. Hằng</div></div>
+              <div class="tt-cell"></div>
+
+              <div class="tt-time">08:00<br>09:50</div>
+              <div class="tt-cell"></div>
+              <div class="tt-event green"><div class="te-name">Cơ sở dữ liệu · K21A</div><div class="te-meta">A1-201</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-event violet"><div class="te-name">HTTT quản lý · K21B</div><div class="te-meta">A1-204</div><div class="te-gv">ThS. V.T. Dung</div></div>
+              <div class="tt-cell"></div>
+              <div class="tt-event green"><div class="te-name">Cơ sở dữ liệu · K21A</div><div class="te-meta">A1-201</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-cell"></div>
+
+              <div class="tt-time">10:00<br>11:50</div>
+              <div class="tt-event violet"><div class="te-name">Lập trình HĐT · K22B</div><div class="te-meta">B1-302</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-cell"></div>
+              <div class="tt-event conflict"><div class="te-name">⚠ Trùng phòng B1-204</div><div class="te-meta">Java K22C × Anh văn 3 K23C</div><div class="te-gv">Cần đổi phòng</div></div>
+              <div class="tt-event conflict"><div class="te-name">⚠ Trống giảng viên</div><div class="te-meta">Java · K22C · B1-204</div><div class="te-gv">GV nghỉ ốm — xếp dạy thay</div></div>
+              <div class="tt-event violet"><div class="te-name">Lập trình HĐT · K22B</div><div class="te-meta">Online</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-event amber"><div class="te-name">Lập trình Java · K22C</div><div class="te-meta">B1-204</div><div class="te-gv">TS. L.V. Hùng</div></div>
+
+              <div class="tt-time">13:00<br>14:50</div>
+              <div class="tt-cell"></div>
+              <div class="tt-event amber"><div class="te-name">Toán rời rạc · K24A</div><div class="te-meta">A2-201</div><div class="te-gv">TS. Đ.T. Sơn</div></div>
+              <div class="tt-event amber"><div class="te-name">Lập trình Java · K22C</div><div class="te-meta">B1-204</div><div class="te-gv">TS. L.V. Hùng</div></div>
+              <div class="tt-event rust"><div class="te-name">Claude Code · K21B</div><div class="te-meta">Lab 302</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-event green"><div class="te-name">Đồ án môn học · K21</div><div class="te-meta">Lab 301</div><div class="te-gv">TS. N.M. Tuấn</div></div>
+              <div class="tt-cell"></div>
+
+              <div class="tt-time">15:00<br>16:50</div>
+              <div class="tt-event blue"><div class="te-name">Mạng máy tính · K22B</div><div class="te-meta">A1-105</div><div class="te-gv">TS. P.Q. Việt</div></div>
+              <div class="tt-cell"></div>
+              <div class="tt-cell"></div>
+              <div class="tt-event violet"><div class="te-name">HTTT quản lý · K21A</div><div class="te-meta">A1-204</div><div class="te-gv">ThS. V.T. Dung</div></div>
+              <div class="tt-cell"></div>
+              <div class="tt-cell"></div>
+            </div>
+          </div>
+
+          <div class="card card-pad" style="margin-top:20px">
+            <div class="section-head"><h2>Lớp chưa xếp lịch</h2><span class="badge amber">3 lớp</span></div>
+            <div class="pending-list">
+              <div class="pending">
+                <div class="pd-ico ico-tint-amber"><i data-lucide="calendar-x" class="icon"></i></div>
+                <div class="pd-body">
+                  <div class="pd-title">Dạy bù — Lập trình Java · CNTT-K22C (2 buổi)</div>
+                  <div class="pd-sub">GV nghỉ ốm 10–11/06 · cần xếp trong tuần 14 · ưu tiên ca 2</div>
+                </div>
+                <span class="badge red">Khẩn</span>
+                <button class="btn primary">Xếp lịch</button>
+              </div>
+              <div class="pending">
+                <div class="pd-ico ico-tint-blue"><i data-lucide="flask-conical" class="icon"></i></div>
+                <div class="pd-body">
+                  <div class="pd-title">Thực hành bù — HTTT quản lý · CNTT-K21B</div>
+                  <div class="pd-sub">Cần Lab 40 máy · tuần 14, ca 3 · theo yêu cầu ThS. Vũ Thị Dung</div>
+                </div>
+                <span class="badge amber">Chờ phòng</span>
+                <button class="btn">Xếp lịch</button>
+              </div>
+              <div class="pending">
+                <div class="pd-ico ico-tint-indigo"><i data-lucide="calendar-plus" class="icon"></i></div>
+                <div class="pd-body">
+                  <div class="pd-title">Ôn tập cuối kỳ — Toán rời rạc · K24A, K24B</div>
+                  <div class="pd-sub">2 buổi gộp lớp · cần hội trường ≥ 120 chỗ · tuần 15</div>
+                </div>
+                <span class="badge blue">Tuần 15</span>
+                <button class="btn">Xếp lịch</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB: Phân công giảng viên ================= -->
+        <div class="tab-panel" id="panel-pc">
+          <div class="card card-pad">
+            <div class="filter-row">
+              <div class="filter-search">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Tìm giảng viên..." />
+              </div>
+              <div class="select-mini">
+                <select>
+                  <option>Tất cả bộ môn</option>
+                  <option>Bộ môn CNPM</option>
+                  <option>Bộ môn HTTT</option>
+                  <option>Bộ môn KHMT</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="select-mini">
+                <select>
+                  <option>Sắp xếp: tải giảng dạy</option>
+                  <option>Sắp xếp: tên A–Z</option>
+                  <option>Sắp xếp: số lớp</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+            </div>
+
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Giảng viên</th>
+                    <th class="num">Lớp HP</th>
+                    <th class="num">Tiết/tuần</th>
+                    <th>Tải giảng dạy (định mức 20 tiết)</th>
+                    <th>Trạng thái tuần này</th>
+                    <th class="num">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="cell-user"><div class="av" style="background:hsl(243 75% 59%)">NT</div><div><div class="nm">TS. Nguyễn Minh Tuấn</div><div class="sub">Bộ môn CNPM</div></div></div></td>
+                    <td class="num">6</td>
+                    <td class="num">22</td>
+                    <td><div class="col-bar"><div class="track"><span class="bad" style="width:100%"></span></div><span class="pct">110%</span></div></td>
+                    <td><span class="stt bad">Vượt định mức</span></td>
+                    <td class="num"><button class="btn">Điều chỉnh</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av" style="background:hsl(221 83% 53%)">LH</div><div><div class="nm">TS. Lê Văn Hùng</div><div class="sub">Bộ môn CNPM</div></div></div></td>
+                    <td class="num">4</td>
+                    <td class="num">16</td>
+                    <td><div class="col-bar"><div class="track"><span class="ok" style="width:80%"></span></div><span class="pct">80%</span></div></td>
+                    <td><span class="stt warn">Nghỉ ốm 10–11/06</span></td>
+                    <td class="num"><button class="btn primary">Xếp dạy thay</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av" style="background:hsl(262 83% 58%)">VD</div><div><div class="nm">ThS. Vũ Thị Dung</div><div class="sub">Bộ môn HTTT</div></div></div></td>
+                    <td class="num">5</td>
+                    <td class="num">18</td>
+                    <td><div class="col-bar"><div class="track"><span class="ok" style="width:90%"></span></div><span class="pct">90%</span></div></td>
+                    <td><span class="stt ok">Đúng lịch</span></td>
+                    <td class="num"><button class="btn">Phân công</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av" style="background:hsl(142 71% 40%)">PV</div><div><div class="nm">TS. Phan Quốc Việt</div><div class="sub">Bộ môn KHMT</div></div></div></td>
+                    <td class="num">4</td>
+                    <td class="num">14</td>
+                    <td><div class="col-bar"><div class="track"><span class="ok" style="width:70%"></span></div><span class="pct">70%</span></div></td>
+                    <td><span class="stt ok">Đúng lịch</span></td>
+                    <td class="num"><button class="btn">Phân công</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av" style="background:hsl(32 95% 48%)">ĐS</div><div><div class="nm">TS. Đặng Thái Sơn</div><div class="sub">Bộ môn KHMT</div></div></div></td>
+                    <td class="num">3</td>
+                    <td class="num">12</td>
+                    <td><div class="col-bar"><div class="track"><span class="ok" style="width:60%"></span></div><span class="pct">60%</span></div></td>
+                    <td><span class="stt ok">Đúng lịch</span></td>
+                    <td class="num"><button class="btn">Phân công</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av" style="background:hsl(172 66% 36%)">TH</div><div><div class="nm">ThS. Trần Mỹ Hằng</div><div class="sub">Bộ môn Ngoại ngữ</div></div></div></td>
+                    <td class="num">5</td>
+                    <td class="num">20</td>
+                    <td><div class="col-bar"><div class="track"><span class="warn" style="width:100%"></span></div><span class="pct">100%</span></div></td>
+                    <td><span class="stt ok">Đúng lịch</span></td>
+                    <td class="num"><button class="btn">Phân công</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av" style="background:hsl(0 72% 51%)">HL</div><div><div class="nm">ThS. Ngô Hải Long</div><div class="sub">Bộ môn CNPM</div></div></div></td>
+                    <td class="num">2</td>
+                    <td class="num">8</td>
+                    <td><div class="col-bar"><div class="track"><span class="ok" style="width:40%"></span></div><span class="pct">40%</span></div></td>
+                    <td><span class="stt ok">Còn trống lịch</span></td>
+                    <td class="num"><button class="btn btn-outline-primary">Phân công</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB: Yêu cầu đổi lịch ================= -->
+        <div class="tab-panel" id="panel-yc">
+          <div class="card card-pad">
+            <div class="section-head"><h2>Yêu cầu đổi lịch chờ duyệt</h2><span class="badge amber">3 yêu cầu</span></div>
+            <div class="pending-list">
+              <div class="pending">
+                <div class="pd-ico ico-tint-indigo"><i data-lucide="repeat" class="icon"></i></div>
+                <div class="pd-body">
+                  <div class="pd-title">Lập trình HĐT · K22B — chuyển Thứ 4 ca 2 → Thứ 5 ca 2</div>
+                  <div class="pd-sub">TS. Nguyễn Minh Tuấn · từ tuần 14 · phòng B1-302 trống ở khung mới ✓</div>
+                </div>
+                <span class="badge green">Không xung đột</span>
+                <span class="act-pair">
+                  <button class="icon-act ok" title="Duyệt"><i data-lucide="check" class="icon-sm"></i></button>
+                  <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                </span>
+              </div>
+              <div class="pending">
+                <div class="pd-ico ico-tint-amber"><i data-lucide="repeat" class="icon"></i></div>
+                <div class="pd-body">
+                  <div class="pd-title">Anh văn 3 · K23C — chuyển Thứ 4 ca 2 → Thứ 6 ca 1</div>
+                  <div class="pd-sub">ThS. Trần Mỹ Hằng · tuần 14–16 · phòng A1-302 trùng với Anh văn 3 K23B</div>
+                </div>
+                <span class="badge red">Trùng phòng</span>
+                <span class="act-pair">
+                  <button class="icon-act" title="Gợi ý phòng khác"><i data-lucide="lightbulb" class="icon-sm"></i></button>
+                  <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                </span>
+              </div>
+              <div class="pending">
+                <div class="pd-ico ico-tint-blue"><i data-lucide="repeat" class="icon"></i></div>
+                <div class="pd-body">
+                  <div class="pd-title">Mạng máy tính · K22B — đổi sang phòng có máy chiếu mới</div>
+                  <div class="pd-sub">TS. Phan Quốc Việt · Thứ 2 ca 4 · đề xuất A1-401</div>
+                </div>
+                <span class="badge green">Không xung đột</span>
+                <span class="act-pair">
+                  <button class="icon-act ok" title="Duyệt"><i data-lucide="check" class="icon-sm"></i></button>
+                  <button class="icon-act no" title="Từ chối"><i data-lucide="x" class="icon-sm"></i></button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="theme-toggle.js"></script>
+<script src="staff-shell.js"></script>
+<script>
+  lucide.createIcons();
+  // Tab panel switching
+  (function(){
+    const tabs = document.querySelectorAll('#viewTabs .tab');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById('panel-' + t.dataset.panel);
+      if (panel) panel.classList.add('active');
+    }));
+  })();
+</script>
+</body>
+</html>
